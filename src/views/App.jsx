@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Link, NavLink, useParams, useHi
 import { AuthenticationContext } from 'utils/authentication';
 
 import Nav from "partials/nav"
+import Room  from 'views/room';
 import Login  from 'views/login';
 import Layout from 'partials/layout'
 import Lobby  from 'views/lobby'
@@ -15,6 +16,7 @@ function App({...props}) {
   
   const history = useHistory();
   const auth = useContext(AuthenticationContext);
+  const { roomId } = useParams();
 
   let buttons = <Nav.Button onClick={()=>alert("hey!")} label="Create room" appendclass="shadow rounded-circle bg-danger" >
             <i className="bi bi-plus-lg"></i>
@@ -30,11 +32,12 @@ function App({...props}) {
     return <>
     <Layout className="App">
       
-      <Container id="content-wrapper">
-      { history.location.pathname === '/'         && <Lobby/> }
+      <Container fluid id="content-wrapper">
+      { history.location.pathname === '/'         && <Lobby/>  }
       { history.location.pathname === '/settings' && <Wizard/> }
-      { history.location.pathname === '/users'    && <Redirect to="/"/> }
-      { history.location.pathname === '/chat'     && <Redirect to="/"/> }
+      { (/^\/room\/[a-z0-9]+/).test(history.location.pathname) && <Room/>   }
+      { (/^\/room\/[a-z0-9]+\/chat$/).test(history.location.pathname)  && <Redirect to="/"/> }
+      { (/^\/room\/[a-z0-9]+\/users$/).test(history.location.pathname) && <Redirect to="/"/> }
       </Container>
 
       <Nav buttons={buttons}>

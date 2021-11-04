@@ -93,9 +93,10 @@ function Nav({buttons, children}){
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
                 .nav-partial{
                     flex-direction: column;
+                    //top: 50%;
                     left: 100% !important;
-                    transform: translateX(-100%) !important;
-                    margin-left: -.5rem;
+                    transform: translate(-100%, 0%) !important;
+                    margin-left: -1.1rem;
                     padding:1.251rem 0 !important;
 
                     .nav-button{

@@ -42,9 +42,15 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "prebuild":"(rm -rf docs || rd /s /q docs)",
-    "postbuild":"(mv build docs || move build docs)",
-    "install":"pnpm run prebuild && pnpm run build && pnpm run postbuild"
+    "pages":"pnpm c1 && pnpm c3 && pnpm c5 && pnpm c6",
+    "c1" : "(cp -f -R public _tmp_public_ || Xcopy /K /D /H /Y /I public _tmp_public_)",
+    "c2" : "(mv build _tmp_build_ || move build _tmp_build_) ",
+    "c3" : "(cp -f gh-pages/index.html public || xcopy /s /Y gh-pages/index.html public) && (cp -f -R gh-pages public || Xcopy /K /D /H /Y /I gh-pages public) ",
+    "c4" : "craco build --content-base public/ ",
+    "c5" : "(mv build docs || move build docs) ",
+    "c6" : "(rm -rf public || rd /s /q public) && (mv _tmp_public_ public || move _tmp_public_ public) ",
+    "c7" : "(mv _tmp_build_ build || move _tmp_build_ build)"
+    ,"&& pnpm c4 ":""
   },
   "eslintConfig": {
     "extends": [

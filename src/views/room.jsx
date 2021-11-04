@@ -1,14 +1,14 @@
-import { React } from 'react';
+import { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import MD from 'utils/md'
 
 export default ({ ...props }) => {
+
     return <>
-        <Row id="room" className="h-100 m-auto">
-            <Col xs={12} sm={{span:6, offset:3}} className="bg-light rounded-2"><MD >{`
-                # Hola Caracola            
-            `}</MD>
+        <Row fluid id="Room" className="h-100 m-auto">
+            <Col xs={12} className="bg-light shadow-lg rounded-bottom" style={{zIndex:1000}}>
+            
             </Col>
         </Row>
     </>;
 }
+
