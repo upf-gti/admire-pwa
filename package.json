@@ -41,8 +41,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && (mv build docs || move build docs)",
-    "test": "craco test"
+    "build": "craco build && (mv build dist || move build dist)",
+    "test": "craco test",
+    "pages": "craco build --content-base docs/ && (mv build docs || move build docs)"
   },
   "eslintConfig": {
     "extends": [
