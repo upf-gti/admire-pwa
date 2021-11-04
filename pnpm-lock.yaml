@@ -32,6 +32,7 @@ specifiers:
   rehype-raw: ^6.1.0
   remark-breaks: ^3.0.2
   remark-gfm: ^3.0.0
+  screenfull: ^6.0.0
   styled-jsx: ^4.0.1
   styled-jsx-plugin-sass: ^1.0.0
   web-vitals: ^2.1.2
@@ -70,6 +71,7 @@ dependencies:
   rehype-raw: 6.1.0
   remark-breaks: 3.0.2
   remark-gfm: 3.0.0
+  screenfull: 6.0.0
   web-vitals: 2.1.2
   workbox-background-sync: 6.3.0
   workbox-broadcast-update: 6.3.0
@@ -12298,6 +12300,11 @@ packages:
       '@types/json-schema': 7.0.9
       ajv: 6.12.6
       ajv-keywords: 3.5.2_ajv@6.12.6
+    dev: false
+
+  /screenfull/6.0.0:
+    resolution: {integrity: sha512-LGY0nhNQkC4FX4DT4pZdJ5cZH5EOz9Gfh9KcVMl779pS677k4IV1Wv7sY/CwC9VKFT21fYgCh7zkTVVefi5XKA==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
   /scss-tokenizer/0.2.3:

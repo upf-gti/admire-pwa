@@ -48,8 +48,8 @@ export default ({children, ...props}) => {
     }
 
     async function logout(){
-        cookies.get("admire_app_email",undefined,0);
-        cookies.get("admire_app_token",undefined,0);
+        cookies.get("admire_app_email",null,-1);
+        cookies.get("admire_app_token",null,0);
         return await BRA.appClient.logout();
     }
 
@@ -65,7 +65,7 @@ export default ({children, ...props}) => {
                 break;
             case 'error': 
                 toast.error(description); 
-                cookies.set("admire_app_token",undefined,0);
+                cookies.set("admire_app_token",null,-1);
                 break;
             default: toast.warn(description);
         }

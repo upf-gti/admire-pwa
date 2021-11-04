@@ -32,7 +32,7 @@ module.exports = {
             ,["@babel/plugin-proposal-class-properties", { "loose": true }]
             ,["@babel/plugin-proposal-private-property-in-object", { "loose": true }]
         ],
-        presets: ['@babel/preset-env']
+        _presets: ['@babel/preset-env']
     },
 
 }

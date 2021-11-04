@@ -7,3 +7,6 @@ pnpx npm-check-updates -u
 darkmode => https://www.cssscript.com/dark-mode-switcher-for-bootstrap-5/#:~:text=An%20experimental%20dark%20mode%20%28dark%20theme%29%20switcher%20for,styles%20for%20Bootstrap%205%20and%20its%20UI%20components.
 
 https://github.com/rafgraph/spa-github-pages#readme
+
+
+https://arundhaduti.github.io/2020/06/13/RemoteDebuggingSafari.html
