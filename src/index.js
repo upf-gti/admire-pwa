@@ -1,13 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+
+import {ProgressBar} from 'react-bootstrap';
+
+import Router from 'components/router';
+import AuthenticationContext  from 'utils/authentication'
+
+import 'style.scss';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AuthenticationContext>
+    <React.Suspense children={<Router/>} fallback={<ProgressBar className="start-50" animated now={100} />}/>
+    </AuthenticationContext>
   </React.StrictMode>,
   document.getElementById('root')
 );
@@ -15,7 +23,7 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.unregister();
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

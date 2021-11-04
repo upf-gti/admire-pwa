@@ -1,0 +1,11 @@
+{
+    "name": "TweenMax",
+    "version": "1.0.0",
+    "description": "",
+    "main": "TweenMax.min.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "dependencies": {}
+  }
+  
