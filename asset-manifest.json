@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/admire-pwa/static/css/main.a1050239.chunk.css",
+    "main.js": "/admire-pwa/static/js/main.0a2a0d85.chunk.js",
+    "main.js.map": "/admire-pwa/static/js/main.0a2a0d85.chunk.js.map",
+    "runtime-main.js": "/admire-pwa/static/js/runtime-main.4bddfc63.js",
+    "runtime-main.js.map": "/admire-pwa/static/js/runtime-main.4bddfc63.js.map",
+    "static/js/2.a8fef46e.chunk.js": "/admire-pwa/static/js/2.a8fef46e.chunk.js",
+    "static/js/2.a8fef46e.chunk.js.map": "/admire-pwa/static/js/2.a8fef46e.chunk.js.map",
+    "static/js/3.87ad3b83.chunk.js": "/admire-pwa/static/js/3.87ad3b83.chunk.js",
+    "static/js/3.87ad3b83.chunk.js.map": "/admire-pwa/static/js/3.87ad3b83.chunk.js.map",
+    "static/js/4.6951d6cb.chunk.js": "/admire-pwa/static/js/4.6951d6cb.chunk.js",
+    "static/js/4.6951d6cb.chunk.js.map": "/admire-pwa/static/js/4.6951d6cb.chunk.js.map",
+    "static/js/5.62a70c7d.chunk.js": "/admire-pwa/static/js/5.62a70c7d.chunk.js",
+    "static/js/5.62a70c7d.chunk.js.map": "/admire-pwa/static/js/5.62a70c7d.chunk.js.map",
+    "static/js/6.84bad9d0.chunk.js": "/admire-pwa/static/js/6.84bad9d0.chunk.js",
+    "static/js/6.84bad9d0.chunk.js.map": "/admire-pwa/static/js/6.84bad9d0.chunk.js.map",
+    "index.html": "/admire-pwa/index.html",
+    "service-worker.js": "/admire-pwa/service-worker.js",
+    "service-worker.js.map": "/admire-pwa/service-worker.js.map",
+    "static/css/main.a1050239.chunk.css.map": "/admire-pwa/static/css/main.a1050239.chunk.css.map",
+    "static/js/2.a8fef46e.chunk.js.LICENSE.txt": "/admire-pwa/static/js/2.a8fef46e.chunk.js.LICENSE.txt",
+    "static/media/style.scss": "/admire-pwa/static/media/bootstrap-icons.7165e5d7.woff",
+    "static/media/logo.f23962e9.png": "/admire-pwa/static/media/logo.f23962e9.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4bddfc63.js",
+    "static/js/2.a8fef46e.chunk.js",
+    "static/css/main.a1050239.chunk.css",
+    "static/js/main.0a2a0d85.chunk.js"
+  ]
+}
