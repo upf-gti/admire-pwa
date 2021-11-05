@@ -4,7 +4,7 @@ import Verified from 'views/verified'
 import ResetPass from 'views/resetpassword'
 
 export default ({children})=> <>
-    <Router>
+    <Router basename={process.env.REACT_APP_BASE}>
     <Switch>
         <Route component={App}       exact path={["/", "/settings", "/about", "/users", "/chat", "/profile", "/room/:roomId", "/room/:roomId/chat", "/room/:roomId/guests"]} />
         <Route component={Verified}  exact path="/verified/:token"/>

@@ -5,7 +5,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import {ProgressBar} from 'react-bootstrap';
 
-import Router from 'components/router';
+import Router from 'partials/router';
 import AuthenticationContext  from 'utils/authentication'
 
 import 'style.scss';

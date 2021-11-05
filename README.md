@@ -10,3 +10,7 @@ https://github.com/rafgraph/spa-github-pages#readme
 
 
 https://arundhaduti.github.io/2020/06/13/RemoteDebuggingSafari.html
+https://www.zachleat.com/web/screenshots/
+https://www.zachleat.com/web/automatic-opengraph/
+
+https://skryvets.com/blog/2018/09/20/an-elegant-solution-of-deploying-react-app-into-a-subdirectory/
