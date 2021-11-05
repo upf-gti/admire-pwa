@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/admire-pwa/static/css/main.a1050239.chunk.css",
+    "main.js": "/admire-pwa/static/js/main.38712ca6.chunk.js",
+    "main.js.map": "/admire-pwa/static/js/main.38712ca6.chunk.js.map",
+    "runtime-main.js": "/admire-pwa/static/js/runtime-main.bc41ef9d.js",
+    "runtime-main.js.map": "/admire-pwa/static/js/runtime-main.bc41ef9d.js.map",
+    "static/js/2.d842dcfd.chunk.js": "/admire-pwa/static/js/2.d842dcfd.chunk.js",
+    "static/js/2.d842dcfd.chunk.js.map": "/admire-pwa/static/js/2.d842dcfd.chunk.js.map",
+    "static/js/3.4c447e6c.chunk.js": "/admire-pwa/static/js/3.4c447e6c.chunk.js",
+    "static/js/3.4c447e6c.chunk.js.map": "/admire-pwa/static/js/3.4c447e6c.chunk.js.map",
+    "static/js/4.170995ed.chunk.js": "/admire-pwa/static/js/4.170995ed.chunk.js",
+    "static/js/4.170995ed.chunk.js.map": "/admire-pwa/static/js/4.170995ed.chunk.js.map",
+    "static/js/5.08afb557.chunk.js": "/admire-pwa/static/js/5.08afb557.chunk.js",
+    "static/js/5.08afb557.chunk.js.map": "/admire-pwa/static/js/5.08afb557.chunk.js.map",
+    "static/js/6.affde6a3.chunk.js": "/admire-pwa/static/js/6.affde6a3.chunk.js",
+    "static/js/6.affde6a3.chunk.js.map": "/admire-pwa/static/js/6.affde6a3.chunk.js.map",
+    "index.html": "/admire-pwa/index.html",
+    "service-worker.js": "/admire-pwa/service-worker.js",
+    "service-worker.js.map": "/admire-pwa/service-worker.js.map",
+    "static/css/main.a1050239.chunk.css.map": "/admire-pwa/static/css/main.a1050239.chunk.css.map",
+    "static/js/2.d842dcfd.chunk.js.LICENSE.txt": "/admire-pwa/static/js/2.d842dcfd.chunk.js.LICENSE.txt",
+    "static/media/style.scss": "/admire-pwa/static/media/bootstrap-icons.7165e5d7.woff",
+    "static/media/logo.png": "/admire-pwa/static/media/logo.f23962e9.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bc41ef9d.js",
+    "static/js/2.d842dcfd.chunk.js",
+    "static/css/main.a1050239.chunk.css",
+    "static/js/main.38712ca6.chunk.js"
+  ]
+}
