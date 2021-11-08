@@ -2,12 +2,12 @@ import React, {useState, useContext, useEffect, useRef  } from 'react';
 import { Button, Form, FloatingLabel, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import MD from 'utils/md';
-import { AuthenticationContext } from 'utils/authentication';
+import { AuthContext } from 'utils/ctx_authentication';
 
 export default () => {
     const formRef = useRef(null);
     const [show, setShow] = useState(false);
-    const auth = useContext(AuthenticationContext);
+    const auth = useContext(AuthContext);
     const user = "h3R"
 
     const [formvalues, setFormValues] = useState({formErrors:{}});

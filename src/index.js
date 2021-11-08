@@ -3,19 +3,13 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
+import Layout from 'components/layout'
 import {ProgressBar} from 'react-bootstrap';
-
-import Router from 'partials/router';
-import AuthenticationContext  from 'utils/authentication'
-
-import 'style.scss';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthenticationContext>
-    <React.Suspense children={<Router/>} fallback={<ProgressBar className="start-50" animated now={100} />}/>
-    </AuthenticationContext>
+      <React.Suspense children={<Layout/>} fallback={<ProgressBar className="start-50" animated now={100} />}/>
   </React.StrictMode>,
   document.getElementById('root')
 );

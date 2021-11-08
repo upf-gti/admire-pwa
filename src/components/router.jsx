@@ -3,8 +3,12 @@ import App from 'views/App'
 import Verified from 'views/verified'
 import ResetPass from 'views/resetpassword'
 
-export default ({children})=> <>
+export default ({children})=>{
+    alert(process.env.REACT_APP_BASE)
+    debugger;
+return <>
     <Router basename={process.env.REACT_APP_BASE}>
+    {children}
     <Switch>
         <Route component={App}       exact path={["/", "/settings", "/about", "/users", "/chat", "/profile", "/room/:roomId", "/room/:roomId/chat", "/room/:roomId/guests"]} />
         <Route component={Verified}  exact path="/verified/:token"/>
@@ -13,3 +17,4 @@ export default ({children})=> <>
     </Switch>
     </Router>
 </>
+} 

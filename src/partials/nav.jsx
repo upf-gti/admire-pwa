@@ -66,7 +66,8 @@ function Nav({buttons, children}){
 
             .nav-item-disabled{
                 color: lighten($btn-link-disabled-color,27.5%);
-                user-select: none;
+                user-select: none !important;
+                pointer-events:none;
                 cursor: not-allowed;
                 &:hover{
                     color:  lighten($btn-link-disabled-color,27.5%);
@@ -115,9 +116,9 @@ function Nav({buttons, children}){
 
 
 Nav.Item = function({children, icon, disabled, to, ...props}){
-    return <NavLink exact activeClassName="nav-item-active" to={to??"/"} className={`nav-item ${disabled?"nav-item-disabled":""} ${props.appendclass??""}`} {...props}>
+    return <div to={to??"/"} className={`nav-item ${disabled?"nav-item-disabled":""} ${props.appendclass??""}`} {...props}>
         <div className={`d-flex my-0 mx-2 flex-column fs-6 fw-lighter`} >{children}</div>
-    </NavLink>
+    </div>
 }
 
 Nav.Button = function({children,...props}){

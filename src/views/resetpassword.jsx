@@ -6,7 +6,6 @@ import { Form, FloatingLabel, OverlayTrigger, Tooltip, Button} from 'react-boots
 import http from 'utils/http'
 import MD from 'utils/md'
 import Modal from 'partials/modal'
-import Layout from 'partials/layout'
 
 
 export default ()=>{
@@ -88,7 +87,7 @@ export default ()=>{
         });
     }
 
-    return <Layout className="reset-password">
+    return <>
         <Modal size="md" show={true} 
             title={<h2 className="user-select-none">Reset password</h2>}
         >
@@ -114,5 +113,5 @@ export default ()=>{
             </Form>
 
         </Modal> 
-    </Layout>
+    </>
 }

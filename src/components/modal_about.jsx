@@ -7,9 +7,9 @@ export default () => {
     const [show, setShow] = useState(false);
     const [proposal, dispatch] = useReducer((o,n)=>n, {proposalEvent : undefined});
     useEffect(() => { 
-            window.addEventListener('beforeinstallprompt',onBeforeInstallPrompt);
+            window.addEventListener('beforeinstallprompt',onBeforeInstallPrompt, 0);
         return () => { 
-            window.removeEventListener('beforeinstallprompt',onBeforeInstallPrompt);
+            window.removeEventListener('beforeinstallprompt',onBeforeInstallPrompt, 0);
         }
     },[]);
 

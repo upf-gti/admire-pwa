@@ -1,9 +1,9 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-export default ({title, children, ...props}) => {
+export default ({show, title, children, ...props}) => {
     return <>
-        <Modal.Dialog>
+        <Modal show={show} {...props}>
             
             <Modal.Header>
                 <Modal.Title>{title}</Modal.Title>
@@ -13,7 +13,7 @@ export default ({title, children, ...props}) => {
             {children}
             </Modal.Body>
 
-        </Modal.Dialog>
+        </Modal>
 
         <style global jsx>{`
             @import 'src/variables.scss';

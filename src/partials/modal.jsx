@@ -1,33 +1,37 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-export default ({title, children, show, setShow = ()=>{}, callback, button_tittle, closeButton, ...props}) => {
+export default ({title, children, show, setShow = ()=>{}, callback, buttons, closeButton, ...props}) => {
     return <>
         <Modal
             centered
             show={show}
             keyboard={true}
-            backdrop="static"
+            //backdrop={closeButton?"":"static"}
             onHide={() => setShow(false)}
             dialogClassName="modal-partial modal-shadow-lg"
             {...props}
         >
-            <Modal.Header closeButton={closeButton} >
-                <Modal.Title>{title}</Modal.Title>
-            </Modal.Header>
+            {(closeButton && title) && <Modal.Header closeButton={closeButton} >
+                <Modal.Title className="user-select-none">{title}</Modal.Title>
+            </Modal.Header>}
             
             <Modal.Body>
                 {children}
             </Modal.Body>
 
-            { (button_tittle || closeButton) && <Modal.Footer>
-                {button_tittle && <Button variant="primary" onClick={callback}>{button_tittle}</Button>}
+            { (buttons || closeButton) && <Modal.Footer>
+                {buttons && buttons.map( (v,k,a) => <div key={k}>{v}</div> )}
                 {closeButton && <Button variant="outline-secondary" onClick={() => setShow(false)}> Close</Button>}
             </Modal.Footer>} 
         </Modal>
 
         <style global jsx>{`
             @import 'src/variables.scss';
+
+            .modal-partial.modal-shadow-lg.modal-md.modal-dialog-centered:focus-visible {
+                outline: none;
+            }
 
             .modal-partial {
                 .modal-title {

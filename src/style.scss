@@ -1,3 +1,13 @@
+@font-face {
+    font-family: Comfortaa;
+    src:
+        url(assets/fonts/Comfortaa-Light.ttf)   ,
+        url(assets/fonts/Comfortaa-Bold.ttf)    ,
+        url(assets/fonts/Comfortaa-Medium.ttf)  ,
+        url(assets/fonts/Comfortaa-Regular.ttf) ,
+        url(assets/fonts/Comfortaa-SemiBold.ttf),
+}
+
 @import "variables.scss";
 @import 'bootstrap/scss/bootstrap.scss';
 @import "bootstrap-icons/font/bootstrap-icons.scss";
@@ -36,10 +46,21 @@ a, button {
   }
 }
 
-
-.btn-link:focus{
+.btn-check:focus + .btn, .btn:focus {
   box-shadow:  none !important;
-  drop-shadow: none !important;
+}
+
+.form-floating > label {
+  font-weight: 500;
+  opacity: .5;
+  /*
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+  margin-left: 4px;*/
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 
 /*==========================================

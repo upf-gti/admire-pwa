@@ -2,11 +2,11 @@ import React, {useState, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import MD from 'utils/md';
-import { AuthenticationContext } from 'utils/authentication';
+import { AuthContext } from 'utils/ctx_authentication';
 
 export default () => {
     const [show, setShow] = useState(false);
-    const auth = useContext(AuthenticationContext);
+    const auth = useContext(AuthContext);
     const user = "h3R"
 
     if(!auth.isLogged) return <></>;

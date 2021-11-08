@@ -2,7 +2,7 @@
 
 import { useContext, useRef, useState, useEffect } from 'react';
 import { Row, Col, Card,Form, FloatingLabel, Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap"
-import { AuthenticationContext } from 'utils/authentication';
+import { AuthContext } from 'utils/ctx_authentication';
 import RecoveryModal from 'components/modal_recovery'
 import RegisterModal from 'components/modal_register'
 import logo from 'assets/img/logo.png';
@@ -11,7 +11,7 @@ import cookies from '@h3r/cookies'
 import * as BRA from 'lib_bra'
 
 export default () => {
-    const auth = useContext(AuthenticationContext);
+    const auth = useContext(AuthContext);
 
     const formRef = useRef(null);
     const [validated, setValidated] = useState(undefined);

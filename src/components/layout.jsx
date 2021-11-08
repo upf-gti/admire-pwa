@@ -1,7 +1,11 @@
 import { Helmet } from "react-helmet"
 import { Image } from 'react-bootstrap'
 import toast, { Toaster } from 'react-hot-toast'
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
 
+import App from 'views/App'
+import Verified from 'views/verified'
+import ResetPass from 'views/resetpassword'
 import AboutModal from 'components/modal_about'
 import ProfileModal from 'components/modal_profile'
 import FullScreenBTN from 'components/btn_fullscreen'
@@ -10,10 +14,28 @@ import logo from "assets/img/logo.png"
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'style.scss'
 
+import RoomsContext  from 'utils/ctx_rooms'
+import StreamContext from 'utils/ctx_streaming'
+import MediaContext from 'utils/ctx_mediadevices'
+import AuthContext  from 'utils/ctx_authentication'
+
 window.toast = toast;
 export default ({ children, ...props }) => {
   return <div id="layout" {...props}>
-
+    <Toaster
+      id="toaster"
+      position="bottom-right"
+      reverseOrder={true}
+      toastOptions={{
+        duration: 2000,
+      }}
+    />
+    <Router basename={process.env.REACT_APP_BASE}>
+    <AuthContext>
+    <RoomsContext>
+    <MediaContext>
+    <StreamContext>
+    
     <Helmet>
       <title>{process.env.REACT_APP_NAME}</title>
       <title>{props.title}</title>
@@ -23,14 +45,7 @@ export default ({ children, ...props }) => {
       <meta property="og:description" content={process.env.REACT_APP_OG_DESC} />
       <meta property="og:image" content={process.envREACT_APP_OG_IMAGE} />
     </Helmet>
-    <Toaster
-      id="toaster"
-      position="bottom-right"
-      reverseOrder={true}
-      toastOptions={{
-        duration: 2000,
-      }}
-    />
+
 
 
     <div id="title" variant="none" className="d-flex m-3 position-absolute top-0 start-0 user-select-none">
@@ -44,13 +59,23 @@ export default ({ children, ...props }) => {
       <FullScreenBTN />
     </div>
 
-    {children}
+    <Switch>
+        <Route component={App}       exact path={["/", "/settings", "/about", "/users", "/chat", "/profile", "/room/:roomId", "/room/:roomId/chat", "/room/:roomId/guests"]} />
+        <Route component={Verified}  exact path="/verified/:token"/>
+        <Route component={ResetPass} exact path="/reset-password/:token"/>
+        <Route> <Redirect to='/'/> </Route>
+    </Switch>
+    
+    </StreamContext>
+    </MediaContext>
+    </RoomsContext>
+    </AuthContext>
+    </Router>
 
     <style global jsx>{`
       @import "src/variables.scss";
 
       #layout {
-        height:100vh;
         text-align:center;
         background:$background;
       }  
