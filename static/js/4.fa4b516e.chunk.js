@@ -1,2 +1,0 @@
-(this["webpackJsonpadmire-pwa"]=this["webpackJsonpadmire-pwa"]||[]).push([[4],{457:function(n,a,e){"use strict";e.r(a);var t=e(33),i=e(1);a.default=function(){return Object(i.jsx)(t.a,{children:"\n# P2         \n"})}}}]);
-//# sourceMappingURL=4.fa4b516e.chunk.js.map
