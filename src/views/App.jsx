@@ -40,13 +40,14 @@ function App({...props}) {
       {view}
       </Container>
 
-      <Nav buttons={rooms.current?<StreamButtons/>:<CreateRoomModal/>}>
-          {rooms.current? <LeaveRoomModal/>
-                        : <Nav.Item><i className="bi bi-house"/>Lobby</Nav.Item>}
+      <Nav>
+          {rooms.current? <LeaveRoomModal/> : <Nav.Item><i className="bi bi-house"/>Lobby</Nav.Item>}
           <WizardModal/>
+          {rooms.current?<StreamButtons/>:<CreateRoomModal/>}
           <UsersModal/>
           <ChatModal/>
       </Nav>
+ 
  
     </div>
     <style global jsx>{`

@@ -1,5 +1,8 @@
+import {Button} from 'react-bootstrap'
 import {useEffect, useRef, useState} from 'react';
+
 let time = performance.now();
+const microphone_gain_data = new Array(10);
 
 export default function AudioGain({stream, show}) {
     let [ctx,setCtx] = useState(null);
@@ -54,7 +57,11 @@ export default function AudioGain({stream, show}) {
         analyser.getByteFrequencyData(array);
         var values = 0;
         const avg = array.reduce((a,b) => a + b, 0) / array.length;
-        
+
+        microphone_gain_data.shift();
+        microphone_gain_data.push(Math.round(avg));
+        window.microphone_gain_data = microphone_gain_data;
+
         let v = .75;
         //console.log(avg);
         //setVol(a => Math.round(a * (1-v) + avg * v));
@@ -70,6 +77,7 @@ export default function AudioGain({stream, show}) {
             })
         }
         </div>
+        <Button></Button>
         <style global jsx>{`
             .pids-wrapper{
                 width: 100%;

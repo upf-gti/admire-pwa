@@ -1,40 +1,11 @@
-import { useState, useEffect } from 'react'
-import { NavLink, useHistory } from "react-router-dom"
-
-function Nav({buttons, children}){
-    const history = useHistory()
-    const [active, setActive] = useState(0);
-    let i = 0;
-    
-    function onKeyPressed(e)
-    {
-        const v = e.keyCode-49;
-        
-        if(v >= 0 && v < children.length && !children[v].props.disabled)
-        {
-            history.push(children[v].props.to ?? "/");
-        }
-    }
-
-    useEffect(()=>{
-        document.addEventListener("keydown", onKeyPressed)
-    return ()=>{
-        document.removeEventListener("keydown", onKeyPressed)
-    }}, [])
+function Nav({children}){
 
     return <>
-        <div className="nav-partial px-3 d-flex justify-content-evenly align-items-center position-absolute bottom-0 start-50 translate-middle-x mb-3 shadow rounded-5 bg-light" style={{ zIndex: 1100}}>
-            {children.filter( (v,k,a) => k < a.length/2 ).map( (v,k,a) => { 
-                const ret = <div id={k} key={k} onClick={ !v.props.disabled? (() => setActive(k)) : undefined }>{v}</div>
-                ++i;
-                return ret;
-            })}
-            {buttons && buttons}
-            {children.filter( (v,k,a) => k >= a.length/2 ).map( (v,k,a) => { 
-                const ret = <div id={k+i} key={k+i} onClick={ !v.props.disabled? (() => setActive(k+i)) : undefined }>{v}</div>
-                return ret;
-            })}
+
+        <div className="nav-partial px-3 mb-1 d-flex justify-content-evenly align-items-center position-absolute bottom-0 start-50 translate-middle-x shadow rounded-5 bg-light" style={{ zIndex: 1100}}>
+            { children.map( (v,k) => v && <div key={'nav-i-'+k}>{v}</div>) }
         </div>
+
         <style global jsx>{`
             @import "node_modules/bootstrap/scss/_functions.scss";
             @import "node_modules/bootstrap/scss/_variables.scss";
@@ -45,7 +16,7 @@ function Nav({buttons, children}){
             }
             .nav-partial{
                 min-width: 1rem;
-                min-height: 4rem;
+                min-height: 1rem;
                 transition: all .2s ease-in-out;
             }
             .nav-button, .nav-item{
@@ -54,10 +25,25 @@ function Nav({buttons, children}){
                 height: 100%;
                 width: auto;
                 user-select: none;
+                transition: all .2s ease-in-out;
 
-                &:hover{
-                    color:  lighten($danger,29.5%);
+                & i{
+                    transform: scale(1.5);
+                    width: 50px;
+                    overflow: hidden;
+                    padding:0;
+                    margin:0;
+                    user-select: none;
+                    text-transform: capitalize;
+
                 }
+                &:hover{
+                    color:  lighten($danger,15%);
+                }
+            }
+
+            .nav-item{
+                height: 44px;
             }
 
             .nav-item-active{
@@ -65,30 +51,56 @@ function Nav({buttons, children}){
             }
 
             .nav-item-disabled{
-                color: lighten($btn-link-disabled-color,27.5%);
+                opacity: .35;
                 user-select: none !important;
                 pointer-events:none;
                 cursor: not-allowed;
                 &:hover{
-                    color:  lighten($btn-link-disabled-color,27.5%);
+                    opacity: .35;
                 }
             }
 
-            .nav-button i, .nav-item i{
-                transform: scale(1.5);
-                width:100%;
-                padding:0;
-                margin:0;
-                user-select: none;
-                text-transform: capitalize;
-            }
+
             .nav-button{
                 color: black !important;
-                height: 4rem;
-                width: 4rem;
-                line-height: 3.5rem;
+                height: 3.5rem;
+                width: 3.5rem;
+                line-height: 3rem;
                 margin-top: -1.5rem;
                 margin-bottom: 1.5rem;
+
+                &:hover{
+                    color:  lighten($danger,50%) !important;
+                }
+            }
+
+            .dark-mode{
+                &.navpartial, .nav-partial{
+                    background-color: transparent !important;
+                    border: 1px solid rgba(255,255,255, .25);
+
+                    .nav-item{
+                        color: invert($secondary,50%);
+                        &:hover{
+                            color:  lighten($danger,15%);
+                            filter: saturate(120%) drop-shadow(0 0 .1rem $danger);
+                        }
+                    }
+
+                    .nav-button{
+                        filter: saturate(80%);
+                        background: $color1 !important;
+                        line-height: 2.8rem;
+                        border: 2px solid $danger;
+                        color: $danger !important;
+
+                        &:hover{
+                            filter: saturate(120%) drop-shadow(0 0 .1rem $danger);
+                            color:  $danger !important;
+                            border: 2px solid $danger;
+                        }
+                    }
+                }
             }
 
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
@@ -117,7 +129,7 @@ function Nav({buttons, children}){
 
 Nav.Item = function({children, icon, disabled, to, ...props}){
     return <div to={to??"/"} className={`nav-item ${disabled?"nav-item-disabled":""} ${props.appendclass??""}`} {...props}>
-        <div className={`d-flex my-0 mx-2 flex-column fs-6 fw-lighter`} >{children}</div>
+        <div className={`d-flex flex-column fs-6 fw-lighter`} >{children}</div>
     </div>
 }
 

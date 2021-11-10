@@ -12,15 +12,17 @@ import { AuthContext } from 'utils/ctx_authentication'
 import BadgeForwardCall from 'components/badge_forward'
 
 export default ({ ...props }) => {
-    const history  = useHistory();
-    const {roomId} = useParams();
+    const history     = useHistory();
+    const {roomId}    = useParams();
     const carouselRef = useRef();
-    const auth     = useContext(AuthContext);
-    const rooms    = useContext(RoomsContext);
-    const media    = useContext(MediaContext);
-    const wrtc     = useContext(StreamContext);
+    const auth        = useContext(AuthContext);
+    const rooms       = useContext(RoomsContext);
+    const media       = useContext(MediaContext);
+    const wrtc        = useContext(StreamContext);
+
+    const [state, setState]       = useState(0);
     const [selected, setSelected] = useState(null);
-    
+
     useEffect(() => {
         function unload(){
             rooms.leaveRoom();
@@ -81,7 +83,9 @@ export default ({ ...props }) => {
         wrtc.callAllUsers(rooms.current);
     },[auth.isLogged && auth.isConnected, rooms.current]);
 
-    useEffect(()=>{},[wrtc.streams])
+    useEffect(()=>{
+        setState(s=>s+1);
+    },[wrtc.streams])
 
 
     
@@ -89,7 +93,7 @@ export default ({ ...props }) => {
     const dummy = BRA.dummyStream.getStream();
 
     return <div id="room" className="overflow-hidden m-auto" style={{zIndex:1000}}>
-        <Row id="content-row" className="g-1" style={{ height:"100%" }}>
+        <Row id="content-row" className="g-0" style={{ height:"100%" }}>
   
             <Col xs="auto" id="carousel-col" ref={carouselRef}>
                 <div id="carousel" className="d-flex flex-column" >
@@ -101,13 +105,13 @@ export default ({ ...props }) => {
                     let isForwardCall = !!forwardedCallId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
-                    return <>
-                    <div className="stream-forward">
-                    <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/>
-                    { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
+                    return <div>
+                        <div className="stream-forward">
+                            <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/>
+                            { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
+                        </div>
+                        <Video key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
                     </div>
-                    <Video key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
-                    </>
                 })}
                 </div>
             </Col>
@@ -115,11 +119,14 @@ export default ({ ...props }) => {
                 <Video className="main-video" id={wrtc.getUserId(selected)} stream={wrtc.streams[selected]??media.localStream} />
             </Col>
         </Row>
+        {/*<div className="bg-danger stream-controls position-absolute start-50 translate-middle-x bottom-0 px-2 py-1">
+            HOLA
+            </div>*/}
         <style global jsx>{`
             @import "src/variables.scss";
 
             #room{
-                height:calc(100vh - 3rem - 3rem);
+                height:calc(100vh - 3rem - 4.5rem);
                 
                 #main-col {
                     height: 100%;
@@ -141,6 +148,10 @@ export default ({ ...props }) => {
 
                     #carousel{
                         height:100%;
+                        .Video{
+                            padding-right: 1px;
+                            padding-bottom: 2px;
+                        }
                     }
                 }
 
@@ -152,15 +163,28 @@ export default ({ ...props }) => {
                     padding:3px 6px;
                     z-index:10000;
                 }
+
+                .stream-controls{
+                    margin-bottom: 5.5rem;
+                }
             }
 
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
                 #room{
                     height:calc(100vh - 2rem);
                 }
+                
+                .stream-controls{
+                    margin-bottom: .5rem !important;
+                }
+        
             }
 
             @media only screen and (orientation: portrait){
+                .stream-controls{
+                    margin-bottom: 5.5rem !important;
+                }
+
                 #content-row{ flex-direction: column; }
                 #carousel-col{
                     overflow-x: scroll;

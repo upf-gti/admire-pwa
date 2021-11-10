@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import {useHistory} from 'react-router-dom'
 import {Row, Col, Card} from 'react-bootstrap'
 import { RoomsContext } from 'utils/ctx_rooms'
+import CreateRoomModal from 'components/modal_create_room'
 
 
 function RoomTile({id, name, ...props}){
@@ -44,13 +45,15 @@ function RoomTile({id, name, ...props}){
     </div>
 }
 
+function onKeyPress(){
+}
 
 export default ()=>{
     const history = useHistory();
     const rooms = useContext(RoomsContext);
     
     return <>
-        <Row id="lobby" className="h-100 m-auto">
+        <Row onKeyPress={onKeyPress} id="lobby" className="h-100 m-auto">
             <Col xs={12} sm={{span:10, offset:1}} >
         
             <h1 className="text-light">Lobby</h1>    

@@ -9,8 +9,8 @@ import ResetPass from 'views/resetpassword'
 import AboutModal from 'components/modal_about'
 import ProfileModal from 'components/modal_profile'
 import FullScreenBTN from 'components/btn_fullscreen'
+import Title from 'partials/title'
 
-import logo from "assets/img/logo.png"
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'style.scss'
 
@@ -21,13 +21,17 @@ import AuthContext  from 'utils/ctx_authentication'
 
 window.toast = toast;
 export default ({ children, ...props }) => {
-  return <div id="layout" {...props}>
+  return <div id="layout" className="dark-mode" {...props}>
     <Toaster
       id="toaster"
       position="bottom-right"
       reverseOrder={true}
       toastOptions={{
         duration: 2000,
+        style: {
+          background: '#333',
+          color: '#fff',
+        },
       }}
     />
     <Router basename={process.env.REACT_APP_BASE}>
@@ -46,12 +50,7 @@ export default ({ children, ...props }) => {
       <meta property="og:image" content={process.envREACT_APP_OG_IMAGE} />
     </Helmet>
 
-
-
-    <div id="title" variant="none" className="d-flex m-3 position-absolute top-0 start-0 user-select-none">
-      <Image className="me-2" width={32} height={32} src={logo} />
-      <h1 className="fs-3">{process.env.REACT_APP_NAME}</h1>
-    </div>
+    <Title/>
 
     <div className="z-top d-flex m-2 position-absolute top-0 end-0">
       <ProfileModal />

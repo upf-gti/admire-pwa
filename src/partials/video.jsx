@@ -30,7 +30,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
 
         .Video{
             position: relative;
-            margin:0;
+            margin:1px;
             padding:0;
             border:1px solid $secondary;
             transition:all .2s ease-in-out;

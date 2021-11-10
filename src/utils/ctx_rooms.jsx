@@ -17,13 +17,21 @@ export default ({children, ...props}) => {
     useEffect( ()=>{ 
         if(!auth.isLogged) return;
 
+        let onGuestJoin, onGuestLeft, onMasterLeft, onUnload, onGetRoom;
         BRA.appClient.on('get_room_response',       onGetRoom);
         BRA.appClient.on('get_rooms_response',      onGetRooms);
+        BRA.appClient.on('guest_joined_room',       onGuestJoin  = () => { toast('Guest joined');   BRA.appClient.getRoom(); });  //asi no lo he de pedir cada vez.
+        BRA.appClient.on('guest_left_room',         onGuestLeft  = () => { toast('Guest left');     BRA.appClient.getRoom(); });  //
+        BRA.appClient.on('master_left_room',        onMasterLeft = () => { toast('Master left');    history.push('/') });  //Tal vez estos tres podrian devolver la info de la room 
+        
         BRA.appClient.getRooms();
         const interval = setInterval(() => {BRA.appClient.getRooms();} , 2000);
     return ()=>{
-        BRA.appClient.off('get_room_response',  onGetRoom);
-        BRA.appClient.off('get_rooms_response', onGetRooms);
+        BRA.appClient.off('get_room_response',      onGetRoom);
+        BRA.appClient.off('get_rooms_response',     onGetRooms);
+        BRA.appClient.off('guest_joined_room',      onGuestJoin);
+        BRA.appClient.off('guest_left_room',        onGuestLeft);
+        BRA.appClient.off('master_left_room',       onMasterLeft);
 
         clearInterval(interval);
     }}, [auth.isLogged]);
@@ -85,8 +93,8 @@ export default ({children, ...props}) => {
                 BRA.appClient.off('leave_room_response', onLeaveRoom); 
                 switch(status){
                     case "ok":    
-                        history.push(`/`);
                         setCurrent(null);
+                        history.push(`/`);
                         toast.success(`Leaved room`); 
                         resolve(arguments);
                         break;
@@ -110,7 +118,7 @@ export default ({children, ...props}) => {
     function onGetRoom({ status, description, roomInfo }){
         if(status === 'error')
             return toast.error(`onGetRoom: ${description}`);
-        setRooms({...roomInfo, [roomInfo?.id]: roomInfo});
+        setCurrent({...roomInfo});
     }
 
     function onGetRooms({status, description, roomInfos}){
