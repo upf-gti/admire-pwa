@@ -30,7 +30,7 @@ function App({...props}) {
   if((/^\/room\/[a-zA-Z0-9]+\/chat$/).test(history.location.pathname)  ) view = <Redirect to="/"/>
   if((/^\/room\/[a-zA-Z0-9]+\/users$/).test(history.location.pathname) ) view = <Redirect to="/"/>
 
-  if(!auth?.isLogged)
+  if(!(auth.isLogged && auth.isConnected))
     return <div className="App" children={<Login />}/>
   else
     return <>

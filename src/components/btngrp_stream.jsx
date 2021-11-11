@@ -25,11 +25,21 @@ export default () => {
 
     useEffect(()=>{
         const ctx = canvasRef?.current?.getContext('2d');
-
+        ctx.globalAlpha   = 0.5;
         function draw()
         {
-            const [x0, y0, r0, x1, y1, r1] = [0,0,0,0,0,0];
-            ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            
+            const [x0, y0, r0, x1, y1, r1] = [ctx.canvas.width*.5, ctx.canvas.height * .5, 137, ctx.canvas.width*.5,ctx.canvas.height * .5,ctx.canvas.height * .5];
+            let gradient = ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            gradient.addColorStop(0, "rgba(255, 255, 255, 0.0)");
+            gradient.addColorStop(0.1, "rgba(255, 255, 255, 0.3)");
+            gradient.addColorStop(.5, "rgba(255, 255, 255, 0.1)");
+            gradient.addColorStop(1, "rgba(255, 255, 255, 0.0)");
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
             requestAnimationFrame(draw)
         }
         const id = requestAnimationFrame(draw);
@@ -41,10 +51,10 @@ export default () => {
 
     return <>
     <div id='pulse-wrapper'className="p-4 rounded-circle" style={{marginTop: '-4rem', marginBottom: '-4rem'}}>
+        <canvas width='512' height='512' ref={canvasRef} className='position-absolute top-0 rounded-circle'/>
         <Nav.Button onClick={handleClick} label="Create room" appendclass="shadow rounded-circle bg-danger" >
             <i className={isAudioEnabled?"bi bi-mic-mute":"bi bi-mic-mute"}></i>
         </Nav.Button>
-        <canvas ref={canvasRef} className='position-absolute top-0 rounded-circle'/>
     </div>
     
     <style global jsx>{`
@@ -59,6 +69,7 @@ export default () => {
             }
 
             canvas {
+                pointer-events: none;
                 margin-top: .35rem;
                 width: 5rem;
                 height:5rem;

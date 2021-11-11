@@ -11,14 +11,13 @@ export default () => {
     const rooms                   = useContext(RoomsContext);
     const [show, setShow]         = useState(false);
 
-    useEffect(() => {},[rooms.current?.guests]);
-
+    useEffect(() => {},[rooms.current?.users]);
+    
     return <>
         <Nav.Item onClick={()=>setShow(s => !s)} disabled={!rooms.current}><i className="bi bi-chat-dots"/>Chat</Nav.Item>
         <Modal tabIndex="0" closeButton size="md" {...{show, setShow}} title={<span>Chat</span>}>
             <ul>
-                {<li key={-1}>{rooms.current?.master}</li>}
-                {rooms.current?.guests.map( (v,k,a) => <li key={k}>{v}</li>)}
+                {rooms.current?.users?.map( (v,k,a) => v && <li key={k}>{v?.username}</li> )}
             </ul>            
         </Modal>
     </>;

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import {useHistory} from 'react-router-dom'
 import {Row, Col, Card} from 'react-bootstrap'
 import { RoomsContext } from 'utils/ctx_rooms'
@@ -51,7 +51,12 @@ function onKeyPress(){
 export default ()=>{
     const history = useHistory();
     const rooms = useContext(RoomsContext);
-    
+
+    useEffect( ()=>{
+        console.log("rooms changed")
+    }, [rooms.list])
+
+
     return <>
         <Row onKeyPress={onKeyPress} id="lobby" className="h-100 m-auto">
             <Col xs={12} sm={{span:10, offset:1}} >
@@ -59,7 +64,7 @@ export default ()=>{
             <h1 className="text-light">Lobby</h1>    
             <Row xs={2} sm={4} lg={4} xl={5} className="g-4">
             { Object.values(rooms.list).map((v,k) => <Col key={k}>
-                    <RoomTile name={` ${v?.id || 'Room '+k}`} onClick={()=>history.push(`/room/${v?.id}`)}/>
+                    <RoomTile name={` ${v?.name || 'Room '+k}`} onClick={()=>history.push(`/room/${v?.name}`)}/>
                 </Col>
             )}
             </Row>

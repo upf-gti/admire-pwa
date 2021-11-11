@@ -3,12 +3,15 @@ import toast from 'react-hot-toast'
 import { useState, useContext, useEffect, createContext } from 'react'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
+import { RoomsContext } from 'utils/ctx_rooms'
 
 
 export const StreamContext = createContext(); 
 export default ({children, ...props}) => {
-    const auth                          = useContext(AuthContext);
-    const media                         = useContext(MediaContext);
+    const auth  = useContext(AuthContext);
+    const rooms = useContext(RoomsContext);
+    const media = useContext(MediaContext);
+
     const [streams, setStreams]         = useState({});
     const [liveCalls, setLiveCalls]     = useState({});
     const [localStream, setLocalStream] = useState(media.localStream);
@@ -42,18 +45,18 @@ export default ({children, ...props}) => {
         setLocalStream(media.localStream);
     }, [media.localStream]);
 
-    function callUser(user){
-        return BRA.rtcClient.call(user, ({callId, status, description}) => {
+    function callUser(username){
+        return BRA.rtcClient.call(username, ({callId, status, description}) => {
             if(status === 'error')
                 toast.error(`Call error: ${description}`);
         });
     }
 
-    function callAllUsers(roomInfo){
-        const users = [...roomInfo?.guests??[], roomInfo?.master].filter((v, k, a) => { return v && v !== auth.user });
+    function callAllUsers(){
+        const users = rooms.current?.users.filter((v, k, a) => { return v && v?.name !== auth.user?.name });
         for (let user of users){
-            if(!callUser(user))
-                toast.error(`call missed to ${user}`);
+            if(!callUser(user?.name))
+                toast.error(`call missed to ${user?.name}`);
         }
     }
 

@@ -20,8 +20,10 @@ import MediaContext from 'utils/ctx_mediadevices'
 import AuthContext  from 'utils/ctx_authentication'
 
 window.toast = toast;
+//toast.error = (message, options) => { toast.error(message, options); console.trace(message) }
+
 export default ({ children, ...props }) => {
-  return <div id="layout" className="dark-mode" {...props}>
+  return <div id="layout" className="" {...props}>
     <Toaster
       id="toaster"
       position="bottom-right"

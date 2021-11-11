@@ -13,7 +13,7 @@ export default () => {
     const rooms                   = useContext(RoomsContext);
     const ref                     = useRef(null);
     const [show, setShow]         = useState(false);
-    const [isValid, setValid]        = useState(false);
+    const [isValid, setValid]     = useState(true);
     const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: sucess, 3: failed
 
     useEffect(()=>{
@@ -31,7 +31,9 @@ export default () => {
     function submit() {
         if ( !ref?.current || !show ) return;
             
-        rooms.createRoom(ref.current.value.toLowerCase())
+        let [roomname, password, icon, hidden] = Array.from(ref.current.elements).map(v => v.value);
+        
+        rooms.createRoom(roomname.toLowerCase(), {password, icon, hidden})
         .then( ()=>{
             setTimeout( () => { setFetching(0); setShow(false); } , 1000);
             setFetching(2);   
@@ -43,7 +45,7 @@ export default () => {
     }
 
     function handleUserInput(e){
-        setValid(ref?.current?.value.length > 3);
+        //setValid(ref?.current?.value.length > 3);
     }
 
     let button = <Button disabled={!isValid} variant={isValid?"outline-primary":"outline-secondary"} onClick={submit} >Proceed!</Button>;
@@ -74,9 +76,21 @@ export default () => {
         \*/}
         <Modal onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton size="md" {...{show, setShow}} title={<span>Let's create a room</span>}>
         <MD>{``}</MD>
-        <FloatingLabel controlId="floatingInput" label="roomId" className="mb-3">
-                <Form.Control ref={ref} onChange={handleUserInput} required name="roomId" type="text" placeholder="roomId"/>
+        <Form ref={ref}>
+            <FloatingLabel controlId="floatingInput" label="roomId" className="mb-3">
+                <Form.Control onChange={handleUserInput} required name="roomId" type="text" placeholder="roomId"/>
             </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="password" className="mb-3">
+                <Form.Control required name="password" type="password" placeholder="password"/>
+            </FloatingLabel>
+
+            <FloatingLabel controlId="floatingInput" label="icon" className="mb-3">
+                <Form.Control required name="icon" type="text" placeholder="icon URL"/>
+            </FloatingLabel>
+
+            <Form.Switch id="hidden-switch" label="Hidden" name="hidden" defaultValue={false}/>
+        </Form>
         </Modal>
         <style global jsx>{`
             #new-room-card {

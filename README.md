@@ -16,3 +16,5 @@ https://www.zachleat.com/web/automatic-opengraph/
 https://skryvets.com/blog/2018/09/20/an-elegant-solution-of-deploying-react-app-into-a-subdirectory/
 
 id deploy does not work, try cleaning cache, removing node modules and reinstalling again before rerun
+
+https://admire-dev-lobby.brainstorm3d.com/

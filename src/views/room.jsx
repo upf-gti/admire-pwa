@@ -100,7 +100,7 @@ export default ({ ...props }) => {
                 {  Object.entries({local:media.localStream, ...wrtc.streams}).map(([callId, stream], k)=>{
 
                     let id = wrtc.getUserId(callId);
-                    let imMaster = auth.user === rooms.current?.master && id !== rooms.current?.master && id !== auth.user;
+                    let imMaster = auth.user.username === rooms.current?.master && id !== rooms.current?.master && id !== auth.user.username;
                     let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId);
                     let isForwardCall = !!forwardedCallId;
                     let isSelected = selected === callId || (!selected && k === 0);

@@ -70,7 +70,7 @@ export default ()=>{
         e.preventDefault();
         const toastId = toast.loading('Resetting password...');
         const password = formvalues.password;
-        await http.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, {password})
+        await http.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, {data:{password}})
         .then( ({status, description, message }) => {
             switch (status) {
                 case 'ok':

@@ -16,17 +16,23 @@ export default () => {
     const formRef = useRef(null);
     const [validated, setValidated] = useState(undefined);
     const [formvalues, setFormValues] = useState({formErrors:{}, email: cookies.get("admire_app_email"), remember: !!cookies.get("admire_app_email")});
-   
+    const [fetching, setFetching] = useState(false);
 
     async function handleSubmit(e){
         e.preventDefault();
+        setFetching(true);
         auth.login(formvalues.email, formvalues.password)
         .then(  app_token => {
+            setFetching(false);
             if(formvalues.remember){
                 cookies.set('admire_app_token', app_token, process.env.REACT_APP_COOKIES_EXPIRE_TIME);
                 cookies.set("admire_app_email", formvalues.email, process.env.REACT_APP_COOKIES_EXPIRE_TIME);
             }
-        });
+        })
+        .catch( err => {
+            setFetching(false);
+        })
+        ;
     }
 
     function handleUserInput (e) {
@@ -119,10 +125,10 @@ export default () => {
                     }
                     >
                         <span style={{padding:"10px 0"}}>
-                            <Button size="sm" className="mt-4" type="submit" disabled={!validated && auth.isConnected} > 
-                                {auth.isConnected?
+                            <Button size="sm" className="mt-4" type="submit" disabled={!(validated && !fetching)} > 
+                                {!fetching?
                                 <><i className="bi bi-box-arrow-in-left"/> Log me in </>
-                                : <><Spinner as="span"animation="grow" size="sm" role="status" aria-hidden="true"/> Connecting </>
+                                : <><Spinner as="span"animation="grow" size="sm" role="status" aria-hidden="true"/> Logging in... </>
                             }</Button>
                         </span>
                     </OverlayTrigger>

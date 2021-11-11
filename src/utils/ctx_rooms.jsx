@@ -10,45 +10,112 @@ export const RoomsContext = createContext();
 export default ({children, ...props}) => {
     const auth = useContext(AuthContext);
     const history = useHistory();
-    const [ready, setReady] = useState(false); 
     let   [rooms, setRooms] = useState({}); 
     const [current, setCurrent] = useState(null);
     
     useEffect( ()=>{ 
         if(!auth.isLogged) return;
 
-        let onGuestJoin, onGuestLeft, onMasterLeft, onUnload, onGetRoom;
-        BRA.appClient.on('get_room_response',       onGetRoom);
-        BRA.appClient.on('get_rooms_response',      onGetRooms);
-        BRA.appClient.on('guest_joined_room',       onGuestJoin  = () => { toast('Guest joined');   BRA.appClient.getRoom(); });  //asi no lo he de pedir cada vez.
-        BRA.appClient.on('guest_left_room',         onGuestLeft  = () => { toast('Guest left');     BRA.appClient.getRoom(); });  //
-        BRA.appClient.on('master_left_room',        onMasterLeft = () => { toast('Master left');    history.push('/') });  //Tal vez estos tres podrian devolver la info de la room 
-        
-        BRA.appClient.getRooms();
-        const interval = setInterval(() => {BRA.appClient.getRooms();} , 2000);
+        BRA.appClient.getRoom(onGetRoom);
+        BRA.appClient.getRooms(onGetRooms);
+        /* Currently not binded events
+            Error:                 
+            UserOnline:            
+            UserOffline:           
+            UserRejoined:    
+        */
+        BRA.appClient.on(BRA.APPEvent.GuestLeftRoom,    onGuestLeft);
+        BRA.appClient.on(BRA.APPEvent.GuestJoinedRoom,  onGuestJoin);
+        BRA.appClient.on(BRA.APPEvent.RoomCreated,      onRoomCreated);
+        BRA.appClient.on(BRA.APPEvent.RoomDeleted,      onRoomDeleted);
     return ()=>{
-        BRA.appClient.off('get_room_response',      onGetRoom);
-        BRA.appClient.off('get_rooms_response',     onGetRooms);
-        BRA.appClient.off('guest_joined_room',      onGuestJoin);
-        BRA.appClient.off('guest_left_room',        onGuestLeft);
-        BRA.appClient.off('master_left_room',       onMasterLeft);
-
-        clearInterval(interval);
+        BRA.appClient.off(BRA.APPEvent.GuestLeftRoom,    onGuestLeft);
+        BRA.appClient.off(BRA.APPEvent.GuestJoinedRoom,  onGuestJoin);
+        BRA.appClient.off(BRA.APPEvent.RoomCreated,      onRoomCreated);
+        BRA.appClient.off(BRA.APPEvent.RoomDeleted,      onRoomDeleted);
     }}, [auth.isLogged]);
 
-    function createRoom(roomId){
+    useEffect(()=>{
+        if(imInRoom(current))
+        {
+            history.push(`/room/${current.name}`);
+            toast.success(`Joined room`); 
+        }
+    },[current]);
+
+    function isUserInRoom(username, roomName)
+    {
+        const r = rooms[roomName];
+        if(!r) return false;
+        
+        for(let u of r.users)
+        {
+            if(u.username === username) return true;
+        }
+        return false;
+    }
+
+    function imInRoom(roomName)
+    {
+        return isUserInRoom(auth.user?.username, roomName);
+    }
+
+    function onRoomCreated({data:{room}}){
+        setRooms({...rooms, [room.name]:room});
+    }
+
+    function onRoomDeleted({data:{room}}){
+        setRooms({...rooms, [room.name]:undefined});
+        if(imInRoom(room.name))
+            leaveRoom();
+    }
+
+    function onGuestLeft({data:{user,room}})
+    {
+        BRA.appClient.getRoom(onGetRoom);
+        BRA.appClient.getRooms(onGetRooms);
+
+        if(imInRoom(room.name))
+            toast(`User '${user.username}' left`);
+    }    
+    
+    function onGuestJoin({data:{user,room}})
+    {
+        BRA.appClient.getRoom(onGetRoom);
+        BRA.appClient.getRooms(onGetRooms);
+
+        if(imInRoom(room.name))
+            toast(`User '${user.username}' joined`);
+    }
+    
+    function onGetRoom({ data }){
+        setCurrent(Object.keys(data.room??{}).length? {...data.room} : null);
+    }
+
+    function onGetRooms({data}){
+        if(!data?.rooms) return;
+        let r = {};
+        for(let room of data.rooms)
+        {
+            r[room.name] = room;
+        }
+        setRooms({...r});
+    }
+
+    function createRoom(roomName, {password, hidden, icon}){
         return new Promise((resolve, reject)=>{
-            function onCreateRoom({status, description}){
-                BRA.appClient.off('create_room_response', onCreateRoom); 
-                switch(status){
-                    case "ok":    
-                        toast.success(`Created room ${roomId}`); 
-                        history.push(`/rooms/${roomId}`);
+            function onCreateRoom({event, data}){
+                switch(event){
+                    case "create_room_response":    
+                        toast.success(`Created room ${room.name}`); 
+                        const {room} = data;
+                        setCurrent(Object.keys(data.room??{}).length? {...data.room} : null);
                         resolve(arguments);
                         break;
                         
                     case "error": 
-                        const msg = `onCreateRoom: ${description}`
+                        const {error, message} = data;    
+                        const msg = `onCreateRoom(e:${error}): ${message}`;
                         toast.error(msg); 
                         reject(msg);
                         break;
@@ -56,86 +123,67 @@ export default ({children, ...props}) => {
                     default: break;
                 }
             }
-            BRA.appClient.on('create_room_response', onCreateRoom);
-            BRA.appClient.createRoom(roomId);
+            BRA.appClient.createRoom(roomName, password??"", hidden??false, icon??"", onCreateRoom);
         })
     }
 
-    function joinRoom(roomId){
+    function joinRoom(roomName){
         return new Promise((resolve, reject) => {
 
-            function onJoinRoom({status, description}){
-                BRA.appClient.off('join_room_response', onJoinRoom);
-                switch(status){
-                    case "ok":    
-                        setCurrent(rooms[roomId]);
-                        toast.success(`Joined room`); 
+            function onJoinRoom({event, data}){
+                switch(event){
+                    case "join_room_response": 
+                        const {room} = data;
+                        setCurrent({...room});
                         resolve(arguments);
                         break;
                         
                     case "error": 
-                        const msg = `onJoinRoom: ${description}`
+                        const {error, message} = data;    
+                        const msg = `onJoinRoom(e:${error}): ${message}`;
                         toast.error(msg); 
+                        //TODO: puede que cambiar el path aqui, provablemente
                         reject(msg);
                         break;
         
-                    default: break;
+                    default: debugger; break;
                 }
             }
-            BRA.appClient.on('join_room_response', onJoinRoom);
-            BRA.appClient.joinRoom(roomId);
+            BRA.appClient.joinRoom(roomName, onJoinRoom);
         });
     }
 
     function leaveRoom(){
         return new Promise((resolve, reject)=>{
-            function onLeaveRoom({status, description}){
-                BRA.appClient.off('leave_room_response', onLeaveRoom); 
-                switch(status){
-                    case "ok":    
-                        setCurrent(null);
-                        history.push(`/`);
-                        toast.success(`Leaved room`); 
+            function onLeaveRoom({event, data}){
+                switch(event){
+                    case "leave_room_response":    
+                        //const {room} = data;
+                        BRA.appClient.getRoom(onGetRoom);
                         resolve(arguments);
                         break;
                         
                     case "error": 
-                        const msg = `onLeaveRoom: ${description}`;
-                        setCurrent(null);
-                        history.push(`/`);
+                        const {error, message} = data;    
+                        const msg = `onLeaveRoom(e:${error}): ${message}`;
                         toast.error(msg); 
                         reject(msg);
                         break;
         
-                    default: break;
+                    default: debugger; break;
                 }
+                history.push(`/`);
+                toast.success(`Leaved room`); 
             }
-            BRA.appClient.on('leave_room_response', onLeaveRoom);
-            BRA.appClient.leaveRoom();
+            BRA.appClient.leaveRoom(onLeaveRoom);
         })
     }
 
-    function onGetRoom({ status, description, roomInfo }){
-        if(status === 'error')
-            return toast.error(`onGetRoom: ${description}`);
-        setCurrent({...roomInfo});
-    }
-
-    function onGetRooms({status, description, roomInfos}){
-        if(status === 'error')
-            return toast.error(`onGetRooms: ${description}`);
-        rooms = {...roomInfos}
-        setRooms(rooms);
-        setReady(true);        
-    }
 
     const store = window.rooms = {
         joinRoom,
         leaveRoom,
         createRoom,
-        getRoomInfo: (roomId) => rooms[roomId],
-        setCurrent,
-        ready,
         current,
         list: rooms,
     }
