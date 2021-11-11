@@ -51,7 +51,7 @@ export default () => {
 
     return <>
         <Nav.Item onClick={()=>setShow(s => !s)} ><i className="bi bi-magic"/>Settings</Nav.Item>
-        <Modal onKeyDown={onKeyDown} tabIndex="0" buttons={[button]} closeButton size="md" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
+        <Modal id='wizard' onKeyDown={onKeyDown} tabIndex="0" buttons={[button]} closeButton size="md" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Wizard/>
         </Modal>
     </>;

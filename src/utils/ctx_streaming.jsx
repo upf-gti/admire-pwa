@@ -47,16 +47,18 @@ export default ({children, ...props}) => {
 
     function callUser(username){
         return BRA.rtcClient.call(username, ({callId, status, description}) => {
-            if(status === 'error')
-                toast.error(`Call error: ${description}`);
+            if(status === 'error'){
+                toast.error(`Call error: ${description}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
+            }
         });
     }
 
     function callAllUsers(){
-        const users = rooms.current?.users.filter((v, k, a) => { return v && v?.name !== auth.user?.name });
-        for (let user of users){
-            if(!callUser(user?.name))
-                toast.error(`call missed to ${user?.name}`);
+        const users = rooms.current?.users?.filter((v, k, a) => { return v && v?.username !== auth.user?.username });
+        for (let user of users ?? []){
+            if(!callUser(user?.username)){
+                toast.error(`Call missed to ${user?.username}`);
+            }
         }
     }
 
@@ -77,6 +79,7 @@ export default ({children, ...props}) => {
 
     function onCallOpened({ call, stream }) {
         const callId = call.callId;
+        
         setStreams({...streams, [callId]: stream});
         const forwardingCallId = liveCalls[callId];   //Live call
 
@@ -91,6 +94,7 @@ export default ({children, ...props}) => {
             const audiotrack = forward_stream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
+            toast(`Forwarding stream`, {icon:<i className="bi bi-cast"/>});
         }
 
         //Regular call
@@ -100,7 +104,7 @@ export default ({children, ...props}) => {
             const audiotrack = media.localStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
-            //if(!selected)setSelected(callId);
+            toast(`Call from ${getUserId(callId)}`, {icon:<i className="bi bi-telephone-inbound"/>});
         }
     }
 
@@ -113,7 +117,7 @@ export default ({children, ...props}) => {
 
         delete streams[callId];
         setStreams({...streams});
-        toast(`Call ${callId} closed`,{icon:"⚠️"});
+        toast(`Call from ${getUserId(callId)} closed`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
     function onUserHangup({ callId }){
@@ -124,7 +128,7 @@ export default ({children, ...props}) => {
         delete streams[callId];
         setStreams({...streams});
 
-        toast(`Call ${callId} hangup`,{icon:"⚠️"});
+        toast(`User ${getUserId(callId)} hangup`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
     function manageLiveCallClosed(callId) {
@@ -145,11 +149,11 @@ export default ({children, ...props}) => {
     }
 
     function getUserId(callId){
-        let id = auth.user;
+        let id = auth.user?.username;
         let call = BRA.rtcClient.getCalls()[callId];
         if (callId !== "local" && call) {
             let { calleeId, callerId } = call;
-            id = (calleeId === auth.user) ? callerId : calleeId;
+            id = (calleeId === auth.user?.username) ? callerId : calleeId;
         }
         return id;
     }
@@ -167,6 +171,21 @@ export default ({children, ...props}) => {
         return Object.entries(liveCalls).find( v => v[1] === callId ) ?? [null,null];
     }
 
+    function replaceStream(stream){
+        for( const callId in BRA.rtcClient.getCalls() )
+        {
+            let call = BRA.rtcClient.getCall(callId);
+            {
+                let track = stream.getVideoTracks()[0];
+                call.replaceLocalVideoTrack(track);
+            }
+            {
+                let track = stream.getAudioTracks()[0];
+                call.replaceLocalAudioTrack(track);
+            }
+        }
+    }
+
     const store = window.wrtc = {
         callUser,
         callAllUsers,
@@ -175,6 +194,7 @@ export default ({children, ...props}) => {
         forwardCall,
         getUserId,
         getLiveCall,
+        replaceStream,
         streams: {...streams, local:localStream},
     }
 

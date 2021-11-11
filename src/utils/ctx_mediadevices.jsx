@@ -6,11 +6,12 @@ import { useState, useContext, useReducer, useEffect, createContext, useRef } fr
 export const MediaContext = createContext(); 
 export default ({children, ...props}) => {
 
-    let {current:init_evts}               = useRef(0);
-    const videoRef                        = useRef(null);
-    const [devices , setDevices]          = useState(null);
-    const [settings, setSettings ]        = useState(null);
-    const [resolutions, setResolutions ]  = useState(null);
+    let   {current:init_evts}            = useRef(0);
+    const videoRef                       = useRef(null);
+    const [ready, setReady ]             = useState(false);
+    const [devices , setDevices]         = useState(null);
+    const [settings, setSettings ]       = useState(null);
+    const [resolutions, setResolutions ] = useState(null);
     const [localStream, setLocalStream ] = useReducer( (value, newvalue)=>{
         if( videoRef && videoRef.current )
             videoRef.current.srcObject = newvalue;
@@ -25,6 +26,7 @@ export default ({children, ...props}) => {
         BRA.mediaAdapter.on("got_resolutions",    onGotResolutions );
         BRA.mediaAdapter.start();
         getDevices();
+        
 
         function onUnload(){
             BRA.mediaAdapter.off("got_stream",        onGotStream );
@@ -59,6 +61,7 @@ export default ({children, ...props}) => {
     { 
         setSettings({...settings});
         setLocalStream(stream);
+        setReady(true);
     }
 
     function onError({description}){
@@ -99,6 +102,7 @@ export default ({children, ...props}) => {
         getDevices,
         setVideo,
         setAudio,
+        ready,
     }
 
     return <MediaContext.Provider value={store} children={children}/>

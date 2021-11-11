@@ -53,7 +53,7 @@ export default ()=>{
     const rooms = useContext(RoomsContext);
 
     useEffect( ()=>{
-        console.log("rooms changed")
+
     }, [rooms.list])
 
 
@@ -64,7 +64,7 @@ export default ()=>{
             <h1 className="text-light">Lobby</h1>    
             <Row xs={2} sm={4} lg={4} xl={5} className="g-4">
             { Object.values(rooms.list).map((v,k) => <Col key={k}>
-                    <RoomTile name={` ${v?.name || 'Room '+k}`} onClick={()=>history.push(`/room/${v?.name}`)}/>
+                    <RoomTile name={` ${v?.name || 'Room '+k}`} onClick={()=>rooms.joinRoom(v?.name)}/>
                 </Col>
             )}
             </Row>

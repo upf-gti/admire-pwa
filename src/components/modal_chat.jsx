@@ -11,11 +11,12 @@ export default () => {
     const rooms                   = useContext(RoomsContext);
     const [show, setShow]         = useState(false);
 
-    useEffect(() => {},[rooms.current?.users]);
-    
+    useEffect(() => {},[rooms.current]);
+    console.log('render-chat')
+
     return <>
         <Nav.Item onClick={()=>setShow(s => !s)} disabled={!rooms.current}><i className="bi bi-chat-dots"/>Chat</Nav.Item>
-        <Modal tabIndex="0" closeButton size="md" {...{show, setShow}} title={<span>Chat</span>}>
+        <Modal tabIndex="0" closeButton size="md" {...{show, setShow}} title={<span><i className="bi bi-chat-dots"/> Chat</span>}>
             <ul>
                 {rooms.current?.users?.map( (v,k,a) => v && <li key={k}>{v?.username}</li> )}
             </ul>            

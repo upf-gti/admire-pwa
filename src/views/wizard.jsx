@@ -42,7 +42,7 @@ export default ({show, setShow, ...props}) => {
         }
     }, [])
 
-    return <div id="wizard">
+    return <div>
         <Gesture
             onSwipeLeft={ () => setSelected( s => (s+1)%pages.length ) } 
             onSwipeRight={() => setSelected( s => (s-1 < 0)? pages.length-1 : s-1 ) }
@@ -73,6 +73,11 @@ export default ({show, setShow, ...props}) => {
                     margin-left: -12px;
                     margin-top: -3.6rem;
                     //margin-top: -1rem;
+                }
+
+                .modal-content{
+                    margin-top: 1.5rem;
+                    min-height: calc(100vh - 10rem);                
                 }
             }    
         `}</style>

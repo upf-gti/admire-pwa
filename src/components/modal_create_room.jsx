@@ -1,11 +1,11 @@
+import toast from 'react-hot-toast'
+import React, {useContext, useRef, useEffect, useState} from 'react'
 import { Col, Card, Button, Form, FloatingLabel, Spinner } from 'react-bootstrap'
-import React, {useContext, useRef, useEffect, useState, useReducer} from 'react'
 
-import MD from 'utils/md';
+import MD from 'utils/md'
 import Nav from 'partials/nav'
 import Modal from 'partials/modal'
 import { RoomsContext } from 'utils/ctx_rooms'
-
 
 
 
@@ -34,14 +34,16 @@ export default () => {
         let [roomname, password, icon, hidden] = Array.from(ref.current.elements).map(v => v.value);
         
         rooms.createRoom(roomname.toLowerCase(), {password, icon, hidden})
-        .then( ()=>{
+        .then( room =>{
+            toast.success(`Created room ${room.name}`); 
             setTimeout( () => { setFetching(0); setShow(false); } , 1000);
             setFetching(2);   
         }) 
-        .catch( ()=>{
+        .catch( err =>{
+            toast.error(`onCreateRoom: ${err}`); 
             setFetching(3);   
+            setTimeout( () => { setFetching(0); } , 1000);
         }) 
-        //setTimeout( () => { setFetching(0); setShow(false); } , 1000);
     }
 
     function handleUserInput(e){
@@ -61,20 +63,8 @@ export default () => {
         <Nav.Button onClick={()=>setShow(1)} label="Create room" appendclass="shadow rounded-circle bg-danger" >
             <i className="bi bi-plus-lg"></i> 
         </Nav.Button>
-        {/*<Col >
-            <Card id='new-room-card' onClick={()=>setShow(1)} className="bg-dark text-light">
-            <Card.Img variant="top" src={`https://unsplash.it/seed/test/160/100`} />
-            <Card.Body>
-            <Card.Title className='position-absolute top-50 start-50 translate-middle'>Create room</Card.Title>
-            </Card.Body>
-            </Card>
-        </Col>
-
-        <Nav.Item onClick={()=>setShow(1)} label="Leave room" >
-            <i className="bi bi-telephone-+"></i>New Room
-        </Nav.Item>
-        \*/}
-        <Modal onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton size="md" {...{show, setShow}} title={<span>Let's create a room</span>}>
+        
+        <Modal size="sm" onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title={<span>Let's create a room</span>}>
         <MD>{``}</MD>
         <Form ref={ref}>
             <FloatingLabel controlId="floatingInput" label="roomId" className="mb-3">

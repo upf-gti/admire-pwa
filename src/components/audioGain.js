@@ -41,8 +41,14 @@ export default function AudioGain({stream, show}) {
     useEffect(()=>{
         if(!ctx) return;
         switch(show){
-            case true:return ctx.resume();
-            case false: return ctx.suspend();
+            case true:
+                ctx.resume();
+                break;
+
+            case false: 
+                ctx.suspend();
+                setVol(0);
+                break;
         }
         return ()=>{
             ctx.suspend();
@@ -77,16 +83,16 @@ export default function AudioGain({stream, show}) {
             })
         }
         </div>
-        <Button></Button>
         <style global jsx>{`
             .pids-wrapper{
                 width: 100%;
+                line-height: 1.5rem;
             }
             .pid{
-                width: calc(10% - 10px);
+                width: calc(10% - 2px);
                 height: 10px;
                 display: inline-block;
-                margin: 5px;
+                margin: 1px;
             }
         `}</style>
     </>;

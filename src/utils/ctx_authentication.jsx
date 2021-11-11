@@ -27,14 +27,10 @@ export default ({children, ...props}) => {
         window.addEventListener('unload', onUnload);
 
         let onAppConnect, onAppDisconnect, onRtcConnect, onRtcDisconnect;
-        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect      = () => { 
-            toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000}); setConnected( v => ({...v, app:true })); });
-        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect      = () => { 
-            toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000}); setConnected( v => ({...v, rtc:true })); });
-        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect   = () => { 
-            toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); });
-        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect   = () => { 
-            toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); });
+        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect      = () => { toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000}); setConnected( v => ({...v, app:true })); });
+        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect      = () => { toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000}); setConnected( v => ({...v, rtc:true })); });
+        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect   = () => { toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); });
+        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect   = () => { toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); });
 
     return ()=>{ //Destructor
         BRA.appClient.off(BRA.APPEvent.ClientConnected,     onAppConnect        );
@@ -63,9 +59,10 @@ export default ({children, ...props}) => {
         {
             toast_usr = toast.loading(`Fetching user info...`, {duration:Infinity});
             getUserInfo()
-            .then( ({ id, username, email, avatar, name, surname, birthdate, role, verified }) => {
+            .then( (response) => {
                 toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
-                setUser({ id, username, email, avatar, name, surname, birthdate, role, verified });
+                console.log(response);
+                setUser(response);
                 setLogged(true);
             })
             .catch( ({error, message}) => {
@@ -82,6 +79,9 @@ export default ({children, ...props}) => {
                     },{duration:5000});
                 }
             });
+        }
+        if(isConnected.rtc && isConnected.app && isLogged){
+            BRA.rtcClient.register(user.username);
         }
     },[isConnected.rtc && isConnected.app, token, isLogged, retries]);
 

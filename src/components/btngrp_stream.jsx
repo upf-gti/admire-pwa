@@ -14,7 +14,7 @@ export default () => {
     function handleClick()
     {
         const audiotracks = media.localStream.getAudioTracks()??[];
-        const enabled = audiotracks.every(track => { track.enabled = !isAudioEnabled; return track.enabled;});
+        const enabled = audiotracks.every(track => { track.enabled = !isAudioEnabled; return !!track.enabled;});
         setAudioEnabled(enabled); 
     }
 
@@ -30,10 +30,10 @@ export default () => {
         {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             
-            const [x0, y0, r0, x1, y1, r1] = [ctx.canvas.width*.5, ctx.canvas.height * .5, 137, ctx.canvas.width*.5,ctx.canvas.height * .5,ctx.canvas.height * .5];
+            const [x0, y0, r0, x1, y1, r1] = [ctx.canvas.width*.5, ctx.canvas.height * .5, 135, ctx.canvas.width*.5,ctx.canvas.height * .5,ctx.canvas.height * .5];
             let gradient = ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
             gradient.addColorStop(0, "rgba(255, 255, 255, 0.0)");
-            gradient.addColorStop(0.1, "rgba(255, 255, 255, 0.3)");
+            gradient.addColorStop(0.1, "rgba(255, 255, 255, 0.5)");
             gradient.addColorStop(.5, "rgba(255, 255, 255, 0.1)");
             gradient.addColorStop(1, "rgba(255, 255, 255, 0.0)");
 
@@ -53,7 +53,7 @@ export default () => {
     <div id='pulse-wrapper'className="p-4 rounded-circle" style={{marginTop: '-4rem', marginBottom: '-4rem'}}>
         <canvas width='512' height='512' ref={canvasRef} className='position-absolute top-0 rounded-circle'/>
         <Nav.Button onClick={handleClick} label="Create room" appendclass="shadow rounded-circle bg-danger" >
-            <i className={isAudioEnabled?"bi bi-mic-mute":"bi bi-mic-mute"}></i>
+            <i className={isAudioEnabled?"bi bi-mic":"bi bi-mic-mute"}></i>
         </Nav.Button>
     </div>
     
@@ -75,7 +75,25 @@ export default () => {
                 height:5rem;
                 transform:translate(-50%,-50%) scale(1.3) !important;
             }
+    
         }
+        @media only screen and (orientation: landscape) and (max-height: 671px) {           
+            #pulse-wrapper {
+                margin: -1.5rem 1rem -1.5rem -4rem !important;
+                .nav-button{
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+                canvas {
+                    top: 50% !important;
+                    margin-top: 0rem;
+                }
+            }
+        }
+        @media only screen and (orientation: portrait){
+
+        } 
+    
     `}</style>
     {/*
     <Nav.Button>
@@ -96,9 +114,3 @@ export default () => {
     */}
     </>
 }
-
-/*
-        <Nav.Button onClick={()=>setShow(1)} label="Create room" appendclass="shadow rounded-circle bg-danger" >
-            <i className="bi bi-plus-lg"></i> 
-        </Nav.Button>
-*/

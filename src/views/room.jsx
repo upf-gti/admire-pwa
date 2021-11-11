@@ -23,7 +23,20 @@ export default ({ ...props }) => {
     const [state, setState]       = useState(0);
     const [selected, setSelected] = useState(null);
 
-    useEffect(() => {
+    useEffect(()=>{//Constructor
+        if(!rooms.imInRoom(roomId) || !rooms.ready || !media.ready) 
+            return;
+
+        wrtc.callAllUsers();
+    return ()=>{//Destructor
+        wrtc.callHangupAll();
+    }},[rooms.current, rooms.ready & media.ready]);
+
+    useEffect( ()=>{
+        wrtc.replaceStream(media.localStream);
+    },[media.localStream]);
+
+    /*useEffect(() => {
         function unload(){
             rooms.leaveRoom();
             document.body.addEventListener('unload', unload);
@@ -32,15 +45,7 @@ export default ({ ...props }) => {
         media.init();
     return ()=>{
         media.stop();
-        //unload();
     }},[])
-
-    /*const room = rooms.getRoomInfo(roomId);
-    useEffect(() => {
-        if(room)
-        rooms.setCurrent(room);
-    },[...Object.values(room??{})])//TODO: ESTO ES MU MU MU FEO
-    */
    
     useEffect(() => {
         function scrollHorizontal(e){
@@ -54,43 +59,37 @@ export default ({ ...props }) => {
         }
     },[carouselRef]);
 
-    useLayoutEffect(()=>{
-        if(!rooms.ready) return;
+    useEffect(()=>{
+        if(!rooms.ready) 
+            return;
 
         (async ()=>{
-            const room = rooms.getRoomInfo(roomId);
+            const room = rooms.list[roomId];
+            //If room does not exist, redirect to home
             if(!room){
                 return history.push('/')
             }
             
-            if(![ room.master, ...room.guests].includes(auth.user)){
+            //If room is not joined, join it
+            if(!room.users.find( v => v.username === auth.user.username)){
                 await rooms.joinRoom(roomId)
-                .catch( ()=> {
-                    history.push('/')
+                .catch( (err, data)=>{ 
+                    history.push('/') 
                 })
             }
-
-            rooms.setCurrent(room);
+            
+            //Now that I am on the room, start it calling the rest of users.
+            if(rooms.current){
+                wrtc.callAllUsers();
+            }
+            
         })();
 
-    },[rooms.ready, roomId]);
-
-    useLayoutEffect(()=>{
-        if(!(auth.isLogged && auth.isConnected) || !rooms.current) return;
-
-        //By this point i can guarantee im in the room where it happens
-        wrtc.callHangupAll();
-        wrtc.callAllUsers(rooms.current);
-    },[auth.isLogged && auth.isConnected, rooms.current]);
+    },[rooms.ready, rooms.current]);
 
     useEffect(()=>{
         setState(s=>s+1);
-    },[wrtc.streams])
-
-
-    
-    
-    const dummy = BRA.dummyStream.getStream();
+    },[wrtc.streams])*/
 
     return <div id="room" className="overflow-hidden m-auto" style={{zIndex:1000}}>
         <Row id="content-row" className="g-0" style={{ height:"100%" }}>
@@ -110,18 +109,16 @@ export default ({ ...props }) => {
                             <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/>
                             { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
                         </div>
-                        <Video key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
+                        <Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
                     </div>
                 })}
                 </div>
             </Col>
             <Col id="main-col">
-                <Video className="main-video" id={wrtc.getUserId(selected)} stream={wrtc.streams[selected]??media.localStream} />
+                <Video isLocal={wrtc.getUserId(selected) === auth.user.username} className="main-video" id={wrtc.getUserId(selected)} stream={wrtc.streams[selected]??media.localStream} />
             </Col>
         </Row>
-        {/*<div className="bg-danger stream-controls position-absolute start-50 translate-middle-x bottom-0 px-2 py-1">
-            HOLA
-            </div>*/}
+
         <style global jsx>{`
             @import "src/variables.scss";
 
@@ -161,7 +158,7 @@ export default ({ ...props }) => {
                     margin-bottom:-1.9rem;
                     text-align:left;
                     padding:3px 6px;
-                    z-index:10000;
+                    z-index:1000;
                 }
 
                 .stream-controls{

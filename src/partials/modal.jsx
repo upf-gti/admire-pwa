@@ -44,6 +44,10 @@ export default ({title, children, show, setShow = ()=>{}, callback, buttons, clo
                 .modal-header{
                     padding-bottom: .2em;
                 }
+
+                .modal-footer{
+                    padding: 0 0.75rem;
+                }
             }
             
 

@@ -7,12 +7,11 @@ import { AuthContext } from 'utils/ctx_authentication';
 export default () => {
     const [show, setShow] = useState(false);
     const auth = useContext(AuthContext);
-    const user = "h3R"
 
     if(!auth.isLogged) return <></>;
     return <>
         <Button variant="link" onClick={ ()=>setShow(1) }>Profile</Button>
-        <Modal closeButton size="lg" {...{show, setShow}} title={<h2 className="user-select-none">{user}</h2>}>
+        <Modal closeButton size="lg" {...{show, setShow}} title={<h2 className="user-select-none">{auth.user.username}</h2>}>
         <MD className="user-select-none">{`
         An offline-capable AdMiRe version is available, wich is a [Progressive Web App](https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/).
 
