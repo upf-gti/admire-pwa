@@ -45,12 +45,12 @@ export default ({children, ...props}) => {
         setLocalStream(media.localStream);
     }, [media.localStream]);
 
-    function callUser(username){
-        return BRA.rtcClient.call(username, ({callId, status, description}) => {
+    function callUser(username, callback){
+        return BRA.rtcClient.call(username, callback ?? (({callId, status, description}) => {
             if(status === 'error'){
                 toast.error(`Call error: ${description}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }
-        });
+        }));
     }
 
     function callAllUsers(){

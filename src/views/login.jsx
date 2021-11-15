@@ -38,7 +38,7 @@ export default () => {
     function handleUserInput (e) {
         const name  = e.target.name;
         const type  = e.target.type;
-        const  value = type==="checkbox"?e.target.checked:e.target.value;
+        const value = type==="checkbox"?e.target.checked:e.target.value;
 
         validateField(name, value, type);
     }
@@ -84,7 +84,6 @@ export default () => {
 
     useEffect(()=>{
         setValidated( false );
-
     },[]);
 
     function hasError(error){

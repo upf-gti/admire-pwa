@@ -88,16 +88,11 @@ export default ()=>{
     }
 
     return <>
-        <Modal size="md" show={true} 
+        <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
+        <Modal closeButton show={true} 
+            onHide={() => history.push("/")} 
             title={<h2 className="user-select-none">Reset password</h2>}
-        >
-            <MD className="user-select-none">{ "Please enter your new password."}</MD>
-            
-            <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
-                <FloatingLabel controlId="floatingPassword" label="New Password">
-                    <Form.Control required name="password" type="password" placeholder=" " onChange={handleUserInput} defaultValue={formvalues.password??""}/>
-                </FloatingLabel>
-
+            buttons={[
                 <OverlayTrigger placement="bottom"
                 overlay={
                     <Tooltip className={`${validated?"d-none":""} mt-2`}  id={`tooltip-bottom`}>
@@ -105,13 +100,17 @@ export default ()=>{
                     </Tooltip>
                 }
                 >
-                    <span style={{padding:"10px 0"}}>
-                        <Button className="mt-4" type="submit" disabled={!validated} > Proceed </Button>
-                    </span>
+                    <Button type="submit" disabled={!validated} > Proceed </Button>
                 </OverlayTrigger>
-
-            </Form>
+            ]}
+        >
+            <MD className="user-select-none">{ "Please enter your new password."}</MD>
+            
+            <FloatingLabel controlId="floatingPassword" label="New Password">
+                <Form.Control required name="password" type="password" placeholder=" " onChange={handleUserInput} defaultValue={formvalues.password??""}/>
+            </FloatingLabel>
 
         </Modal> 
+        </Form>
     </>
 }

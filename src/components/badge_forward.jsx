@@ -1,24 +1,74 @@
-import {useState, useContext} from 'react'
+import {useState, useContext, useRef} from 'react'
 import Modal from 'partials/modal'
-import {Badge} from 'react-bootstrap'
+import {Badge, Button, Form, FloatingLabel, Spinner} from 'react-bootstrap'
 
 import { RoomsContext } from 'utils/ctx_rooms'
 import { StreamContext } from 'utils/ctx_streaming'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
+import toast from 'react-hot-toast';
 
 
 export default ({callId, isForwardCall})=>{
-    const [show, setShow] = useState(null);
     const wrtc     = useContext(StreamContext);
+    const ref = useRef(null);
+    const [show, setShow] = useState(null);
+    const [fetching, setFetching] = useState(0);//0: not fetching, 1: fetching, 2: sucess, 3: failed
+
 
     let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId);
+    
+function submit() {
+
+        if ( !ref?.current || !show )
+            return setShow(false);
+
+        setFetching(true);            
+
+        const [forwardingCallId, mediaHubtarget] = [callId, ref.current.value];
+
+        function callback({callId, status, description}) {
+            if(status === 'error'){
+                setFetching(3);           
+                setTimeout( () => { setFetching(0); } , 2000);
+                toast.error(`Call response error: ${description}`);
+            }
+            else {
+                setFetching(2);   
+                setTimeout( () => { setFetching(0); setShow(false); } , 1000);
+                callback(callId, forwardingCallId);
+            }
+        }
+
+        if(!wrtc.callUser(mediaHubtarget, callback))
+        {
+            setFetching(3);   
+            toast.error(`call missed to backend`);
+            setTimeout( () => { setFetching(0); } , 2000);
+        }
+    }
+
+    function onKeyDown(e){
+        if(e.keyCode === 13)
+        submit()
+    }
+
+    let button;
+    switch(fetching){
+        case 1:  button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
+        case 2:  button = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
+        case 3:  button = <Button variant="outline-danger"  > ❌ Error </Button>; break;
+        default: button = <Button variant="outline-primary" onClick={submit} >Proceed!</Button>;
+    }
 
     return <>
         {isForwardCall ? <Badge style={{padding:".44em .45em"}} pill bg="danger" onClick={() => wrtc.callHangup( mediaHubCallId )}><i className="bi bi-x"></i></Badge>
         :                <Badge style={{padding:".44em .45em"}} pill bg="danger" onClick={() => setShow( callId )} className="cursor-pointer"><i className="bi bi-cast"></i></Badge>}
-        <Modal {...{show,setShow}} closeButton title="Ready to forward?">
+        <Modal {...{show,setShow}}  buttons={[button]}  closeButton title="Ready to forward?" onKeyDown={onKeyDown}>
             Enter the destination ID you want to forward to
+            <FloatingLabel controlId="floatingInput" label="targetId" className="mb-3">
+                <Form.Control ref={ref} name="targetId" type="text" placeholder="mediahub target id"/>
+            </FloatingLabel>
         </Modal>
     </>;
 }

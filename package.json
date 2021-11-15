@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.7.0",
+    "gravatar": "^1.8.2",
     "lib_bra": "link:lib\\bra",
     "lib_tweenmax": "link:lib\\TweenMax",
     "prop-types": "^15.7.2",

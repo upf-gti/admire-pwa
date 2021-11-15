@@ -3,6 +3,8 @@ import { Button, Form, FloatingLabel, Spinner, OverlayTrigger, Tooltip } from 'r
 import Modal from 'partials/modal'
 import MD from 'utils/md';
 import { AuthContext } from 'utils/ctx_authentication';
+import toast from 'react-hot-toast';
+import http from 'utils/http'
 
 export default () => {
     const formRef = useRef(null);
@@ -58,42 +60,49 @@ export default () => {
         setValidated( false );
     },[]);
 
-    function handleSubmit(event){
-        alert("NO IMPLEMENTATION")
+    async function handleSubmit(e){
+        e.preventDefault();
+        const email = formvalues.email.toLowerCase();
+        const toastId = toast.loading('Resetting password...');
+        debugger;
+        await http.post(`${process.env.REACT_APP_API_URL}/forgot-password`, { data: {email} })
+        .then(({error, message, status}) => {
+            if (error) {
+                return toast.error(`onSubmitRecovery: ${message}`, { id: toastId });
+            }
+            setShow(false);
+            toast.success('Success', { id: toastId });
+        })
+        .catch(err => {
+            toast.error(`onSubmitRecovery: ${err}`, { id: toastId });
+        });
     }
 
     function hasError(error){
         return(error.length === 0 ? '' : 'has-error');
     }
 
-
+    const button =  <OverlayTrigger placement="bottom"
+    overlay={
+        <Tooltip className={`${validated?"d-none":""}`}  id={`tooltip-bottom`}>
+            Enter your email address first.
+        </Tooltip>
+    }
+    >
+        <span style={{padding:"10px 0"}}>
+            <Button type="submit" onClick={handleSubmit} disabled={!validated && auth.isConnected} > Send password reset email </Button>
+        </span>
+    </OverlayTrigger>
 
     return <>
         <Button size="sm" className="mt-4" variant="link" onClick={ ()=>setShow(1) }><i className="bi bi-lock"></i>Forgot password?</Button>
-        <Modal closeButton size="lg" {...{show, setShow}} title={<h2 className="user-select-none">Forgot Password</h2>} size="md">
+        <Modal buttons={[button]} closeButton size="lg" {...{show, setShow}} title={<h2 className="user-select-none">Forgot Password</h2>} size="md">
             <MD className="user-select-none">{`Enter your email adress, on a couple of minutes you will receive an email with a link to reset your password.`}</MD>
             <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
                 <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
                     <Form.Control required name="email" type="email" placeholder=" " 
                     onChange={handleUserInput} />
                 </FloatingLabel>
-
-                <OverlayTrigger placement="bottom"
-                overlay={
-                    <Tooltip className={`${validated?"d-none":""}`}  id={`tooltip-bottom`}>
-                        Enter your email address first.
-                    </Tooltip>
-                }
-                >
-                    <span style={{padding:"10px 0"}}>
-                        <Button type="submit" disabled={!validated && auth.isConnected} > 
-                        {auth.isConnected? 
-                            <> Send password reset email </>
-                            : <><Spinner as="span"animation="grow" role="status" aria-hidden="true"/> Connecting </>
-                        }</Button>
-                    </span>
-                </OverlayTrigger>
-
             </Form>
         </Modal>
     </>;
