@@ -9,7 +9,7 @@ function RoomTile({id, name, ...props}){
     return <div>
     
         <Card className="bg-dark text-light" {...props}>
-            <Card.Img variant="top" src={`https://unsplash.it/seed/test/160/100`} />
+            <Card.Img variant="top" src={`https://unsplash.it/seed/tesst-${name}/160/100`} />
             <Card.Body>
             <Card.Title>#{name}</Card.Title>
             {/*<Card.Text></Card.Text>*/}
@@ -63,7 +63,7 @@ export default ()=>{
         
             <h1 className="text-light">Lobby</h1>    
             <Row xs={2} sm={4} lg={4} xl={5} className="g-4">
-            { Object.values(rooms.list).map((v,k) => <Col key={k}>
+            { [...Object.values(rooms.list)].map((v,k) => <Col key={k}>
                     <RoomTile name={` ${v?.name || 'Room '+k}`} onClick={()=>rooms.joinRoom(v?.name)}/>
                 </Col>
             )}
@@ -78,3 +78,4 @@ export default ()=>{
         `}</style>
     </>
 }
+//{name:'room test'},{name:'low coverage'},{name:'volcano'},{name:'ecogreen'},{name:'weathercast'},...
