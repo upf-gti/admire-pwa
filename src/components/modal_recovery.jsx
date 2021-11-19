@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect, useRef  } from 'react';
-import { Button, Form, FloatingLabel, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Form, FloatingLabel, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import MD from 'utils/md';
 import { AuthContext } from 'utils/ctx_authentication';
@@ -10,7 +10,6 @@ export default () => {
     const formRef = useRef(null);
     const [show, setShow] = useState(false);
     const auth = useContext(AuthContext);
-    const user = "h3R"
 
     const [formvalues, setFormValues] = useState({formErrors:{}});
     const [validated, setValidated] = useState(undefined);
@@ -43,16 +42,17 @@ export default () => {
         setFormValues( v => ({ ...v, [name]:value, [`${name}_check`]:check, formErrors }) );
     }
 
-    function validateForm(){
-        let isValid = true;
-        for( let key in formvalues ){
-            if( key.indexOf('_check') !== -1 )
-                isValid &= formvalues[key];
-        }
-        setValidated( isValid?true:false );
-    }
+
 
     useEffect(()=>{
+        function validateForm(){
+            let isValid = true;
+            for( let key in formvalues ){
+                if( key.indexOf('_check') !== -1 )
+                    isValid &= formvalues[key];
+            }
+            setValidated( isValid?true:false );
+        }
         validateForm();
     },[formvalues]);
 
@@ -79,13 +79,14 @@ export default () => {
     }
 
     function hasError(error){
+        if(!error) return "";
         return(error.length === 0 ? '' : 'has-error');
     }
 
     const button =  <OverlayTrigger placement="bottom"
     overlay={
         <Tooltip className={`${validated?"d-none":""}`}  id={`tooltip-bottom`}>
-            Enter your email address first.
+            {Object.entries(formvalues.formErrors).map(([key, value]) => { return <span>{key}: {value}</span> }) }
         </Tooltip>
     }
     >
@@ -96,12 +97,14 @@ export default () => {
 
     return <>
         <Button size="sm" className="mt-4" variant="link" onClick={ ()=>setShow(1) }><i className="bi bi-lock"></i>Forgot password?</Button>
-        <Modal buttons={[button]} closeButton size="lg" {...{show, setShow}} title={<h2 className="user-select-none">Forgot Password</h2>} size="md">
+        <Modal size="md" closeButton {...{show, setShow}} 
+        buttons={[button]} 
+        title={<h2 className="user-select-none">Forgot Password</h2>} 
+        >
             <MD className="user-select-none">{`Enter your email adress, on a couple of minutes you will receive an email with a link to reset your password.`}</MD>
             <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
                 <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-                    <Form.Control required name="email" type="email" placeholder=" " 
-                    onChange={handleUserInput} />
+                    <Form.Control required className={ hasError(formvalues.formErrors?.email)} name="email" type="email" placeholder=" " onChange={handleUserInput} />
                 </FloatingLabel>
             </Form>
         </Modal>

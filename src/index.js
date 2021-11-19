@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
-import Layout from 'components/layout'
+import Layout from 'partials/layout'
 import {ProgressBar} from 'react-bootstrap';
 
 

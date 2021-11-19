@@ -1,9 +1,9 @@
 //import { useEffect } from 'react';
+import { useParams } from "react-router-dom"
 import { Row, Col, Badge } from 'react-bootstrap'
-import { useContext, useEffect,useLayoutEffect, useState, useRef } from 'react'
-import { useParams, useHistory } from "react-router-dom"
-
+import { useContext, useLayoutEffect, useEffect, useState, useRef } from 'react'
 import * as BRA from 'lib_bra'
+
 import Video from 'partials/video'
 import { RoomsContext } from 'utils/ctx_rooms'
 import { StreamContext } from 'utils/ctx_streaming'
@@ -11,102 +11,44 @@ import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
 import BadgeForwardCall from 'components/badge_forward'
 
-export default ({ ...props }) => {
-    const history     = useHistory();
+
+export default function Room({ ...props }){
     const {roomId}    = useParams();
     const carouselRef = useRef();
     const auth        = useContext(AuthContext);
     const rooms       = useContext(RoomsContext);
     const media       = useContext(MediaContext);
     const wrtc        = useContext(StreamContext);
-
-    const [state, setState]       = useState(0);
     const [selected, setSelected] = useState(null);
 
-    useEffect(()=>{//Constructor
+    useLayoutEffect(()=>{//Constructor
         if(!rooms.imInRoom(roomId) || !rooms.ready || !media.ready) 
             return;
 
         wrtc.callAllUsers();
     return ()=>{//Destructor
         wrtc.callHangupAll();
-    }},[rooms.current, rooms.ready & media.ready]);
+    }},[rooms.ready, media.ready]);
 
     useEffect( ()=>{
         wrtc.replaceStream(media.localStream);
     },[media.localStream]);
 
-    /*useEffect(() => {
-        function unload(){
-            rooms.leaveRoom();
-            document.body.addEventListener('unload', unload);
-        }
-        document.body.addEventListener('unload', unload);
-        media.init();
-    return ()=>{
-        media.stop();
-    }},[])
-   
-    useEffect(() => {
-        function scrollHorizontal(e){
-            this.scrollLeft += e.deltaY;
-        }
-        carouselRef.current?.removeEventListener('wheel', scrollHorizontal)
-        carouselRef.current?.addEventListener('wheel', scrollHorizontal)
-
-        return ()=>{
-            carouselRef.current?.removeEventListener('wheel', scrollHorizontal)
-        }
-    },[carouselRef]);
-
-    useEffect(()=>{
-        if(!rooms.ready) 
-            return;
-
-        (async ()=>{
-            const room = rooms.list[roomId];
-            //If room does not exist, redirect to home
-            if(!room){
-                return history.push('/')
-            }
-            
-            //If room is not joined, join it
-            if(!room.users.find( v => v.username === auth.user.username)){
-                await rooms.joinRoom(roomId)
-                .catch( (err, data)=>{ 
-                    history.push('/') 
-                })
-            }
-            
-            //Now that I am on the room, start it calling the rest of users.
-            if(rooms.current){
-                wrtc.callAllUsers();
-            }
-            
-        })();
-
-    },[rooms.ready, rooms.current]);
-
-    useEffect(()=>{
-        setState(s=>s+1);
-    },[wrtc.streams])*/
-
     return <div id="room" className="overflow-hidden m-auto" style={{zIndex:1000}}>
-        <Row id="content-row" className="g-0" style={{ height:"100%" }}>
-  
+        <Row  id="content-row" className="g-2" style={{ height:"100%" }}>
             <Col xs="auto" id="carousel-col" ref={carouselRef}>
                 <div id="carousel" className="d-flex flex-column" >
                 {  Object.entries({local:media.localStream, ...wrtc.streams}).map(([callId, stream], k)=>{
 
                     let id = wrtc.getUserId(callId);
-                    let imMaster = auth.user.username === rooms.current?.master && id !== rooms.current?.master && id !== auth.user.username;
-                    let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId);
+                    let imMaster = auth.user.username === rooms.current?.master.username;
+                    let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId); //eslint-disable-line
                     let isForwardCall = !!forwardedCallId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
-                    return <div>
+                    return <div key={k}>
                         <div className="stream-forward">
-                            <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/>
+                            { imMaster && <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/> }
                             { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
                         </div>
                         <Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
@@ -124,7 +66,7 @@ export default ({ ...props }) => {
 
             #room{
                 height:calc(100vh - 3rem - 4.5rem);
-                
+
                 #main-col {
                     height: 100%;
                     overflow: hidden;

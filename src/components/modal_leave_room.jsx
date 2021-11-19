@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState, useReducer} from 'react';
+import React, {useContext, useState} from 'react';
 import { Button } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import Nav from 'partials/nav'

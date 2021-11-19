@@ -12,9 +12,10 @@ export default ({children, ...props}) => {
     const rooms = useContext(RoomsContext);
     const media = useContext(MediaContext);
 
+    const [state, setState]             = useState(0);  
     const [streams, setStreams]         = useState({});
     const [liveCalls, setLiveCalls]     = useState({});
-    const [localStream, setLocalStream] = useState(media.localStream);
+    let [localStream, setLocalStream] = useState(media.localStream);
 
     useEffect( ()=>{ 
         BRA.rtcClient.on(BRA.RTCEvent.IncomingCall, onIncomingCall);
@@ -29,20 +30,9 @@ export default ({children, ...props}) => {
     }}, []);
 
     useEffect( ()=>{
-        for( const callId in BRA.rtcClient.getCalls() )
-        {
-            let call = BRA.rtcClient.getCall(callId);
-            let stream = media.localStream;
-            {
-                let track = stream.getVideoTracks()[0];
-                call.replaceLocalVideoTrack(track);
-            }
-            {
-                let track = stream.getAudioTracks()[0];
-                call.replaceLocalAudioTrack(track);
-            }
-        }
-        setLocalStream(media.localStream);
+        setState(s => s+1);
+        localStream = media.localStream;
+        setLocalStream(localStream);
     }, [media.localStream]);
 
     function callUser(username, callback){
@@ -56,6 +46,7 @@ export default ({children, ...props}) => {
     function callAllUsers(){
         const users = rooms.current?.users?.filter((v, k, a) => { return v && v?.username !== auth.user?.username });
         for (let user of users ?? []){
+            
             if(!callUser(user?.username)){
                 toast.error(`Call missed to ${user?.username}`);
             }
@@ -100,8 +91,10 @@ export default ({children, ...props}) => {
         //Regular call
         else {
             toast.success(`Incoming Call: ${callId}, callerId: ${call.callerId}, calleeId: ${call.calleeId} `);
-            const videotrack = media.localStream.getVideoTracks()[0];
-            const audiotrack = media.localStream.getAudioTracks()[0];
+            //TODO:esto no deberia estar en window!!!!
+            if(!window.localStream) return;
+            const videotrack = window.localStream.getVideoTracks()[0];
+            const audiotrack = window.localStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
             toast(`Call from ${getUserId(callId)}`, {icon:<i className="bi bi-telephone-inbound"/>});
@@ -162,7 +155,7 @@ export default ({children, ...props}) => {
     function forwardCall(source, target) {
         if (!target || !source)
             return console.error(`source or target callId's are undefined`);
-        liveCalls[target] = source;
+        window.liveCalls = liveCalls[target] = source;
         setLiveCalls({...liveCalls});
     }
 
@@ -175,14 +168,10 @@ export default ({children, ...props}) => {
         for( const callId in BRA.rtcClient.getCalls() )
         {
             let call = BRA.rtcClient.getCall(callId);
-            {
-                let track = stream.getVideoTracks()[0];
-                call.replaceLocalVideoTrack(track);
-            }
-            {
-                let track = stream.getAudioTracks()[0];
-                call.replaceLocalAudioTrack(track);
-            }
+            let audiotrack = stream.getAudioTracks()[0];
+            let videotrack = stream.getVideoTracks()[0];
+            call.replaceLocalVideoTrack(videotrack);
+            call.replaceLocalAudioTrack(audiotrack);
         }
     }
 

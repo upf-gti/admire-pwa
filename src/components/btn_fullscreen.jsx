@@ -4,33 +4,19 @@ import { useState, useEffect } from 'react'
 
 
 export default () => {  
-    let [state, setState] = useState(0);
-
-    function handleClick(){
-        /*let promise
-        if (document.fullscreenElement) {
-            promise = document.exitFullscreen();
-        } else {
-            promise = document.documentElement.requestFullscreen();
-        }
-        promise.then( ()=>setState(++state) );*/
-        screenfull.toggle();
-    }
+    let [state, setState] = useState(0);//eslint-disable-line
 
     useEffect(()=>{
-        const f = () => setState(++state);
+        const f = () => setState(s => ++s);
         screenfull.on('change', f);
     return ()=>{
         screenfull.off('change', f);
-    }
-    },[])
+    }},[])
     
-//window.document.documentElement.webkitRequestFullScreen
-
     return <div id="btn_fullscreen">
         { screenfull.isEnabled && 
             <Button 
-            onClick={handleClick} variant="link"> 
+            onClick={screenfull.toggle} variant="link"> 
                 {  document.fullscreen && <i className="bi bi-fullscreen-exit"/> }
                 { !document.fullscreen && <i className="bi bi-fullscreen"/> }
             </Button>    

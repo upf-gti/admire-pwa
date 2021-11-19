@@ -1,5 +1,5 @@
 import {Button} from 'react-bootstrap'
-import { useEffect, useState, useRef, useContext } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default ({id, stream, onClick, isLocal = false, ...props})=>{
     let ref = useRef(null);
@@ -8,7 +8,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
     useEffect(()=>{
         if(stream && ref.current){
             ref.current.srcObject = stream;
-            ref.current.play();
+            //ref.current.play();
         }
     },[stream]);
 

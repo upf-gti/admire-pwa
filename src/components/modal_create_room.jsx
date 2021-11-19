@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast'
 import React, {useContext, useRef, useEffect, useState} from 'react'
-import { Col, Card, Button, Form, FloatingLabel, Spinner } from 'react-bootstrap'
+import { Button, Form, FloatingLabel, Spinner } from 'react-bootstrap'
 
 import MD from 'utils/md'
 import Nav from 'partials/nav'
@@ -13,7 +13,7 @@ export default () => {
     const rooms                   = useContext(RoomsContext);
     const ref                     = useRef(null);
     const [show, setShow]         = useState(false);
-    const [isValid, setValid]     = useState(true);
+    const [isValid, setValid]     = useState(true);//eslint-disable-line
     const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: sucess, 3: failed
 
     useEffect(()=>{

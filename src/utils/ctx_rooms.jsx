@@ -29,17 +29,11 @@ export default ({children, ...props}) => {
             setReady(true);
         });});
 
-        /*const interval = setInterval(() => {
-            BRA.appClient.getRooms(onGetRooms);
-            BRA.appClient.getRoom(onGetRoom);
-        } , 2000);*/
-
     return ()=>{
         BRA.appClient.off(BRA.APPEvent.GuestLeftRoom,    onGuestLeft);
         BRA.appClient.off(BRA.APPEvent.GuestJoinedRoom,  onGuestJoin);
         BRA.appClient.off(BRA.APPEvent.RoomCreated,      onRoomCreated);
         BRA.appClient.off(BRA.APPEvent.RoomDeleted,      onRoomDeleted);
-        //clearInterval(interval);
     }}, [auth.isLogged]);
 
     function isUserInRoom(username, roomName)
@@ -88,7 +82,9 @@ export default ({children, ...props}) => {
 
         if(room?.name)
         {
-            history.push(`/room/${room?.name}`);
+            if(history.location.pathname !== `/room/${room?.name}`){
+                history.push(`/room/${room?.name}`);
+            }
         }
         else{
             history.push(`/`);

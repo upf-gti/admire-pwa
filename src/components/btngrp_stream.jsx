@@ -1,6 +1,6 @@
-import Nav from "partials/nav"
 import { useEffect, useState, useContext, useRef } from 'react'
-import { ButtonToolbar, Button } from 'react-bootstrap'
+
+import Nav from "partials/nav"
 import { MediaContext } from 'utils/ctx_mediadevices'
 
 

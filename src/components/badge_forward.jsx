@@ -1,12 +1,9 @@
+import toast from 'react-hot-toast';
 import {useState, useContext, useRef} from 'react'
-import Modal from 'partials/modal'
 import {Badge, Button, Form, FloatingLabel, Spinner} from 'react-bootstrap'
 
-import { RoomsContext } from 'utils/ctx_rooms'
+import Modal from 'partials/modal'
 import { StreamContext } from 'utils/ctx_streaming'
-import { MediaContext } from 'utils/ctx_mediadevices'
-import { AuthContext } from 'utils/ctx_authentication'
-import toast from 'react-hot-toast';
 
 
 export default ({callId, isForwardCall})=>{
@@ -16,7 +13,7 @@ export default ({callId, isForwardCall})=>{
     const [fetching, setFetching] = useState(0);//0: not fetching, 1: fetching, 2: sucess, 3: failed
 
 
-    let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId);
+    let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId); //eslint-disable-line
     
 function submit() {
 
@@ -27,8 +24,10 @@ function submit() {
 
         const [forwardingCallId, mediaHubtarget] = [callId, ref.current.value];
 
-        function callback({callId, status, description}) {
-            if(status === 'error'){
+        function callback(response) {
+            const {callId, calleeId, callerId, status, description}=response;
+            if(status === "error")
+            {                
                 setFetching(3);           
                 setTimeout( () => { setFetching(0); } , 2000);
                 toast.error(`Call response error: ${description}`);
@@ -36,7 +35,8 @@ function submit() {
             else {
                 setFetching(2);   
                 setTimeout( () => { setFetching(0); setShow(false); } , 1000);
-                callback(callId, forwardingCallId);
+                //callback(callId, forwardingCallId);
+                wrtc.forwardCall(callId, forwardingCallId);
             }
         }
 

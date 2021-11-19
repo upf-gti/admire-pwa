@@ -2,7 +2,7 @@ import http from "utils/http"
 import * as BRA from "lib_bra";
 import cookies from '@h3r/cookies'
 import toast from 'react-hot-toast'
-import { createContext, useEffect, useState, useRef } from 'react'
+import { createContext, useEffect, useState, useRef, } from 'react'
 
 export const AuthContext = createContext()
 
@@ -26,11 +26,15 @@ export default ({children, ...props}) => {
         }
         window.addEventListener('unload', onUnload);
 
-        let onAppConnect, onAppDisconnect, onRtcConnect, onRtcDisconnect;
-        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect      = () => { toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000}); setConnected( v => ({...v, app:true })); });
-        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect      = () => { toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000}); setConnected( v => ({...v, rtc:true })); });
-        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect   = () => { toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); });
-        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect   = () => { toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); });
+        function onAppConnect    (){ toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000}); setConnected( v => ({...v, app:true })); }
+        function onRtcConnect    (){ toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000}); setConnected( v => ({...v, rtc:true })); }
+        function onAppDisconnect (){ toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); }
+        function onRtcDisconnect (){ toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); }
+
+        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect   );
+        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect   );
+        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect);
+        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect);
 
     return ()=>{ //Destructor
         BRA.appClient.off(BRA.APPEvent.ClientConnected,     onAppConnect        );
@@ -41,6 +45,7 @@ export default ({children, ...props}) => {
         onUnload();
     }
     }, []);
+
 
     useEffect( ()=>{
         if(!isConnected.app && token){
@@ -61,7 +66,6 @@ export default ({children, ...props}) => {
             getUserInfo()
             .then( (response) => {
                 toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
-                console.log(response);
                 setUser(response);
                 setLogged(true);
             })
@@ -88,6 +92,7 @@ export default ({children, ...props}) => {
     async function login(email, password){
         const toastId = toast.loading('Logging in...');
         email = email.toLowerCase();
+        setToken(null);
         return http.post(`${process.env.REACT_APP_API_URL}/auth/basic`, {data:{ email, password }})
         .then(response => {
             if(response?.access_token){

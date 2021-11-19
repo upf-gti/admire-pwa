@@ -77,7 +77,7 @@ export default ({show, setShow, ...props}) => {
 
                 .modal-content{
                     margin-top: 1.5rem;
-                    min-height: calc(100vh - 10rem);                
+                    min-height: 555px;                
                 }
             }    
         `}</style>

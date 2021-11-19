@@ -63,7 +63,7 @@ export default ()=>{
     },[]);
 
     function hasError(error){
-        return(error.length === 0 ? '' : 'has-error');
+        return(error?.length? '' : 'has-error');
     }
 
     async function handleSubmit(e){

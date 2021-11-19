@@ -12,28 +12,59 @@ export default ({children, ...props}) => {
     const [devices , setDevices]         = useState(null);
     const [settings, setSettings ]       = useState(null);
     const [resolutions, setResolutions ] = useState(null);
-    const [localStream, setLocalStream ] = useReducer( (value, newvalue)=>{
+    let [localStream, setLocalStream ] = useReducer( (value, newvalue)=>{
         if( videoRef && videoRef.current )
             videoRef.current.srcObject = newvalue;
         return newvalue;
     }, BRA.dummyStream.getStream() );
     
     useEffect( ()=>{ 
-        BRA.mediaAdapter.on("got_stream",         onGotStream );
-        BRA.mediaAdapter.on('got_devices',        onGotDevices );
-        BRA.mediaAdapter.on("error_stream",       onError);
-        BRA.mediaAdapter.on("error_devices",      onError);
-        BRA.mediaAdapter.on("got_resolutions",    onGotResolutions );
-        BRA.mediaAdapter.start();
-        getDevices();
-        
+      
+     
+        (async ()=>{
+            BRA.mediaAdapter.on(BRA.MediaEvent.GotDevices,          onGotDevices );
+            BRA.mediaAdapter.on(BRA.MediaEvent.ErrorStream,         onError);
+            BRA.mediaAdapter.on(BRA.MediaEvent.ErrorDevices,        onError);
+            BRA.mediaAdapter.on(BRA.MediaEvent.GotResolutions,      onGotResolutions );
+  
+            let supported = await BRA.mediaAdapter.start();
+            if( !supported )
+                return toast.error("Media devices are not available");
+            
 
+            let audio = window.localStorage.getItem("audio");
+            let video = window.localStorage.getItem("video");               
+            
+            await new Promise((resolve, reject)=>{
+                function onStream(d){
+                    BRA.mediaAdapter.off(BRA.MediaEvent.GotStream, onStream );
+                    resolve(d);
+                }
+                BRA.mediaAdapter.on(BRA.MediaEvent.GotStream, onStream );
+                BRA.mediaAdapter.setVideo(video);
+            })
+            .then(onGotStream);
+
+            await new Promise((resolve, reject)=>{
+                function onStream(d){
+                    BRA.mediaAdapter.off(BRA.MediaEvent.GotStream, onStream );
+                    BRA.mediaAdapter.on(BRA.MediaEvent.GotStream, onGotStream );
+                    resolve(d);
+                }
+                BRA.mediaAdapter.on(BRA.MediaEvent.GotStream, onStream );
+                BRA.mediaAdapter.setAudio(audio);
+            })
+            .then(onGotStream)        
+           
+            setReady(true);
+        })();
+            
         function onUnload(){
-            BRA.mediaAdapter.off("got_stream",        onGotStream );
-            BRA.mediaAdapter.off('got_devices',       onGotDevices );
-            BRA.mediaAdapter.off("error_stream",      onError);
-            BRA.mediaAdapter.off("error_devices",     onError);
-            BRA.mediaAdapter.off("got_resolutions",   onGotResolutions );
+            BRA.mediaAdapter.off(BRA.MediaEvent.GotStream,      onGotStream );
+            BRA.mediaAdapter.off(BRA.MediaEvent.GotDevices,     onGotDevices );
+            BRA.mediaAdapter.off(BRA.MediaEvent.ErrorStream,    onError);
+            BRA.mediaAdapter.off(BRA.MediaEvent.ErrorDevices,   onError);
+            BRA.mediaAdapter.off(BRA.MediaEvent.GotResolutions, onGotResolutions );
             window.removeEventListener('unload ', onUnload);
         }
         window.addEventListener('unload ',    onUnload);
@@ -57,15 +88,17 @@ export default ({children, ...props}) => {
         setDevices({...devices, audio, video});
     }
 
-    function onGotStream( {stream, settings})
+    function onGotStream({stream, settings})
     { 
+        window.localStorage.setItem("audio", settings?.audio);
+        window.localStorage.setItem("video", settings?.video);
+        window.localStream = localStream = stream;
         setSettings({...settings});
-        setLocalStream(stream);
-        setReady(true);
+        setLocalStream(localStream);
     }
 
-    function onError({description}){
-        toast.error("Error:", description);
+    function onError({error, message}){
+        toast.error(`${error}: ${message}`);
     }
 
     function init(){

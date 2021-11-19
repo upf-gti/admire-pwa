@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet"
-import { Image } from 'react-bootstrap'
 import toast, { Toaster } from 'react-hot-toast'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
 
@@ -19,8 +18,11 @@ import StreamContext from 'utils/ctx_streaming'
 import MediaContext from 'utils/ctx_mediadevices'
 import AuthContext  from 'utils/ctx_authentication'
 
-window.toast = toast;
-//toast.error = (message, options) => { toast.error(message, options); console.trace(message) }
+window.toast  = toast;
+const error   = toast.error;   toast.error   = (message, options) => { console.trace(message); return   error(message, options); }
+const success = toast.success; toast.success = (message, options) => { console.log(message);   return success(message, options); }
+const loading = toast.loading; toast.loading = (message, options) => { console.log(message);   return loading(message, options); }
+const custom  = toast.custom;  toast.custom  = (message, options) => { console.log(message);   return  custom(message, options); }
 
 export default ({ children, ...props }) => {
   return <div id="layout" className="" {...props}>
@@ -62,7 +64,7 @@ export default ({ children, ...props }) => {
 
     <Switch>
         <Route component={App}       exact path={["/", "/settings", "/about", "/users", "/chat", "/profile", "/room/:roomId", "/room/:roomId/chat", "/room/:roomId/guests"]} />
-        <Route component={Verified}  exact path="/verified/:token"/>
+        <Route component={Verified}  exact path="/verify/:token"/>
         <Route component={ResetPass} exact path="/reset-password/:token"/>
         <Route> <Redirect to='/'/> </Route>
     </Switch>
