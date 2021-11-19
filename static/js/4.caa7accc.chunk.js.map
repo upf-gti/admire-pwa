@@ -1,0 +1,1 @@
+{"version":3,"sources":["pages/p1.jsx"],"names":[],"mappings":"gHAAA,0BAGe,4BAAI,cAAC,IAAD","file":"static/js/4.caa7accc.chunk.js","sourcesContent":["import MD from \"utils/md\"\r\n\r\n\r\nexport default ()=><MD>{`\r\n# P1        \r\n`}</MD>"],"sourceRoot":""}
