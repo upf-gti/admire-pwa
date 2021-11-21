@@ -6,7 +6,7 @@ import { findByDisplayValue } from '.pnpm/@testing-library+dom@8.10.1/node_modul
 import Modal from 'partials/modal'
 
 export default ({show, setShow, ...props}) => {
-    const pages = ["Devices","Pose", "Shader"];
+    const pages = ["Devices","Battery", "Pose", "Shader"];
     const [selected, setSelected] = useState(0);
     const [page, setPage] = useState(null);
     const [views, setViews] = useState([]);

@@ -93,7 +93,6 @@ export default function Pose() {
 
     //intro message for the pose detection assesment step
     let message = `
-    ### **Step 1: Pose Detection**
     The pose detection step is used to detect the pose of the person in the image. Position yourself centered on the image within the green valid range.
     If the conditions are not met, reposition yourself or the camera.
     ${(center.w > .3) ? '* ❌ You are in the too close to the camera.': '* ✔️ Your distance to camera looks good.'}
@@ -113,6 +112,7 @@ export default function Pose() {
 
     return <>
         <div id='pose'>
+        <h3 className="pt-2"><b>Step 3: Positioning in frame</b></h3>
             <Row>
             <Col>
                 <video style={{ transform: "rotateY(180deg)", width:"100%" }} ref={videoRef}></video>
