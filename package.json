@@ -6,6 +6,9 @@
   "dependencies": {
     "@awesomeqr/react": "^0.1.2-rc.0",
     "@h3r/cookies": "^1.0.1",
+    "@mediapipe/camera_utils": "^0.3.1632432234",
+    "@mediapipe/drawing_utils": "^0.3.1620248257",
+    "@mediapipe/face_detection": "^0.4.1628005423",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -13,6 +16,7 @@
     "bootstrap-icons": "^1.7.0",
     "gravatar": "^1.8.2",
     "lib_bra": "link:lib\\bra",
+    "lib_canvas_renderer": "link:lib\\canvasRenderer",
     "lib_tweenmax": "link:lib\\TweenMax",
     "prop-types": "^15.7.2",
     "rc-gesture": "^0.0.22",

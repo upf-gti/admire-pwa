@@ -30,13 +30,13 @@ function submit() {
             {                
                 setFetching(3);           
                 setTimeout( () => { setFetching(0); } , 2000);
-                toast.error(`Call response error: ${description}`);
+                toast.error(`Mediahub Call response error: ${description}`, {duration: 5000});
             }
             else {
                 setFetching(2);   
                 setTimeout( () => { setFetching(0); setShow(false); } , 1000);
                 //callback(callId, forwardingCallId);
-                wrtc.forwardCall(callId, forwardingCallId);
+                wrtc.forwardCall(forwardingCallId, callId);
             }
         }
 

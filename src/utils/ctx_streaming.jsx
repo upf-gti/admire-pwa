@@ -12,10 +12,10 @@ export default ({children, ...props}) => {
     const rooms = useContext(RoomsContext);
     const media = useContext(MediaContext);
 
-    const [state, setState]             = useState(0);  
-    const [streams, setStreams]         = useState({});
-    const [liveCalls, setLiveCalls]     = useState({});
-    let [localStream, setLocalStream] = useState(media.localStream);
+    const [state, setState]             = useState(0);
+    let   [streams, setStreams]         = useState({});
+    let   [liveCalls, setLiveCalls]     = useState({});
+    let   [localStream, setLocalStream] = useState(media.localStream);
 
     useEffect( ()=>{ 
         BRA.rtcClient.on(BRA.RTCEvent.IncomingCall, onIncomingCall);
@@ -71,7 +71,8 @@ export default ({children, ...props}) => {
     function onCallOpened({ call, stream }) {
         const callId = call.callId;
         
-        setStreams({...streams, [callId]: stream});
+        streams = {...streams, [callId]: stream}
+        setStreams(streams);
         const forwardingCallId = liveCalls[callId];   //Live call
 
         if (forwardingCallId) {
@@ -155,7 +156,7 @@ export default ({children, ...props}) => {
     function forwardCall(source, target) {
         if (!target || !source)
             return console.error(`source or target callId's are undefined`);
-        window.liveCalls = liveCalls[target] = source;
+        liveCalls[target] = source;
         setLiveCalls({...liveCalls});
     }
 

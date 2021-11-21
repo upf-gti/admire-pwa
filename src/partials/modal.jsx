@@ -29,6 +29,9 @@ export default ({title, children, show, setShow = ()=>{}, callback, buttons, clo
         <style global jsx>{`
             @import 'src/variables.scss';
 
+            .modal-dialog{
+                max-height: calc(100vh - 1rem);
+            }
             .modal-partial.modal-shadow-lg.modal-md.modal-dialog-centered:focus-visible {
                 outline: none;
             }
@@ -98,8 +101,19 @@ export default ({title, children, show, setShow = ()=>{}, callback, buttons, clo
 
 
             @media only screen and (orientation: landscape) and (max-height: 671px) {
-                .modal-dialog{
-                    max-width: 38rem !important;
+                .modal-content{
+                    //max-width: 38rem !important;
+                    //margin-right: 6.5rem !important;
+                }
+                .modal-md{
+                    max-width: 800px !important;
+                }
+                  /* Tablet Devices, Desktop and Laptop Screens */
+                @media only screen and (max-width: 674px) {
+                    .modal-dialog{
+                    //max-width: 38rem !important;
+                    margin-right: 6.5rem !important;
+                }
                 }
             }
             @media only screen and (orientation: portrait){

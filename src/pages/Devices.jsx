@@ -56,7 +56,6 @@ export default ()=>{
                 <Form.Switch id="hear-switch" label="test" className="me-2 user-select-none" name="test-input" onChange={(e)=>setTest(t => !t)} defaultChecked={test}/>
                 <AudioGain stream={media.localStream} show={test} />
                 </div>
-
             </Col>
         </Row>
 
@@ -67,7 +66,19 @@ export default ()=>{
                 max-height: 25vh;
             }
 
-            @media (orientation: landscape){
+            #devices .row{
+                flex-direction: column !important;
+            }
+            @media only screen and (orientation: landscape) and (max-height: 671px) {           
+                #devices .row{
+                    flex-direction: row !important;
+                    .col{
+                        align-self: start;
+                    }
+                }
+            }  
+
+            /*@media (orientation: landscape){
                 #devices{
                     #devices-row{
                         flex-direction: row !important;
@@ -80,7 +91,7 @@ export default ()=>{
                         flex-direction: column !important;
                     }
                 }
-            }
+            }*/
         `}</style>
     </div>
 }

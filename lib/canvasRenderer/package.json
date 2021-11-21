@@ -1,0 +1,11 @@
+{
+    "name": "canvas-render",
+    "version": "1.0.0",
+    "description": "",
+    "main": "canvasRenderer.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "dependencies": {}
+  }
+  

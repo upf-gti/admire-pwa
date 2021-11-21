@@ -85,7 +85,15 @@ export default ({children, ...props}) => {
             });
         }
         if(isConnected.rtc && isConnected.app && isLogged){
-            BRA.rtcClient.register(user.username);
+
+
+            BRA.rtcClient.register(user.username, ({status, description})=>{
+                if(status === 'error')
+                {
+                    toast.error(`onRegister error: ${description}`,{icon:<i className="bi bi-activity"/>, duration: 5000});
+                    setTimeout(logout,1000);
+                }
+            });
         }
     },[isConnected.rtc && isConnected.app, token, isLogged, retries]);
 

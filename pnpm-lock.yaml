@@ -10,6 +10,9 @@ specifiers:
   '@babel/preset-env': ^7.16.0
   '@craco/craco': ^6.4.0
   '@h3r/cookies': ^1.0.1
+  '@mediapipe/camera_utils': ^0.3.1632432234
+  '@mediapipe/drawing_utils': ^0.3.1620248257
+  '@mediapipe/face_detection': ^0.4.1628005423
   '@testing-library/jest-dom': ^5.15.0
   '@testing-library/react': ^12.1.2
   '@testing-library/user-event': ^13.5.0
@@ -20,6 +23,7 @@ specifiers:
   gh-pages: ^3.2.3
   gravatar: ^1.8.2
   lib_bra: link:lib\bra
+  lib_canvas_renderer: link:lib\canvasRenderer
   lib_tweenmax: link:lib\TweenMax
   node-sass: ^6.0.1
   prop-types: ^15.7.2
@@ -55,6 +59,9 @@ specifiers:
 dependencies:
   '@awesomeqr/react': 0.1.2-rc.0_react-dom@17.0.2+react@17.0.2
   '@h3r/cookies': 1.0.1
+  '@mediapipe/camera_utils': 0.3.1632432234
+  '@mediapipe/drawing_utils': 0.3.1620248257
+  '@mediapipe/face_detection': 0.4.1628005423
   '@testing-library/jest-dom': 5.15.0
   '@testing-library/react': 12.1.2_react-dom@17.0.2+react@17.0.2
   '@testing-library/user-event': 13.5.0
@@ -62,6 +69,7 @@ dependencies:
   bootstrap-icons: 1.7.0
   gravatar: 1.8.2
   lib_bra: link:lib/bra
+  lib_canvas_renderer: link:lib/canvasRenderer
   lib_tweenmax: link:lib/TweenMax
   prop-types: 15.7.2
   rc-gesture: 0.0.22
@@ -2718,6 +2726,18 @@ packages:
       '@types/node': 16.11.6
       '@types/yargs': 16.0.4
       chalk: 4.1.2
+    dev: false
+
+  /@mediapipe/camera_utils/0.3.1632432234:
+    resolution: {integrity: sha512-uGWOSd/1dNUka5/KkDs37pjYoHhFwUtQwQL/zhkQxZHAgYS8oCcz9vupa3pHthUzHDqzTw4XqB7teuoVRO+8/A==}
+    dev: false
+
+  /@mediapipe/drawing_utils/0.3.1620248257:
+    resolution: {integrity: sha512-s598oo1K6C62mX3rWXJ7n1RJFdXjyQn3f6CeI+lU6kD69MVyBcV3hdmO5LnEZlCw5NRDANtaM8WAOuqZHaldLg==}
+    dev: false
+
+  /@mediapipe/face_detection/0.4.1628005423:
+    resolution: {integrity: sha512-oj+vxkQNAGUnTPK2GgTN7uuRt/EQGaVc7HV6igPKbBgp4iYh2o9MIxheADKqUWt5TrgliK2wEvYHEkKBvs7Eqw==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:

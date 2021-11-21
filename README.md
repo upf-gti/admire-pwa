@@ -1,5 +1,7 @@
 https://realfavicongenerator.net/
 
+(Live Demo)[https://upf-gti.github.io/admire-pwa/]
+
 pnpm outdated
 pnpx npm-check-updates -u  
 

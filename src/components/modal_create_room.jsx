@@ -72,11 +72,11 @@ export default () => {
             </FloatingLabel>
 
             <FloatingLabel controlId="floatingInput" label="password" className="mb-3">
-                <Form.Control required name="password" type="password" placeholder="password"/>
+                <Form.Control name="password" type="password" placeholder="password"/>
             </FloatingLabel>
 
             <FloatingLabel controlId="floatingInput" label="icon" className="mb-3">
-                <Form.Control required name="icon" type="text" placeholder="icon URL"/>
+                <Form.Control name="icon" type="text" placeholder="icon URL"/>
             </FloatingLabel>
 
             <Form.Switch id="hidden-switch" label="Hidden" name="hidden" defaultValue={false}/>
