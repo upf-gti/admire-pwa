@@ -63,18 +63,20 @@ export default ({children, ...props}) => {
 
     function onGuestLeft({data:{user,room}})
     {
-        BRA.appClient.getRoom(onGetRoom);
-        toast(`User '${user.username}' left`);
-        if(current)
+        if(current){
+            BRA.appClient.getRoom(onGetRoom);
+            toast(`User '${user.username}' left`);
             setCurrent( {...current, users: current?.users??[].filter(u=>u.username!==user.username)} );
+        }
     }    
     
     function onGuestJoin({data:{user,room}})
     {
-        BRA.appClient.getRoom(onGetRoom);
-        toast(`User '${user.username}' joined`);
-        if(current)
+        if(current){
+            BRA.appClient.getRoom(onGetRoom);
+            toast(`User '${user.username}' joined`);
             setCurrent( {...current, users: current?.users??[].push(user)} );
+        }
     }
     
     function onGetRoom({ data: {room} }){
@@ -127,7 +129,7 @@ export default ({children, ...props}) => {
                 else resolve(data.room);
             });
         })
-        .then(  (room)=>{ BRA.appClient.getRoom(onGetRoom); return room; } )
+        .then(  (room)=>{ BRA.appClient.getRooms(onGetRoom); return room; } )
         //.catch( (e)=> toast.error(e) );
     }
 
