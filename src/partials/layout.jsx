@@ -46,7 +46,6 @@ export default ({ children, ...props }) => {
     
     <Helmet>
       <title>{process.env.REACT_APP_NAME}</title>
-      <title>{props.title}</title>
       <meta property="og:url" content={process.env.REACT_APP_OG_URL} />
       <meta property="og:type" content={process.env.REACT_APP_OG_TYPE} />
       <meta property="og:title" content={process.env.REACT_APP_OG_TITLE} />

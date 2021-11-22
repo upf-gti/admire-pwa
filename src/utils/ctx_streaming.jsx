@@ -4,6 +4,7 @@ import { useState, useContext, useEffect, createContext } from 'react'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
 import { RoomsContext } from 'utils/ctx_rooms'
+import { strategy } from "workbox-streams"
 
 
 export const StreamContext = createContext(); 
@@ -168,9 +169,16 @@ export default ({children, ...props}) => {
     function replaceStream(stream){
         for( const callId in BRA.rtcClient.getCalls() )
         {
+            let s = stream;
+            const forwardingCallId = liveCalls[callId];   //Live call
+            if(forwardingCallId && streams[forwardingCallId])
+            {
+                s = streams[forwardingCallId];
+            }
+
             let call = BRA.rtcClient.getCall(callId);
-            let audiotrack = stream.getAudioTracks()[0];
-            let videotrack = stream.getVideoTracks()[0];
+            let audiotrack = s.getAudioTracks()[0];
+            let videotrack = s.getVideoTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
         }

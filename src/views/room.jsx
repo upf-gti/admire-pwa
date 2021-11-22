@@ -44,6 +44,7 @@ export default function Room({ ...props }){
                     let imMaster = auth.user.username === rooms.current?.master.username;
                     let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId); //eslint-disable-line
                     let isForwardCall = !!forwardedCallId;
+                    let isMediahubCall = mediaHubCallId === callId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
                     return <div key={k}>
@@ -51,7 +52,7 @@ export default function Room({ ...props }){
                             { imMaster && <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/> }
                             { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
                         </div>
-                        <Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>
+                        {!isMediahubCall && <Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>}
                     </div>
                 })}
                 </div>

@@ -22,6 +22,7 @@ export default ({children, ...props}) => {
         BRA.appClient.on(BRA.APPEvent.GuestJoinedRoom,   onGuestJoin);
         BRA.appClient.on(BRA.APPEvent.RoomCreated,       onRoomCreated);
         BRA.appClient.on(BRA.APPEvent.RoomDeleted,       onRoomDeleted);
+        BRA.appClient.on(BRA.APPEvent.UserRejoined,      onUserRejoined);
 
         //Initial fetch of rooms
         BRA.appClient.getRooms( (m1) => { onGetRooms(m1)
@@ -34,6 +35,8 @@ export default ({children, ...props}) => {
         BRA.appClient.off(BRA.APPEvent.GuestJoinedRoom,  onGuestJoin);
         BRA.appClient.off(BRA.APPEvent.RoomCreated,      onRoomCreated);
         BRA.appClient.off(BRA.APPEvent.RoomDeleted,      onRoomDeleted);
+        BRA.appClient.off(BRA.APPEvent.UserRejoined,     onUserRejoined);
+
     }}, [auth.isLogged]);
 
     function isUserInRoom(username, roomName)
@@ -52,13 +55,11 @@ export default ({children, ...props}) => {
     }
 
     function onRoomCreated({data:{room}}){
-        setRooms({...rooms, [room.name]:room});
+        BRA.appClient.getRooms(onGetRooms);
     }
 
     function onRoomDeleted({data:{room}}){
-        delete rooms[room.name];
-        setRooms({...rooms});
-        BRA.appClient.getRoom(onGetRoom)
+        BRA.appClient.getRooms(onGetRooms);
     }
 
     function onGuestLeft({data:{user,room}})
@@ -100,6 +101,9 @@ export default ({children, ...props}) => {
         setRooms(rs);
     }
 
+    function onUserRejoined(){
+    }
+
     function createRoom(roomName, {password, hidden, icon}){
         return new Promise((resolve, reject)=>{
             BRA.appClient.createRoom(roomName, password??"", hidden??false, icon??"", ({event, data}) => {
@@ -129,7 +133,10 @@ export default ({children, ...props}) => {
                 else resolve(data.room);
             });
         })
-        .then(  (room)=>{ BRA.appClient.getRooms(onGetRoom); return room; } )
+        .finally(  (room)=>{ 
+            BRA.appClient.getRoom(onGetRoom);
+            BRA.appClient.getRooms(onGetRooms); 
+        return room; } )
         //.catch( (e)=> toast.error(e) );
     }
 
