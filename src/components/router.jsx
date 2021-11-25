@@ -4,8 +4,6 @@ import Verified from 'views/verified'
 import ResetPass from 'views/resetpassword'
 
 export default ({children})=>{
-    alert(process.env.REACT_APP_BASE)
-    debugger;
 return <>
     <Router basename={process.env.REACT_APP_BASE}>
     {children}

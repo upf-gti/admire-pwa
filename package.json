@@ -51,7 +51,8 @@
     "build": "craco build",
     "test": "craco test",
     "predeploy": "pnpm run build",
-    "deploy": "pnpm run build && gh-pages -d build"
+    "deploy": "pnpm run build && gh-pages -d build",
+    "release": "release-it"
   },
   "eslintConfig": {
     "extends": [
@@ -86,6 +87,7 @@
     "customize-cra": "^1.0.0",
     "gh-pages": "^3.2.3",
     "node-sass": "^6.0.1",
+    "release-it": "^14.11.8",
     "styled-jsx": "^4.0.1",
     "styled-jsx-plugin-sass": "^1.0.0"
   }
