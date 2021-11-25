@@ -1,20 +1,41 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {useHistory} from 'react-router-dom'
-import {Row, Col, Card} from 'react-bootstrap'
+import {Row, Col, Card, Badge, Button, Form, FloatingLabel, Spinner} from 'react-bootstrap'
 import { RoomsContext } from 'utils/ctx_rooms'
 import CreateRoomModal from 'components/modal_create_room'
+import lock from 'assets/img/TeenyiconsPasswordOutline.svg'
+import RoomPasswordModal from 'components/modal_room_password'
 
 
-function RoomTile({id, name, ...props}){
-    return <div>
+function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
+    const [show, setShow] = useState(false);
+    const rooms = useContext(RoomsContext);
+
+    function handleClick(){
+        if(secured){
+            setShow(true);
+        }
+        else
+            submit();
+    }
+    function submit(password){
+        return rooms.joinRoom(name, password)
+    }
+
+    if(hidden){
+        return <></>
+    }
+    return <div onClick={handleClick}>
     
         <Card className="bg-dark text-light" {...props}>
-            <Card.Img variant="top" src={`https://unsplash.it/seed/tesst-${name}/160/100`} />
+            <Card.Img variant="top" src={icon} />
+            <Badge style={{padding:".44em .25em .44em .45em", margin:".25rem"}} bg="white" className="position-absolute end-0 top-0" pill><img width="18" src={lock} style={{filter:"invert(.5)"}}/></Badge>
             <Card.Body>
             <Card.Title>#{name}</Card.Title>
             {/*<Card.Text></Card.Text>*/}
             </Card.Body>
         </Card>
+        <RoomPasswordModal {...{show, setShow}} onSubmit={submit}/>
 
         <style global jsx>{`
             @import 'src/variables.scss';
@@ -64,7 +85,7 @@ export default ()=>{
             <h1 className="text-light">Lobby</h1>    
             <Row xs={2} sm={4} lg={4} xl={5} className="g-4">
             { [...Object.values(rooms.list)].map((v,k) => <Col key={k}>
-                    <RoomTile name={` ${v?.name || 'Room '+k}`} onClick={()=>rooms.joinRoom(v?.name)}/>
+                    <RoomTile /*name={` ${v?.name || 'Room '+k}`}*/ {...v} />
                 </Col>
             )}
             </Row>

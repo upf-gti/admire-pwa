@@ -106,7 +106,7 @@ export default ({children, ...props}) => {
 
     function createRoom(roomName, {password, hidden, icon}){
         return new Promise((resolve, reject)=>{
-            BRA.appClient.createRoom(roomName, password??"", hidden??false, icon??"", ({event, data}) => {
+            BRA.appClient.createRoom(roomName, password??"", hidden??false, icon && icon.length? icon : `https://unsplash.it/seed/test-${roomName}/160/100`, ({event, data}) => {
                 if(data.error) reject(data.message);
                 else resolve(data.room);
             });
@@ -115,15 +115,18 @@ export default ({children, ...props}) => {
         //.catch( (e) => toast.error(e) );
     }
 
-    function joinRoom(roomName){
+    function joinRoom(roomName, password){
         return new Promise((resolve, reject) => {
-            BRA.appClient.joinRoom(roomName,"",({event, data}) => {
-                if(data.error) reject(data.message);
+            BRA.appClient.joinRoom(roomName,password??"",({event, data}) => {
+                if(data.error) 
+                {
+                    toast.error(data.message)
+                    reject(data.message);
+                }
                 else resolve(data.room);
             });
         })    
         .then(  (room)=>{ BRA.appClient.getRoom(onGetRoom); return room; } )
-        //.catch( (e) => toast.error(e) );
     }
 
     function leaveRoom(){
