@@ -1,7 +1,7 @@
 {
   "name": "admire-pwa",
   "homepage": "https://upf-gti.github.io/admire-pwa/",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@awesomeqr/react": "^0.1.2-rc.0",
