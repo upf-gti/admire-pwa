@@ -46,7 +46,6 @@ export default ({show, setShow, onSubmit, ...props}) => {
         case 3: button = <Button variant="outline-danger"  > ❌ Error </Button>; break;
         default: break;
     }
-    debugger
 
     return <>       
         

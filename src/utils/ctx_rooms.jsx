@@ -55,10 +55,12 @@ export default ({children, ...props}) => {
     }
 
     function onRoomCreated({data:{room}}){
+        BRA.appClient.getRoom(onGetRoom);
         BRA.appClient.getRooms(onGetRooms);
     }
 
     function onRoomDeleted({data:{room}}){
+        BRA.appClient.getRoom(onGetRoom);
         BRA.appClient.getRooms(onGetRooms);
     }
 
