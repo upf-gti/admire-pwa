@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-export default ({title, children, show, setShow = ()=>{}, callback, buttons, closeButton, ...props}) => {
+export default ({title, children, show, setShow, callback, buttons, closeButton, ...props}) => {
     return <>
         <Modal
             centered

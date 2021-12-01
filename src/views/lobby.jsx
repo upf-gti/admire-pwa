@@ -25,6 +25,9 @@ function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
     if(hidden){
         return <></>
     }
+
+    console.log(show);
+    window.setShow = setShow;
     return <div onClick={handleClick}>
     
         <Card className="bg-dark text-light" {...props}>
@@ -35,7 +38,11 @@ function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
             {/*<Card.Text></Card.Text>*/}
             </Card.Body>
         </Card>
-        <RoomPasswordModal {...{show, setShow}} onSubmit={submit}/>
+        <RoomPasswordModal 
+            show={show}
+            setShow = { setShow } 
+            onSubmit={submit}
+        />
 
         <style global jsx>{`
             @import 'src/variables.scss';
@@ -60,6 +67,12 @@ function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
                         font-size: 1rem;
                         white-space: nowrap;
                     }
+                }
+
+                .card-img-top{
+                    width: 100%;
+                    height: 100px;
+                    object-fit: cover;
                 }
             }
         `}</style>

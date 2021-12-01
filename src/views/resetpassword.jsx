@@ -34,7 +34,8 @@ export default ()=>{
                 break;
 
             case 'password':
-                check = value.length >= 6;
+                const pass_re =  /^[a-zA-Z]+(.){7,20}$/;
+                check = pass_re.test(value);
                 formErrors[name] = check ? '': ' is too short';
                 break;
 

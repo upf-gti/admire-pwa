@@ -39,10 +39,6 @@ export default ({show, setShow, onSubmit, ...props}) => {
         })
     }
 
-    function handleUserInput(e){
-        //setValid(ref?.current?.value.length > 3);
-    }
-
     let button = <Button disabled={!isValid} variant={isValid?"outline-primary":"outline-secondary"} onClick={submit} >Proceed!</Button>;
     switch(fetching){
         case 1: button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
@@ -50,10 +46,11 @@ export default ({show, setShow, onSubmit, ...props}) => {
         case 3: button = <Button variant="outline-danger"  > ❌ Error </Button>; break;
         default: break;
     }
-
+    debugger
 
     return <>       
-        <Modal size="sm" onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title={<span>Join secured room</span>}>
+        
+        <Modal className="py-4" closeButton {...{show, setShow}} >
         <MD>{``}</MD>
         <Form ref={ref}>
             <FloatingLabel controlId="floatingInput" label="password" className="mb-3">

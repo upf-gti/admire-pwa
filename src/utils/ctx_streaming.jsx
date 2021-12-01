@@ -4,8 +4,8 @@ import { useState, useContext, useEffect, createContext } from 'react'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
 import { RoomsContext } from 'utils/ctx_rooms'
-import { strategy } from "workbox-streams"
 
+let liveCalls = [];
 
 export const StreamContext = createContext(); 
 export default ({children, ...props}) => {
@@ -15,7 +15,6 @@ export default ({children, ...props}) => {
 
     const [state, setState]             = useState(0);
     let   [streams, setStreams]         = useState({});
-    let   [liveCalls, setLiveCalls]     = useState({});
     let   [localStream, setLocalStream] = useState(media.localStream);
 
     useEffect( ()=>{ 
@@ -139,7 +138,6 @@ export default ({children, ...props}) => {
         if (result) {
             const [mediaHubCallId, forwardedCallId] = result;
             delete liveCalls[mediaHubCallId];
-            setLiveCalls(liveCalls);
         }
     }
 
@@ -158,7 +156,6 @@ export default ({children, ...props}) => {
         if (!target || !source)
             return console.error(`source or target callId's are undefined`);
         liveCalls[target] = source;
-        setLiveCalls({...liveCalls});
     }
 
     function getLiveCall(callId)

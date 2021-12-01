@@ -86,7 +86,6 @@ export default ({children, ...props}) => {
         }
         if(isConnected.rtc && isConnected.app && isLogged){
 
-
             BRA.rtcClient.register(user.username, ({status, description})=>{
                 if(status === 'error')
                 {
@@ -103,15 +102,17 @@ export default ({children, ...props}) => {
         setToken(null);
         return http.post(`${process.env.REACT_APP_API_URL}/auth/basic`, {data:{ email, password }})
         .then(response => {
-            if(response?.access_token){
-                toast.success('Success login', { id: toastId });
-                setToken(response.access_token);
-                return response.access_token;
-            }
-            else {
-                toast.error(`Error ${response.error}: ${response.message}`, { id: toastId });
+            if(response?.error || !response?.access_token)
+            {
+                for(let msg of [response.message].flat()) 
+                    toast.error(`onLogin error: ${msg}`);
+                toast.dismiss(toastId);
                 setTimeout(logout,2000)
+                return null;
             }
+            toast.success('Success login', { id: toastId });
+            setToken(response.access_token);
+            return response.access_token;
         })
         .catch(err => toast.error(`Error catch: ${err}`, { id: toastId }));
     }
