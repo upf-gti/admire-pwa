@@ -16,9 +16,14 @@ import WizardModal from 'components/modal_wizard'
 import UsersModal from 'components/modal_users'
 import ChatModal from 'components/modal_chat'
 import StreamButtons from 'components/btngrp_stream';
-
+import * as serviceWorkerRegistration from 'serviceWorkerRegistration';
 
 function App({...props}) {
+  useEffect(()=>{
+    serviceWorkerRegistration.register();
+  },[])
+
+
   const history = useHistory();
   const auth = useContext(AuthContext);
   const rooms = useContext(RoomsContext);
