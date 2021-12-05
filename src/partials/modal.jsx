@@ -35,7 +35,15 @@ export default ({title, children, show, setShow, callback, buttons, closeButton,
             .modal-partial.modal-shadow-lg.modal-md.modal-dialog-centered:focus-visible {
                 outline: none;
             }
-
+            .modal-body{
+                min-height: 60vh;
+                overflow-y: scroll;
+                overflow-x: hidden;
+            }
+            .modal-content{
+                max-height: 90vh;
+                overflow: hidden;
+            }
             .modal-partial {
                 .modal-title {
                     font-weight: lighter;

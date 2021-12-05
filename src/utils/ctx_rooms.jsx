@@ -1,6 +1,6 @@
 import * as BRA from 'lib_bra'
 import toast from  'react-hot-toast'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useRef } from 'react-router-dom'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'utils/ctx_authentication'
 
@@ -11,9 +11,10 @@ export default ({children, ...props}) => {
     const auth    = useContext(AuthContext);
     const history = useHistory();
     
-    let   [rooms, setRooms]     = useState({});
-    const [ready, setReady]     = useState(false);
-    let   [current, setCurrent] = useState(null);
+    let   [rooms, setRooms]       = useState({});
+    const [ready, setReady]       = useState(false);
+    let   [current, setCurrent]   = useState(null);
+    const [messages, setMessages] = useState([]);
     
     useEffect( ()=>{ 
         if(!auth.isLogged) return;
