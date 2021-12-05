@@ -20,8 +20,8 @@ export default ({title, children, show, setShow, callback, buttons, closeButton,
                 {children}
             </Modal.Body>
 
-            { (buttons || closeButton) && <Modal.Footer>
-                {buttons && buttons.map( (v,k,a) => <div key={k}>{v}</div> )}
+            { (buttons || closeButton) && <Modal.Footer className="flex-nowrap">
+                {buttons && buttons.map( (v,k,a) => v )}
                 {closeButton && <Button variant="outline-secondary" onClick={() => setShow(false)}> Close</Button>}
             </Modal.Footer>} 
         </Modal>

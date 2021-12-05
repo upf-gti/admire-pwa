@@ -66,8 +66,8 @@ export default ({children, ...props}) => {
 
     function onGuestLeft({data:{user,room}})
     {
+        BRA.appClient.getRoom(onGetRoom);
         if(current){
-            BRA.appClient.getRoom(onGetRoom);
             toast(`User '${user.username}' left`);
             setCurrent( {...current, users: current?.users??[].filter(u=>u.username!==user.username)} );
         }
@@ -75,8 +75,8 @@ export default ({children, ...props}) => {
     
     function onGuestJoin({data:{user,room}})
     {
+        BRA.appClient.getRoom(onGetRoom);
         if(current){
-            BRA.appClient.getRoom(onGetRoom);
             toast(`User '${user.username}' joined`);
             setCurrent( {...current, users: current?.users??[].push(user)} );
         }
@@ -144,7 +144,6 @@ export default ({children, ...props}) => {
         return room; } )
         //.catch( (e)=> toast.error(e) );
     }
-
 
     const store = window.rooms = {
         joinRoom,
