@@ -6,7 +6,7 @@ import { AuthContext } from 'utils/ctx_authentication'
 
 
 export const RoomsContext = createContext(); 
-
+let messages = []
 export default ({children, ...props}) => {
     const auth    = useContext(AuthContext);
     const history = useHistory();
@@ -14,7 +14,12 @@ export default ({children, ...props}) => {
     let   [rooms, setRooms]       = useState({});
     const [ready, setReady]       = useState(false);
     let   [current, setCurrent]   = useState(null);
-    const [messages, setMessages] = useState([]);
+    const [state, setState] = useState(0);
+
+    function setMessages(d){
+        messages = d;
+        setState(s => s+1);
+    }
     
     useEffect( ()=>{ 
         if(!auth.isLogged) return;
@@ -37,8 +42,12 @@ export default ({children, ...props}) => {
         BRA.appClient.off(BRA.APPEvent.RoomCreated,      onRoomCreated);
         BRA.appClient.off(BRA.APPEvent.RoomDeleted,      onRoomDeleted);
         BRA.appClient.off(BRA.APPEvent.UserRejoined,     onUserRejoined);
-
     }}, [auth.isLogged]);
+
+    useEffect(()=>{
+        if(!current) return;
+        localStorage.setItem('messages', JSON.stringify(messages));
+    },[messages]);
 
     function isUserInRoom(username, roomName)
     {
@@ -71,6 +80,7 @@ export default ({children, ...props}) => {
         if(current){
             toast(`User '${user.username}' left`);
             setCurrent( {...current, users: current?.users??[].filter(u=>u.username!==user.username)} );
+            messages.push({text:`User '${user.username}' left`, timestamp: new Date().toISOString()});
         }
     }    
     
@@ -80,6 +90,7 @@ export default ({children, ...props}) => {
         if(current){
             toast(`User '${user.username}' joined`);
             setCurrent( {...current, users: current?.users??[].push(user)} );
+            messages.push({text:`User '${user.username}' joined`, timestamp: new Date().toISOString()});
         }
     }
     
@@ -88,11 +99,13 @@ export default ({children, ...props}) => {
 
         if(room?.name)
         {
+            BRA.appClient.on(BRA.APPEvent.ChatText, onMessage);
             if(history.location.pathname !== `/room/${room?.name}`){
-                history.push(`/room/${room?.name}`);
+                   history.push(`/room/${room?.name}`);
             }
         }
         else{
+            BRA.appClient.off(BRA.APPEvent.ChatText, onMessage);
             history.push(`/`);
         }
     }
@@ -104,7 +117,28 @@ export default ({children, ...props}) => {
         setRooms(rs);
     }
 
-    function onUserRejoined(){
+    function onUserRejoined({event,data}){
+        if(current){
+            const user = data.user;
+            messages.push({text:`User '${user.username}' rejoined`, timestamp: new Date().toISOString()});
+        }
+    }
+
+    function onMessage({ event, data }) {
+        if (!data) return;
+        //const {text, timestamp, username} = data;
+        setMessages([...messages,data])
+    }
+
+    async function sendMessage(text){
+        return new Promise( (resolve, reject) => {
+            if(!current) reject();
+
+            function onSendMessage(data){
+                resolve();
+            }
+            BRA.appClient.sendText(text, onSendMessage);
+        })
     }
 
     function createRoom(roomName, {password, hidden, icon}){
@@ -130,6 +164,12 @@ export default ({children, ...props}) => {
             });
         })    
         .then(  (room)=>{ BRA.appClient.getRoom(onGetRoom); return room; } )
+        .finally( ()=>{
+            let m = localStorage.getItem('messages');
+            if(m) m=JSON.parse(m);
+            else m=[];
+            setMessages([...m]);
+        })
     }
 
     function leaveRoom(){
@@ -140,6 +180,7 @@ export default ({children, ...props}) => {
             });
         })
         .finally(  (room)=>{ 
+            setMessages([]);
             BRA.appClient.getRoom(onGetRoom);
             BRA.appClient.getRooms(onGetRooms); 
         return room; } )
@@ -155,6 +196,8 @@ export default ({children, ...props}) => {
         isUserInRoom,
         ready,
         current,
+        sendMessage,
+        messages,
         list: rooms,
     }
 
