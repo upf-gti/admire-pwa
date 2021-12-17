@@ -41,7 +41,7 @@ export default () => {
         ]} tabIndex="0" closeButton size="lg" {...{ show, setShow }} title={<span><i className="bi bi-chat-dots" /> Chat</span>}>
             <ul className="messages">
                 {rooms.messages.map((message, i) => <>{message.username? <li key={i} className={message.username === auth.user.username ? "sent" : "replies"}>
-                    <Image className="border border-light border-2 shadow" roundedCircle src={message.avatar} alt={message.username} />
+                    <Image className="border border-light border-2 shadow" roundedCircle src={rooms.current.users.filter( v => v.username === message.username)[0].avatar} alt={message.username} />
                     <p className="rounded-3 shadow">
                         <span className="meta d-block">
                             <span className="fw-bold">{message.username}</span>

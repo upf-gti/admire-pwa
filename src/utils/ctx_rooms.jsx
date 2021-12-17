@@ -3,7 +3,7 @@ import toast from  'react-hot-toast'
 import { useHistory, useParams, useRef } from 'react-router-dom'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'utils/ctx_authentication'
-import avatar_img from 'assets/img/default_avatar.svg'
+import avatar_img from 'assets/img/UilUser.svg'
 
 export const RoomsContext = createContext(); 
 let messages = []
@@ -95,12 +95,30 @@ export default ({children, ...props}) => {
             messages.push({text:`User '${user.username}' joined`, timestamp: new Date().toISOString()});
         }
     }
+
+    function kickUser(username){
+        if(!current) return;
+        BRA.appClient.kickUser(username, ({event, data})=>{
+            if(event==='error'){
+                return toast.error(data.message);
+            }
+            BRA.appClient.getRoom(onGetRoom)
+        });
+    }
     
-    function onGetRoom({ data: {room} }){
+    async function onGetRoom({ data: {room} }){
         setCurrent(room?.name?{...room}:null);
 
         if(room?.name)
         {
+            for(let user of room.users??[]){
+                if(user.avatar) continue;
+                user.avatar = avatars[user.username] ?? await auth.getUserAvatar(user.username)
+                user.avatar = user.avatar.length
+                ? user.avatar 
+                : avatar_img;
+            }
+
             BRA.appClient.on(BRA.APPEvent.ChatText, onMessage);
             if(history.location.pathname !== `/room/${room?.name}`){
                    history.push(`/room/${room?.name}`);
@@ -129,7 +147,6 @@ export default ({children, ...props}) => {
     async function onMessage({ event, data }) {
         if (!data) return;
         //const {text, timestamp, username} = data;
-        data.avatar = avatars[data.username] ?? await auth.getUserAvatar(data.username) ?? avatar_img;
         setMessages([...messages,data])
     }
 
@@ -197,6 +214,7 @@ export default ({children, ...props}) => {
         setCurrent,
         imInRoom,
         isUserInRoom,
+        kickUser,
         ready,
         current,
         sendMessage,
