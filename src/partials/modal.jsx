@@ -31,19 +31,23 @@ export default ({title, children, show, setShow, callback, buttons, closeButton,
 
             .modal-dialog{
                 max-height: calc(100vh - 1rem);
+                outline: none !important;
             }
             .modal-partial.modal-shadow-lg.modal-md.modal-dialog-centered:focus-visible {
                 outline: none;
             }
-            .modal-body{
-                min-height: 60vh;
-                overflow-y: scroll;
-                overflow-x: hidden;
-            }
+
             .modal-content{
                 max-height: 90vh;
-                overflow: hidden;
+                //overflow: hidden;
             }
+
+            .modal-lg > .modal-content{
+                min-height: 50vh;
+                //overflow-y: scroll;
+                //overflow-x: hidden;
+            }
+
             .modal-partial {
                 .modal-title {
                     font-weight: lighter;

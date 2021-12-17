@@ -6,7 +6,7 @@ import { findByDisplayValue } from '.pnpm/@testing-library+dom@8.10.1/node_modul
 import Modal from 'partials/modal'
 
 export default ({show, setShow, ...props}) => {
-    const pages = ["Devices","Battery", "Pose", "Shader"];
+    const pages = ["Devices","Battery", "Pose"];
     const [selected, setSelected] = useState(0);
     const [page, setPage] = useState(null);
     const [views, setViews] = useState([]);
@@ -67,12 +67,28 @@ export default ({show, setShow, ...props}) => {
             */}
         </Gesture>
         <style global jsx>{`
+            @import 'src/variables.scss';
+
+
             #wizard{
                 .nav-tabs{
                     width: calc(100% + 24px);
                     margin-left: -12px;
                     margin-top: -3.6rem;
                     //margin-top: -1rem;
+
+                    & .nav-link{
+                        background-color: rgba(255,255,255,0.15);
+                        color: white;
+                        font-weight: 500;
+
+                        &.active{
+                            color: $color4 !important;
+                            background-color: #fff !important;
+                        }
+                    }
+
+                    
                 }
 
                 .modal-content{

@@ -13,8 +13,9 @@ export default () => {
     
     //introduction message to user settings panel
     
-    function onSubmit(){
-        
+    function onSubmit(e){
+        e.preventDefault();
+        debugger;
     }
 
 
@@ -57,13 +58,13 @@ export default () => {
             </Col>
         </Col>
         <Col xs={6}>
-            <Form.Group className="mb-1" children={<FloatingLabel label="username">     <Form.Control name='username'   placeholder='username'   /*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['username'  ]}*/     />      </FloatingLabel>} />
-            <Form.Group className="mb-1" children={<FloatingLabel label="email">        <Form.Control name='email'      placeholder='email'      /*onChange={handleUserInput}*/ type="email"     /*defaultValue={formvalues['email'     ]}*/     />      </FloatingLabel>} />{/*value={userEmail} onChange={event => setEmail(event.target.value)} isInvalid={!isEmailValid} /> */}
-            <Form.Group className="mb-1" children={<FloatingLabel label="password">     <Form.Control name='password'   placeholder='password'   /*onChange={handleUserInput}*/ type="password"  /*defaultValue={formvalues['password'  ]}*/     />      </FloatingLabel>} />
-            <Form.Group className="mb-1" children={<FloatingLabel label="avatar URL">   <Form.Control name='avatar'     placeholder='avatar URL' /*onChange={handleUserInput}*/ type="avatar"    /*defaultValue={formvalues['avatar URL']}*/     />      </FloatingLabel>} />{/*value={image_url !== '' ? image_url : userEmail !== '' ? gravatar_url : ''} onChange={event => setImageURL(event.target.value)} */}
-            <Form.Group className="mb-1" children={<FloatingLabel label="name">         <Form.Control name='name'       placeholder='name'       /*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['name'      ]}*/     />      </FloatingLabel>} />
-            <Form.Group className="mb-1" children={<FloatingLabel label="surname">      <Form.Control name='surname'    placeholder='surname'    /*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['surname'   ]}*/     />      </FloatingLabel>} />
-            <Form.Group className="mb-1" children={<FloatingLabel label="birthddate">   <Form.Control name='birthdate'  placeholder='birthdate'  /*onChange={handleUserInput}*/ type="date"      /*defaultValue={formvalues['birthdate' ]}*/     />      </FloatingLabel>} />
+            <Form.Group className="mb-1" children={<FloatingLabel label="username">     <Form.Control name='username'   placeholder='username'   defaultValue={auth.user.username}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['username'  ]}*/     />      </FloatingLabel>} />
+            <Form.Group className="mb-1" children={<FloatingLabel label="email">        <Form.Control name='email'      placeholder='email'      defaultValue={auth.user.email}/*onChange={handleUserInput}*/ type="email"     /*defaultValue={formvalues['email'     ]}*/     />      </FloatingLabel>} />{/*value={userEmail} onChange={event => setEmail(event.target.value)} isInvalid={!isEmailValid} /> */}
+            <Form.Group className="mb-1" children={<FloatingLabel label="password">     <Form.Control name='password'   placeholder='password'   defaultValue={auth.user}/*onChange={handleUserInput}*/ type="password"  /*defaultValue={formvalues['password'  ]}*/     />      </FloatingLabel>} />
+            <Form.Group className="mb-1" children={<FloatingLabel label="avatar URL">   <Form.Control name='avatar'     placeholder='avatar URL' defaultValue={auth.user.avatar}/*onChange={handleUserInput}*/ type="avatar"    /*defaultValue={formvalues['avatar URL']}*/     />      </FloatingLabel>} />{/*value={image_url !== '' ? image_url : userEmail !== '' ? gravatar_url : ''} onChange={event => setImageURL(event.target.value)} */}
+            <Form.Group className="mb-1" children={<FloatingLabel label="name">         <Form.Control name='name'       placeholder='name'       defaultValue={auth.user.name}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['name'      ]}*/     />      </FloatingLabel>} />
+            <Form.Group className="mb-1" children={<FloatingLabel label="surname">      <Form.Control name='surname'    placeholder='surname'    defaultValue={auth.user.surname}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['surname'   ]}*/     />      </FloatingLabel>} />
+            <Form.Group className="mb-1" children={<FloatingLabel label="birthddate">   <Form.Control name='birthdate'  placeholder='birthdate'  defaultValue={auth.user.birthdate}/*onChange={handleUserInput}*/ type="date"      /*defaultValue={formvalues['birthdate' ]}*/     />      </FloatingLabel>} />
         </Col>
 
   

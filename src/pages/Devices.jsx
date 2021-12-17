@@ -23,11 +23,11 @@ export default ()=>{
         <h3 className="pt-2"><b>Step 1: Devices</b></h3>
         <Row id='devices-row'>
 
-            <Col>
+            <Col md={6}>
                 <Video id="local" stream={media.localStream} isLocal={!test} />
             </Col>
 
-            <Col>
+            <Col md={6}>
                 <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                 <Form.Select value={media.settings?.video ?? "None"} onChange={({ target }) => {
                     media.setVideo(target.value);
@@ -67,9 +67,9 @@ export default ()=>{
                 max-height: 25vh;
             }
 
-            #devices .row{
+            /*#devices .row{
                 flex-direction: column !important;
-            }
+            }*/
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
                 #devices .row{
                     flex-direction: row !important;

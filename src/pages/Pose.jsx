@@ -114,8 +114,8 @@ export default function Pose() {
         <div id='pose'>
         <h3 className="pt-2"><b>Step 3: Positioning in frame</b></h3>
             <Row>
-            <Col>
-                <video style={{ transform: "rotateY(180deg)", width:"100%" }} ref={videoRef}></video>
+            <Col md={6}>
+                <video muted style={{ transform: "rotateY(180deg)", width:"100%" }} ref={videoRef}></video>
                 <ProgressBar>
                     <ProgressBar variant = "danger"  key = {1} now = {dangerRange*.5} />
                     <ProgressBar variant = "warning" key = {2} now = {warningRange*.5} />
@@ -125,7 +125,7 @@ export default function Pose() {
                 </ProgressBar>
                 <Form.Range id="range" value={center.x * 100}/>
             </Col>
-            <Col>
+            <Col md={6}>
                 <MD className="user-select-none">{message}</MD>
             </Col>
 
@@ -134,9 +134,9 @@ export default function Pose() {
 
         <style global jsx>{`
         @import "src/variables.scss";
-        #pose .row{
+        /*#pose .row{
             flex-direction: column !important;
-        }
+        }*/
         @media only screen and (orientation: landscape) and (max-height: 671px) {           
             #pose .row{
                 flex-direction: row !important;

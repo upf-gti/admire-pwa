@@ -29,10 +29,10 @@ export default function Battery() {
     return <>
         <h3 className="pt-2"><b>Step 2: Battery Level</b></h3>
         <Row>
-            <Col xs="auto">
+            <Col xs="3">
                 <BatteryIcon />
             </Col>
-            <Col>
+            <Col >
                 <MD className="pt-3 user-select-none">{message}</MD>
             </Col>
         </Row>

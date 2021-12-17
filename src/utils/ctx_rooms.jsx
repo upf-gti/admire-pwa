@@ -3,10 +3,12 @@ import toast from  'react-hot-toast'
 import { useHistory, useParams, useRef } from 'react-router-dom'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'utils/ctx_authentication'
-
+import avatar_img from 'assets/img/default_avatar.svg'
 
 export const RoomsContext = createContext(); 
 let messages = []
+let avatars = {}
+
 export default ({children, ...props}) => {
     const auth    = useContext(AuthContext);
     const history = useHistory();
@@ -124,9 +126,10 @@ export default ({children, ...props}) => {
         }
     }
 
-    function onMessage({ event, data }) {
+    async function onMessage({ event, data }) {
         if (!data) return;
         //const {text, timestamp, username} = data;
+        data.avatar = avatars[data.username] ?? await auth.getUserAvatar(data.username) ?? avatar_img;
         setMessages([...messages,data])
     }
 

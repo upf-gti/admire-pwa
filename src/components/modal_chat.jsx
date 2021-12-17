@@ -5,10 +5,6 @@ import Modal from 'partials/modal'
 import { RoomsContext } from 'utils/ctx_rooms'
 import { AuthContext } from 'utils/ctx_authentication';
 
-import * as BRA from 'lib_bra'
-import toast from 'react-hot-toast'
-
-let messages = [];
 export default () => {
     const inputRef = useRef(null);
     const rooms = useContext(RoomsContext);
@@ -24,8 +20,6 @@ export default () => {
         rooms.sendMessage(inputRef.current.value)
             .then(() => inputRef.current.value = "")
     }
-
-    console.log(rooms.messages)
 
     return <>
         <Nav.Item onClick={() => setShow(s => !s)} disabled={!rooms.current}><i className="bi bi-chat-dots" />Chat</Nav.Item>
@@ -44,10 +38,10 @@ export default () => {
                     </Button>
                 </InputGroup>
             </Form>
-        ]} tabIndex="0" closeButton size="md" {...{ show, setShow }} title={<span><i className="bi bi-chat-dots" /> Chat</span>}>
+        ]} tabIndex="0" closeButton size="lg" {...{ show, setShow }} title={<span><i className="bi bi-chat-dots" /> Chat</span>}>
             <ul className="messages">
                 {rooms.messages.map((message, i) => <>{message.username? <li key={i} className={message.username === auth.user.username ? "sent" : "replies"}>
-                    <Image className="border border-light border-2 shadow" roundedCircle src="http://emilcarlsson.se/assets/mikeross.png" alt={message.username} />
+                    <Image className="border border-light border-2 shadow" roundedCircle src={message.avatar} alt={message.username} />
                     <p className="rounded-3 shadow">
                         <span className="meta d-block">
                             <span className="fw-bold">{message.username}</span>

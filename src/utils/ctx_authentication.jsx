@@ -102,6 +102,10 @@ export default ({children, ...props}) => {
         setToken(null);
         return http.post(`${process.env.REACT_APP_API_URL}/auth/basic`, {data:{ email, password }})
         .then(response => {
+            if(!response){
+                throw(`onLogin error: no response`);
+            }
+
             if(response?.error || !response?.access_token)
             {
                 for(let msg of [response.message].flat()) 
@@ -140,6 +144,17 @@ export default ({children, ...props}) => {
             .catch(err => reject(err));
         });
     }
+
+    async function getUserAvatar(username){
+        return new Promise((resolve, reject) => {
+            http.get(`${process.env.REACT_APP_API_URL}/users/${username}/avatar`, {headers:{Authorization:`Bearer ${token}`}})
+            .then( response => {
+                if(response?.error) reject(response);
+                else resolve(response.avatar);
+            })
+            .catch(err => reject(err));
+        });
+    }
     
     const store = window.auth = {
         user       
@@ -147,6 +162,7 @@ export default ({children, ...props}) => {
        ,isConnected: isConnected.app && isConnected.rtc
        ,login
        ,logout
+       ,getUserAvatar
    }
  
     return <AuthContext.Provider value={store}> 
