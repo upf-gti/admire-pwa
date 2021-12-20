@@ -19,9 +19,7 @@ export default ({children, ...props}) => {
 
     useEffect( ()=>{ //Constructor
         function onUnload(){
-            BRA.rtcClient.unregister();
-            BRA.rtcClient.disconnect();
-            BRA.appClient.disconnect(); 
+            logout();   
             window.removeEventListener('unload', onUnload);
         }
         window.addEventListener('unload', onUnload);
@@ -31,16 +29,18 @@ export default ({children, ...props}) => {
         function onAppDisconnect (){ toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); }
         function onRtcDisconnect (){ toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); }
 
-        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect   );
-        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect   );
-        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect);
-        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect);
+        BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect    );
+        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect    );
+        BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect );
+        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect );
+        BRA.appClient.on(BRA.APPEvent.Error,                onError );
 
     return ()=>{ //Destructor
-        BRA.appClient.off(BRA.APPEvent.ClientConnected,     onAppConnect        );
-        BRA.appClient.off(BRA.RTCEvent.ClientConnected,     onAppDisconnect     );
-        BRA.rtcClient.off(BRA.APPEvent.ClientDisconnected,  onRtcConnect        );
-        BRA.rtcClient.off(BRA.RTCEvent.ClientDisconnected,  onRtcDisconnect     );
+        BRA.appClient.off(BRA.APPEvent.ClientConnected,     onAppConnect    );
+        BRA.appClient.off(BRA.RTCEvent.ClientConnected,     onAppDisconnect );
+        BRA.rtcClient.off(BRA.APPEvent.ClientDisconnected,  onRtcConnect    );
+        BRA.rtcClient.off(BRA.RTCEvent.ClientDisconnected,  onRtcDisconnect );
+        BRA.appClient.off(BRA.APPEvent.Error,               onError );
 
         onUnload();
     }
@@ -49,13 +49,22 @@ export default ({children, ...props}) => {
 
     useEffect( ()=>{
         if(!isConnected.app && token){
+            
             BRA.appClient.connect(process.env.REACT_APP_APP_URL, token);
         }
     }, [isConnected.app, token]);
 
     useEffect( ()=>{
         if(!isConnected.rtc && token){
-            BRA.rtcClient.connect(process.env.REACT_APP_RTC_URL, token);
+            (async ()=>{
+                const u = await getUserInfo()
+                .then( (response) => {
+                    toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
+                    setUser(response);
+                    return response;
+                })
+                BRA.rtcClient.connect(process.env.REACT_APP_RTC_URL, u.username);
+            })()
         }
     }, [isConnected.rtc, token]);
 
@@ -84,24 +93,29 @@ export default ({children, ...props}) => {
                 }
             });
         }
-        if(isConnected.rtc && isConnected.app && isLogged){
-
-            BRA.rtcClient.register(user.username, ({status, description})=>{
-                if(status === 'error')
-                {
-                    toast.error(`onRegister error: ${description}`,{icon:<i className="bi bi-activity"/>, duration: 5000});
-                    setTimeout(logout,1000);
-                }
-            });
-        }
     },[isConnected.rtc && isConnected.app, token, isLogged, retries]);
 
-    async function login(email, password){
+    function onError(response){
+        const {event, data} = response;
+        if(event === 'error'){
+            switch(data.error)
+            {
+                case 101: 
+                    toast.error(data.message);
+                    logout(); 
+                break;
+                default:
+                    console.warn("error type not handled", data);
+            }
+        }
+    }
+
+    function login(email, password){
         const toastId = toast.loading('Logging in...');
         email = email.toLowerCase();
         setToken(null);
         return http.post(`${process.env.REACT_APP_API_URL}/auth/basic`, {data:{ email, password }})
-        .then(response => {
+        .then(async response => {
             if(!response){
                 throw(`onLogin error: no response`);
             }
@@ -116,6 +130,7 @@ export default ({children, ...props}) => {
             }
             toast.success('Success login', { id: toastId });
             setToken(response.access_token);
+
             return response.access_token;
         })
         .catch(err => toast.error(`Error catch: ${err}`, { id: toastId }));
@@ -128,7 +143,6 @@ export default ({children, ...props}) => {
         setLogged(false);
         toast('Logged out');
         
-        BRA.rtcClient.unregister();
         BRA.rtcClient.disconnect();
         BRA.appClient.disconnect(); 
         setRetries(0);
@@ -143,6 +157,52 @@ export default ({children, ...props}) => {
             })
             .catch(err => reject(err));
         });
+    }
+
+    async function updateUserInfo(data){
+        const info = await getUserInfo();
+        if(!info) return;
+        let promises = [];
+        
+        ///users/update/username
+        if(info.username != data.username)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/username`, {data:{username:data.username}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        ///users/update/password
+        if(info.password != data.password)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/password`, {data:{password:data.password}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        ///users/update/avatar
+        if(info.avatar != data.avatar)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/avatar`, {data:{avatar:data.avatar}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        ///users/update/name
+        if(info.name != data.name)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/name`, {data:{name:data.name}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        ///users/update/surname
+        if(info.surname != data.surname)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/surname`, {data:{email:data.surname}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        ///users/update/birthdate
+        if(info.birthdate != data.birthdate)
+            promises.push(http.post(`${process.env.REACT_APP_API_URL}/users/update/birthdate`, {data:{description:data.birthdate}}, {headers:{Authorization:`Bearer ${token}`}}));
+
+        if(promises.length === 0) 
+            return toast.success('No changes on user info detected');
+
+        return Promise.all(promises)
+        .then(response => {
+            if(!response) return;
+            if(response.some(r => r?.error))
+            {
+                toast.error('Error updating user info');
+                return;
+            }
+            toast.success('User info updated');
+            return response;
+        })
+        .catch(err => toast.error(`Error catch: ${err}`));
     }
 
     async function getUserAvatar(username){
@@ -162,7 +222,9 @@ export default ({children, ...props}) => {
        ,isConnected: isConnected.app && isConnected.rtc
        ,login
        ,logout
+       ,getUserInfo
        ,getUserAvatar
+       ,updateUserInfo
    }
  
     return <AuthContext.Provider value={store}> 

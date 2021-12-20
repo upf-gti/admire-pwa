@@ -1,4 +1,4 @@
-import React, {useState, useContext } from 'react';
+import React, {useState, useContext, useRef } from 'react';
 import { Row, Col, Form, FloatingLabel, ButtonGroup, Button, Image } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import MD from 'utils/md';
@@ -6,23 +6,33 @@ import { AuthContext } from 'utils/ctx_authentication';
 
 import profile_img from 'assets/img/profile_light.png'
 import HForm from 'utils/forms'
+import toast from 'react-hot-toast';
 
 export default () => {
-    const [show, setShow] = useState(false);
+    const ref = useRef(null);
     const auth = useContext(AuthContext);
+    const [show, setShow] = useState(false);
     
     //introduction message to user settings panel
     
-    function onSubmit(e){
-        e.preventDefault();
-        debugger;
+    async function submit(){
+        if ( !ref?.current || !show ) return;
+        let [username, email, bla, avatar, name, surname, birthdate] = Array.from(ref.current.elements).map(v => v.value);
+        auth.updateUserInfo({username, email, avatar, name, surname, birthdate});
+    }
+
+    async function clear(){
+        Array.from(ref.current.elements).foreach(v => {
+            debugger;
+        });
+        toast.success('User info restored');
     }
 
 
     if(!auth.isLogged) return <></>;
     return <>
         <Button variant="link" onClick={ ()=>setShow(1) }>Profile</Button>
-        <HForm onSubmit={onSubmit}>
+       
 
         <Modal closeButton size="lg" {...{show, setShow}} 
         //title={ <h2 className="user-select-none">Profile</h2>}
@@ -32,8 +42,8 @@ export default () => {
         
         <div align="center" className="fw-bolder">
         <ButtonGroup>
-            <Button variant = "outline-primary">Save</Button>
-            <Button variant = "outline-secondary">Discard</Button>
+            <Button onClick={submit} variant = "outline-primary">Save</Button>
+            <Button onClick={clear} variant = "outline-secondary">Discard</Button>
         </ButtonGroup>
         </div>
         ]}
@@ -58,19 +68,20 @@ export default () => {
             </Col>
         </Col>
         <Col xs={6}>
+            <Form ref={ref}>
             <Form.Group className="mb-1" children={<FloatingLabel label="username">     <Form.Control name='username'   placeholder='username'   defaultValue={auth.user.username}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['username'  ]}*/     />      </FloatingLabel>} />
-            <Form.Group className="mb-1" children={<FloatingLabel label="email">        <Form.Control name='email'      placeholder='email'      defaultValue={auth.user.email}/*onChange={handleUserInput}*/ type="email"     /*defaultValue={formvalues['email'     ]}*/     />      </FloatingLabel>} />{/*value={userEmail} onChange={event => setEmail(event.target.value)} isInvalid={!isEmailValid} /> */}
+            <Form.Group className="mb-1" children={<FloatingLabel label="email">        <Form.Control disabled name='email'      placeholder='email'      defaultValue={auth.user.email}/*onChange={handleUserInput}*/ type="email"     /*defaultValue={formvalues['email'     ]}*/     />      </FloatingLabel>} />{/*value={userEmail} onChange={event => setEmail(event.target.value)} isInvalid={!isEmailValid} /> */}
             <Form.Group className="mb-1" children={<FloatingLabel label="password">     <Form.Control name='password'   placeholder='password'   defaultValue={auth.user}/*onChange={handleUserInput}*/ type="password"  /*defaultValue={formvalues['password'  ]}*/     />      </FloatingLabel>} />
             <Form.Group className="mb-1" children={<FloatingLabel label="avatar URL">   <Form.Control name='avatar'     placeholder='avatar URL' defaultValue={auth.user.avatar}/*onChange={handleUserInput}*/ type="avatar"    /*defaultValue={formvalues['avatar URL']}*/     />      </FloatingLabel>} />{/*value={image_url !== '' ? image_url : userEmail !== '' ? gravatar_url : ''} onChange={event => setImageURL(event.target.value)} */}
             <Form.Group className="mb-1" children={<FloatingLabel label="name">         <Form.Control name='name'       placeholder='name'       defaultValue={auth.user.name}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['name'      ]}*/     />      </FloatingLabel>} />
             <Form.Group className="mb-1" children={<FloatingLabel label="surname">      <Form.Control name='surname'    placeholder='surname'    defaultValue={auth.user.surname}/*onChange={handleUserInput}*/ type="text"      /*defaultValue={formvalues['surname'   ]}*/     />      </FloatingLabel>} />
             <Form.Group className="mb-1" children={<FloatingLabel label="birthddate">   <Form.Control name='birthdate'  placeholder='birthdate'  defaultValue={auth.user.birthdate}/*onChange={handleUserInput}*/ type="date"      /*defaultValue={formvalues['birthdate' ]}*/     />      </FloatingLabel>} />
+            </Form>
         </Col>
 
   
         </Row>
         </Modal>
-        </HForm>
         <style global jsx>{`
 
         `}</style>

@@ -36,7 +36,7 @@ export default ({children, ...props}) => {
     }, [media.localStream]);
 
     function callUser(username, callback){
-        return BRA.rtcClient.call(username, callback ?? (({callId, status, description}) => {
+        return BRA.rtcClient.call('', username, callback ?? (({callId, status, description}) => {
             if(status === 'error'){
                 toast.error(`Call error: ${description}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }

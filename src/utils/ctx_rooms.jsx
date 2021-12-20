@@ -31,6 +31,7 @@ export default ({children, ...props}) => {
         BRA.appClient.on(BRA.APPEvent.RoomCreated,       onRoomCreated);
         BRA.appClient.on(BRA.APPEvent.RoomDeleted,       onRoomDeleted);
         BRA.appClient.on(BRA.APPEvent.UserRejoined,      onUserRejoined);
+        BRA.appClient.on(BRA.APPEvent.UserKicked,        onUserKicked);
 
         //Initial fetch of rooms
         BRA.appClient.getRooms( (m1) => { onGetRooms(m1)
@@ -50,6 +51,11 @@ export default ({children, ...props}) => {
         if(!current) return;
         localStorage.setItem('messages', JSON.stringify(messages));
     },[messages]);
+
+    function onUserKicked(){
+        BRA.appClient.getRoom(onGetRoom);
+        BRA.appClient.getRooms(onGetRooms);
+    }
 
     function isUserInRoom(username, roomName)
     {
@@ -147,6 +153,7 @@ export default ({children, ...props}) => {
     async function onMessage({ event, data }) {
         if (!data) return;
         //const {text, timestamp, username} = data;
+        data.avatar = avatars[data.username] ?? await auth.getUserAvatar(data.username) ?? avatar_img;
         setMessages([...messages,data])
     }
 
@@ -161,9 +168,9 @@ export default ({children, ...props}) => {
         })
     }
 
-    function createRoom(roomName, {password, hidden, icon}){
+    function createRoom(roomName, {password, hidden, icon, size}){
         return new Promise((resolve, reject)=>{
-            BRA.appClient.createRoom(roomName, password??"", hidden??false, icon && icon.length? icon : `https://unsplash.it/seed/test-${roomName}/160/100`, ({event, data}) => {
+            BRA.appClient.createRoom(roomName, password??"", hidden??false, size, icon && icon.length? icon : `https://unsplash.it/seed/test-${roomName}/160/100`, ({event, data}) => {
                 if(data.error) reject(data.message);
                 else resolve(data.room);
             });

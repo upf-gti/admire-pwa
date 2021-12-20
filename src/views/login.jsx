@@ -8,7 +8,6 @@ import RegisterModal from 'components/modal_register'
 import logo from 'assets/img/logo.png';
 import toast from 'react-hot-toast';
 import cookies from '@h3r/cookies'
-import * as BRA from 'lib_bra'
 
 export default () => {
     const auth = useContext(AuthContext);

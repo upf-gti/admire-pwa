@@ -2,7 +2,6 @@
 import { useParams } from "react-router-dom"
 import { Row, Col, Badge } from 'react-bootstrap'
 import { useContext, useLayoutEffect, useEffect, useState, useRef } from 'react'
-import * as BRA from 'lib_bra'
 
 import Video from 'partials/video'
 import { RoomsContext } from 'utils/ctx_rooms'

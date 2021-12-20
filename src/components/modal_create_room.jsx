@@ -31,9 +31,9 @@ export default () => {
     function submit() {
         if ( !ref?.current || !show ) return;
             
-        let [roomname, password, icon, hidden] = Array.from(ref.current.elements).map(v => v.value);
+        let [roomname, password, size, icon, hidden] = Array.from(ref.current.elements).map(v => v.value);
         
-        rooms.createRoom(roomname.toLowerCase(), {password, icon, hidden})
+        rooms.createRoom(roomname.toLowerCase(), {password, size, icon, hidden})
         .then( room =>{
             toast.success(`Created room ${room.name}`); 
             setTimeout( () => { setFetching(0); setShow(false); } , 1000);
@@ -73,6 +73,11 @@ export default () => {
 
             <FloatingLabel controlId="floatingInput" label="password" className="mb-3">
                 <Form.Control name="password" type="password" placeholder="password"/>
+            </FloatingLabel>
+
+
+            <FloatingLabel controlId="floatingInput" label="size" className="mb-3">
+                <Form.Control name="size" min="1" step="1" type="number" placeholder="max users" defaultValue="8"/>
             </FloatingLabel>
 
             <FloatingLabel controlId="floatingInput" label="icon" className="mb-3">
