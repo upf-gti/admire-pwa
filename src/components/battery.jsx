@@ -31,7 +31,7 @@ export default function Battery(){
     })
 
     return <>
-    <div id="battery" className="text-center">
+    <div id="battery-icon" className="text-center">
         <div className="battery-shape">
             <div className="level">
                 <div className="percentage" style={{width:`${battery.current?.level * 100}%`}}></div>
@@ -46,7 +46,10 @@ export default function Battery(){
     </div>
     <style global jsx>{`
             @import "src/variables.scss";
-
+            #battery-icon{
+                max-width: 150px;
+                margin: auto;
+            }
             .battery-shape{
                 position: relative;
                 min-width: 140px;

@@ -67,9 +67,6 @@ export default ()=>{
                 max-height: 25vh;
             }
 
-            /*#devices .row{
-                flex-direction: column !important;
-            }*/
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
                 #devices .row{
                     flex-direction: row !important;

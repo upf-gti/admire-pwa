@@ -26,16 +26,26 @@ export default function Battery() {
     * ${battery.level < 0.25 ? '❌ You need at least 25% of the battery charge to stream video.' : '✔️ You can stream video.'}
     `;
 
-    return <>
+    return <div id="battery">
         <h3 className="pt-2"><b>Step 2: Battery Level</b></h3>
         <Row>
-            <Col xs="3">
+            <Col md="4">
                 <BatteryIcon />
             </Col>
-            <Col >
+            <Col md="8">
                 <MD className="pt-3 user-select-none">{message}</MD>
             </Col>
         </Row>
+        <style global jsx>{`
+            @media only screen and (orientation: landscape) and (max-height: 671px) {           
+                #battery .row{
+                    flex-direction: row !important;
+                    .col{
+                        align-self: start;
+                    }
+                }
+            }  
+        `}</style>
         
-    </>
+    </div>
 }
