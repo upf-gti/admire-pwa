@@ -72,15 +72,13 @@ export default ()=>{
         const toastId = toast.loading('Resetting password...');
         const password = formvalues.password;
         await http.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, {data:{password}})
-        .then( ({status, description, message }) => {
-            switch (status) {
-                case 'ok':
-                    toast.success('Success', {id: toastId});
-                    setTimeout( ()=>history.push(`/`), 1000);
-                    break;
-                case 400: toast.error(message, {id: toastId}); break;
-                case 'error': toast.error(description, {id: toastId}); break;
-                default: toast.warn(description, {id: toastId});
+        .then( ({error, status, message }) => {
+            if (error) {
+                return toast.error(`onResetPassword: ${message}`, { id: toastId });
+            }
+            else{
+                toast.success('Success', {id: toastId});
+                setTimeout( ()=>history.push(`/`), 1000);
             }
         })
         .catch(err => {
@@ -89,8 +87,8 @@ export default ()=>{
     }
 
     return <>
-        <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
         <Modal closeButton show={true} 
+            setShow={()=>history.push(`/`)}
             onHide={() => history.push("/")} 
             title={<h2 className="user-select-none">Reset password</h2>}
             buttons={[
@@ -101,17 +99,18 @@ export default ()=>{
                     </Tooltip>
                 }
                 >
-                    <Button type="submit" disabled={!validated} > Proceed </Button>
+                    <Button type="submit" onClick={handleSubmit} disabled={!validated} > Proceed </Button>
                 </OverlayTrigger>
             ]}
         >
-            <MD className="user-select-none">{ "Please enter your new password."}</MD>
-            
-            <FloatingLabel controlId="floatingPassword" label="New Password">
-                <Form.Control required name="password" type="password" placeholder=" " onChange={handleUserInput} defaultValue={formvalues.password??""}/>
-            </FloatingLabel>
-
+            <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
+                <MD className="user-select-none">{ "Please enter your new password."}</MD>
+                
+                <FloatingLabel controlId="floatingPassword" label="New Password">
+                    <Form.Control required name="password" type="password" placeholder=" " onChange={handleUserInput} defaultValue={formvalues.password??""}/>
+                </FloatingLabel>
+            </Form> 
         </Modal> 
-        </Form>
+
     </>
 }
