@@ -21,12 +21,12 @@ export default ({children, ...props}) => {
         BRA.rtcClient.on(BRA.RTCEvent.IncomingCall, onIncomingCall);
         BRA.rtcClient.on(BRA.RTCEvent.CallOpened,   onCallOpened);
         BRA.rtcClient.on(BRA.RTCEvent.CallClosed,   onCallClosed);
-        BRA.rtcClient.on(BRA.RTCEvent.UserHangup,   onUserHangup);
+        BRA.rtcClient.on(BRA.RTCEvent.CallHangup,   onCallHangup);
     return ()=>{
         BRA.rtcClient.off(BRA.RTCEvent.IncomingCall, onIncomingCall);
         BRA.rtcClient.off(BRA.RTCEvent.CallOpened,   onCallOpened);
         BRA.rtcClient.off(BRA.RTCEvent.CallClosed,   onCallClosed);
-        BRA.rtcClient.off(BRA.RTCEvent.UserHangup,   onUserHangup);
+        BRA.rtcClient.off(BRA.RTCEvent.CallHangup,   onCallHangup);
     }}, []);
 
     useEffect( ()=>{
@@ -36,11 +36,12 @@ export default ({children, ...props}) => {
     }, [media.localStream]);
 
     function callUser(username, callback){
-        return BRA.rtcClient.call('', username, callback ?? (({callId, status, description}) => {
-            if(status === 'error'){
-                toast.error(`Call error: ${description}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
+        const response = callback ?? (({callId, error, message}) => {
+            if(error){
+                toast.error(`Call error: ${message}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }
-        }));
+        });
+        return BRA.rtcClient.call(username, {response});
     }
 
     function callAllUsers(){
@@ -114,7 +115,7 @@ export default ({children, ...props}) => {
         toast(`Call from ${getUserId(callId)} closed`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
-    function onUserHangup({ callId }){
+    function onCallHangup({ callId }){
         if (!callId)
             return console.error("No call");
 

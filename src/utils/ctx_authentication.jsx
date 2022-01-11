@@ -49,7 +49,6 @@ export default ({children, ...props}) => {
 
     useEffect( ()=>{
         if(!isConnected.app && token){
-            
             BRA.appClient.connect(process.env.REACT_APP_APP_URL, token);
         }
     }, [isConnected.app, token]);
@@ -63,7 +62,7 @@ export default ({children, ...props}) => {
                     setUser(response);
                     return response;
                 })
-                BRA.rtcClient.connect(process.env.REACT_APP_RTC_URL, u.username);
+                BRA.rtcClient.connect(process.env.REACT_APP_RTC_URL, token);
             })()
         }
     }, [isConnected.rtc, token]);
@@ -120,7 +119,7 @@ export default ({children, ...props}) => {
                 throw(`onLogin error: no response`);
             }
 
-            if(response?.error || !response?.access_token)
+            if(response?.error || !response?.token)
             {
                 for(let msg of [response.message].flat()) 
                     toast.error(`onLogin error: ${msg}`);
@@ -129,9 +128,9 @@ export default ({children, ...props}) => {
                 return null;
             }
             toast.success('Success login', { id: toastId });
-            setToken(response.access_token);
+            setToken(response.token);
 
-            return response.access_token;
+            return response.token;
         })
         .catch(err => toast.error(`Error catch: ${err}`, { id: toastId }));
     }

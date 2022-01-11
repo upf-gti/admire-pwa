@@ -64,9 +64,8 @@ export default () => {
         e.preventDefault();
         const email = formvalues.email.toLowerCase();
         const toastId = toast.loading('Resetting password...');
-        debugger;
         await http.post(`${process.env.REACT_APP_API_URL}/forgot-password`, { data: {email} })
-        .then(({error, message, status}) => {
+        .then(({error, message}) => {
             if (error) {
                 return toast.error(`onSubmitRecovery: ${message}`, { id: toastId });
             }

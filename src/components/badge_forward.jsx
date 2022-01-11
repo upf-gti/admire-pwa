@@ -25,12 +25,12 @@ function submit() {
         const [forwardingCallId, mediaHubtarget] = [callId, ref.current.value];
 
         function callback(response) {
-            const {callId, calleeId, callerId, status, description}=response;
-            if(status === "error")
+            const {callId, calleeId, callerId, error, message}=response;
+            if(error)
             {                
                 setFetching(3);           
                 setTimeout( () => { setFetching(0); } , 2000);
-                toast.error(`Mediahub Call response error: ${description}`, {duration: 5000});
+                toast.error(`Mediahub Call response error: ${message}`, {duration: 5000});
             }
             else {
                 setFetching(2);   

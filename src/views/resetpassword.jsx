@@ -72,7 +72,7 @@ export default ()=>{
         const toastId = toast.loading('Resetting password...');
         const password = formvalues.password;
         await http.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, {data:{password}})
-        .then( ({error, status, message }) => {
+        .then( ({error, message }) => {
             if (error) {
                 return toast.error(`onResetPassword: ${message}`, { id: toastId });
             }
