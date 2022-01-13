@@ -24,8 +24,8 @@ function submit() {
 
         const [forwardingCallId, mediaHubtarget] = [callId, ref.current.value];
 
-        function callback(response) {
-            const {callId, calleeId, callerId, error, message}=response;
+        function callback({event, data}) {
+            const {callid, callee, caller, error, message}=data;
             if(error)
             {                
                 setFetching(3);           
@@ -35,8 +35,8 @@ function submit() {
             else {
                 setFetching(2);   
                 setTimeout( () => { setFetching(0); setShow(false); } , 1000);
-                //callback(callId, forwardingCallId);
-                wrtc.forwardCall(forwardingCallId, callId);
+                //callback(callid, forwardingCallId);
+                wrtc.forwardCall(forwardingCallId, callid);
             }
         }
 
