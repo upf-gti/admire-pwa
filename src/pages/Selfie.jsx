@@ -7,6 +7,7 @@ import MD from 'utils/md'
 import selfie from 'assets/img/selfie.png'
 import img1 from 'assets/img/snipping.png'
 import img2 from 'assets/img/score.png'
+import http from 'utils/http'
 
 console.warn = ()=>{}
 let images = new Array(3).fill(<img style={{width:"100%"}}src={selfie} alt="0"/>);
@@ -15,6 +16,18 @@ export default function Pose() {
     const videoRef = useRef(null);
     const media = useContext(MediaContext);
     const [state, setState] = useState(0);
+
+    function DataURIToBlob(dataURI) {
+        const splitDataURI = dataURI.split(',')
+        const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
+        const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+
+        const ia = new Uint8Array(byteString.length)
+        for (let i = 0; i < byteString.length; i++)
+            ia[i] = byteString.charCodeAt(i)
+
+        return new Blob([ia], { type: mimeString })
+      }
 
     function makeSelfie(event) {
         if(!videoRef.current) return;
@@ -29,6 +42,22 @@ export default function Pose() {
         event.target.alt = '1';
         images[event.target.id] = <img src={img.src} score={Math.random().toFixed(2)} style={{transform:'scaleX(-1)'}}/>
         setState(s => s+1);
+
+        const formData = new FormData();
+        formData.append('user',   DataURIToBlob(img.src), 'selfie.jpg');
+        formData.append('studio', DataURIToBlob(img.src), 'selfie2.jpg');
+
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+        }
+
+        return fetch("https://admire-dev-iq.brainstorm3d.com/image/analyze", 
+        {method: 'POST',headers,formData})
+        .then(response =>  {debugger})
+        .catch(error => {debugger})
+
+    
+        //send to server
     }
 
     useEffect(() => {

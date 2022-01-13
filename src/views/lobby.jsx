@@ -26,7 +26,6 @@ function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
         return <></>
     }
 
-    console.log(show);
     window.setShow = setShow;
     return <div onClick={handleClick}>
     

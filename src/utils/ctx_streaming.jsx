@@ -36,7 +36,8 @@ export default ({children, ...props}) => {
     }, [media.localStream]);
 
     function callUser(username, callback){
-        const response = callback ?? (({callId, error, message}) => {
+        const response = callback ?? (({event, data}) => {
+            const {callid, error, message} = data;
             if(error){
                 toast.error(`Call error: ${message}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }
@@ -65,24 +66,26 @@ export default ({children, ...props}) => {
         }
     }
 
-    function onIncomingCall({ callId, callerId }){
-        BRA.rtcClient.acceptCall(callId);
+    function onIncomingCall({event, data}){
+        const { callid, caller } = data;
+        BRA.rtcClient.acceptCall(callid);
     }
 
-    function onCallOpened({ call, stream }) {
-        const callId = call.callId;
+    function onCallOpened( request ) {
+        const { call, stream } = request;
+        const callid = call.callid;
         
-        streams = {...streams, [callId]: stream}
+        streams = {...streams, [callid]: stream}
         setStreams(streams);
-        const forwardingCallId = liveCalls[callId];   //Live call
+        const forwardingCallId = liveCalls[callid];   //Live call
 
         if (forwardingCallId) {
             const forward_stream = streams[forwardingCallId];
             if (!forward_stream) {
-                callHangup(callId);
-                return toast.error(`Live Call Error: ${callId}, callerId: ${call.callerId}, calleeId: ${call.calleeId} `);;
+                callHangup(callid);
+                return toast.error(`Live Call Error: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);;
             }
-            toast.success(`Live Call: ${callId}, callerId: ${call.callerId}, calleeId: ${call.calleeId} `);
+            toast.success(`Live Call: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
             const videotrack = forward_stream.getVideoTracks()[0];
             const audiotrack = forward_stream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
@@ -92,44 +95,47 @@ export default ({children, ...props}) => {
 
         //Regular call
         else {
-            toast.success(`Incoming Call: ${callId}, callerId: ${call.callerId}, calleeId: ${call.calleeId} `);
+            toast.success(`Incoming Call: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
             //TODO:esto no deberia estar en window!!!!
             if(!window.localStream) return;
             const videotrack = window.localStream.getVideoTracks()[0];
             const audiotrack = window.localStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
-            toast(`Call from ${getUserId(callId)}`, {icon:<i className="bi bi-telephone-inbound"/>});
+            toast(`Call from ${getUserId(callid)}`, {icon:<i className="bi bi-telephone-inbound"/>});
         }
     }
 
-    function onCallClosed({ call }){
+    function onCallClosed( request ){
+        const { call } = request;
         if (!call)
             return console.error("No call");
 
-        const callId = call.callId;
-        manageLiveCallClosed(callId);
+        const callid = call.callid;
+        manageLiveCallClosed(callid);
 
-        delete streams[callId];
+        delete streams[callid];
         setStreams({...streams});
-        toast(`Call from ${getUserId(callId)} closed`, {icon:<i className="bi bi-telephone-x"/>});
+        toast(`Call from ${getUserId(callid)} closed`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
-    function onCallHangup({ callId }){
-        if (!callId)
+    function onCallHangup( {event, data} ){
+        const { callid } = data;
+
+        if (!callid)
             return console.error("No call");
 
-        manageLiveCallClosed(callId);
-        delete streams[callId];
+        manageLiveCallClosed(callid);
+        delete streams[callid];
         setStreams({...streams});
 
-        toast(`User ${getUserId(callId)} hangup`, {icon:<i className="bi bi-telephone-x"/>});
+        toast(`User ${getUserId(callid)} hangup`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
-    function manageLiveCallClosed(callId) {
+    function manageLiveCallClosed(callid) {
         let result = null;
         for (const [mId, fId] of Object.entries(liveCalls)) {
-            if (callId !== mId && fId !== callId)
+            if (callid !== mId && fId !== callid)
                 continue;
 
             result = [mId, fId];
@@ -146,8 +152,8 @@ export default ({children, ...props}) => {
         let id = auth.user?.username;
         let call = BRA.rtcClient.getCalls()[callId];
         if (callId !== "local" && call) {
-            let { calleeId, callerId } = call;
-            id = (calleeId === auth.user?.username) ? callerId : calleeId;
+            let { callee, caller } = call;
+            id = (callee === auth.user?.username) ? caller : callee;
         }
         return id;
     }
@@ -159,22 +165,22 @@ export default ({children, ...props}) => {
         liveCalls[target] = source;
     }
 
-    function getLiveCall(callId)
+    function getLiveCall(callid)
     {
-        return Object.entries(liveCalls).find( v => v[1] === callId ) ?? [null,null];
+        return Object.entries(liveCalls).find( v => v[1] === callid ) ?? [null,null];
     }
 
     function replaceStream(stream){
-        for( const callId in BRA.rtcClient.getCalls() )
+        for( const callid in BRA.rtcClient.getCalls() )
         {
             let s = stream;
-            const forwardingCallId = liveCalls[callId];   //Live call
+            const forwardingCallId = liveCalls[callid];   //Live call
             if(forwardingCallId && streams[forwardingCallId])
             {
                 s = streams[forwardingCallId];
             }
 
-            let call = BRA.rtcClient.getCall(callId);
+            let call = BRA.rtcClient.getCall(callid);
             let audiotrack = s.getAudioTracks()[0];
             let videotrack = s.getVideoTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
