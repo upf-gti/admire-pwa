@@ -43,19 +43,11 @@ export default function Pose() {
         images[event.target.id] = <img src={img.src} score={Math.random().toFixed(2)} style={{transform:'scaleX(-1)'}}/>
         setState(s => s+1);
 
-        const formData = new FormData();
-        formData.append('user',   DataURIToBlob(img.src), 'selfie.jpg');
-        formData.append('studio', DataURIToBlob(img.src), 'selfie2.jpg');
+        http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {});
 
-        const headers = {
-            'Content-Type': 'multipart/form-data',
-        }
-
-        return fetch("https://admire-dev-iq.brainstorm3d.com/image/analyze", 
-        {method: 'POST',headers,formData})
+        http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {data:{ actor: img.src, studio: img.src }})
         .then(response =>  {debugger})
         .catch(error => {debugger})
-
     
         //send to server
     }
