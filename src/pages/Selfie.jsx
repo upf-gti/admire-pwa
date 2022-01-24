@@ -68,8 +68,9 @@ export default function Pose() {
 
     //intro message for the selfie for image quality assesment step
     let message = `
-    The image quality assessment step will score if the image <b>has enough light</b> and <b>enough contrast</b> (i.e. not blurry or dark).
-    Take 3 selfies with your face facing towards the camera. Make sure the camera lenses are <b>clean</b> and <b>not tilted</b>.
+    The image quality assessment step will score if the image <b>has enough light</b> and <b>enough contrast</b>.
+    Take <b>3 selfies</b> with your face facing towards the camera. 
+    The highlighted number shows the <b>best scored</b> capture.
     `;
     const [min,med,max] = images.map( v => parseFloat(v.props.score ?? 0)).sort()
     return <>
