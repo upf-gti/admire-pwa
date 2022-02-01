@@ -2,7 +2,7 @@ function Nav({children}){
 
     return <>
 
-        <div className="nav-partial px-3 mb-1 d-flex justify-content-evenly align-items-center position-absolute bottom-0 start-50 translate-middle-x shadow rounded-5 bg-light" style={{ zIndex: 1100}}>
+        <div className="nav-partial px-3 mb-1 d-flex justify-content-evenly align-items-center position-absolute bottom-0 start-50 translate-middle-x shadow rounded-5 bg-light" style={{ zIndex: 1000}}>
             { children.map( (v,k) => v && <div key={'nav-i-'+k}>{v}</div>) }
         </div>
 
