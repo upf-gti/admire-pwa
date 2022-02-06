@@ -9,6 +9,7 @@ import { StreamContext } from 'utils/ctx_streaming'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
 import BadgeForwardCall from 'components/badge_forward'
+import ButtonComposite from 'components/modal_composite'
 
 
 export default function Room({ ...props }){
@@ -36,6 +37,7 @@ export default function Room({ ...props }){
     return <div id="room" className="overflow-hidden m-auto" style={{zIndex:1000}}>
         <Row  id="content-row" className="g-2" style={{ height:"100%" }}>
             <Col xs="auto" id="carousel-col" ref={carouselRef}>
+                {auth.user.username === rooms.current?.master.username && <ButtonComposite/>}
                 <div id="carousel" className="d-flex flex-column" >
                 {  Object.entries({local:media.localStream, ...wrtc.streams}).map(([callId, stream], k)=>{
 
