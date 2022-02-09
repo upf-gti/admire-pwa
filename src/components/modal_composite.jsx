@@ -26,6 +26,19 @@ export default () => {
         if(!rooms.ready || !media.ready) return;
         return ()=>{//Destructor
     }},[rooms.ready, media.ready]);
+
+    useEffect(()=>{//Constructor
+        if(!A || !videoARef.current) return;
+        videoARef.current.srcObject = wrtc.streams[A];
+        return ()=>{//Destructor
+    }},[A, wrtc.streams]);
+
+    useEffect(()=>{//Constructor
+        if(!B || !videoBRef.current) return;
+        videoBRef.current.srcObject = wrtc.streams[B];
+        return ()=>{//Destructor
+    }},[B, wrtc.streams]);
+    
     
     function snapshot(video)
     {   
@@ -39,10 +52,9 @@ export default () => {
 
     function submit(){
         if(!A || !B) return;
-        debugger;
         const snapA = snapshot( videoARef.current );
         const snapB = snapshot( videoBRef.current );
-        http.post("https://admire-dev-web.brainstorm3d.com/image/lut", {data:{ actor: snapA.src, studio: snapB.src }})
+        http.post("https://admire-dev-web.brainstorm3d.com/image/lut", {data:{ actor: snapA, studio: snapB }})
         .then(response =>  {debugger})
         .catch(error => {debugger})
     
@@ -55,7 +67,9 @@ export default () => {
         <Modal buttons={[<Button onClick={submit}>Submit</Button>]} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Row id='devices-row'>
                 <Col md={6}>
-                    <Video muted fref={videoARef} stream={wrtc.streams[A]}/>
+
+                    <video autoPlay muted ref={videoARef} style={{width:"100%"}}/>
+                    {/*<Video muted fref={videoARef} stream={wrtc.streams[A]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={A} onChange={({ target }) => {
                         setA(target.value);
@@ -65,7 +79,8 @@ export default () => {
                     </FloatingLabel>
                 </Col>
                 <Col md={6}>
-                    <Video muted fref={videoBRef} stream={wrtc.streams[B]}/>
+                    <video autoPlay muted ref={videoBRef} style={{width:"100%"}}/>
+                    {/*<Video muted fref={videoBRef} stream={wrtc.streams[B]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={B} onChange={({ target }) => {
                         setB(target.value);
