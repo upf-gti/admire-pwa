@@ -142,7 +142,6 @@ export default () => {
         default: break;
     }
 
-    console.log(JSON.stringify(formvalues.formErrors));
     return <>
         <Card.Footer className="text-center user-select-none" onClick={ ()=>setShow(1) }> Create an account </Card.Footer>
         <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>

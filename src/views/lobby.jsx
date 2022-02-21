@@ -2,10 +2,8 @@ import { useContext, useEffect, useState } from 'react'
 import {useHistory} from 'react-router-dom'
 import {Row, Col, Card, Badge, Button, Form, FloatingLabel, Spinner} from 'react-bootstrap'
 import { RoomsContext } from 'utils/ctx_rooms'
-import CreateRoomModal from 'components/modal_create_room'
 import lock from 'assets/img/TeenyiconsPasswordOutline.svg'
 import RoomPasswordModal from 'components/modal_room_password'
-
 
 function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
     const [show, setShow] = useState(false);

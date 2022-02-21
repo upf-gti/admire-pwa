@@ -1,19 +1,15 @@
-import toast from 'react-hot-toast'
 import React, {useContext, useRef, useEffect, useState} from 'react'
 import { Button, Form, FloatingLabel, Spinner } from 'react-bootstrap'
 
 import MD from 'utils/md'
-import Nav from 'partials/nav'
 import Modal from 'partials/modal'
 import { RoomsContext } from 'utils/ctx_rooms'
-
-
 
 export default ({show, setShow, onSubmit, ...props}) => {
     const rooms                   = useContext(RoomsContext);
     const ref                     = useRef(null);
     const [isValid, setValid]     = useState(true);//eslint-disable-line
-    const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: sucess, 3: failed
+    const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: success, 3: failed
 
     useEffect(()=>{
         function onKeyDown(e) {
@@ -21,11 +17,21 @@ export default ({show, setShow, onSubmit, ...props}) => {
                 setShow(true);
             }
         }
+
+        if(show) {
+            console.log("Add event listener in room password modal");
             window.addEventListener('keydown', onKeyDown);
-        return ()=>{
+        }
+        else {
+            console.log("Remove event listener in room password modal");
             window.removeEventListener('keydown', onKeyDown);
         }
-    },[])
+
+        return ()=>{
+            console.log("Remove event listener in room password modal");
+            window.removeEventListener('keydown', onKeyDown);
+        }
+    },[show])
 
     function submit() {
         if ( !ref?.current || !show ) return;
@@ -49,7 +55,7 @@ export default ({show, setShow, onSubmit, ...props}) => {
 
     return <>       
         
-        <Modal className="py-4" closeButton {...{show, setShow}} >
+        <Modal className="py-4" closeButton {...{show, setShow}} buttons={[button]} title="Room password" >
         <MD>{``}</MD>
         <Form ref={ref}>
             <FloatingLabel controlId="floatingInput" label="password" className="mb-3">
