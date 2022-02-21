@@ -8,8 +8,8 @@ import { RoomsContext } from 'utils/ctx_rooms'
 export default ({show, setShow, onSubmit, ...props}) => {
     const rooms                   = useContext(RoomsContext);
     const ref                     = useRef(null);
-    const [isValid, setValid]     = useState(true);//eslint-disable-line
-    const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: success, 3: failed
+    const [isValid, setValid]     = useState(true);             // eslint-disable-line
+    const [fetching, setFetching] = useState(0);                // 0: not fetching, 1: fetching, 2: success, 3: failed
 
     useEffect(()=>{
        

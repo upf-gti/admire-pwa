@@ -5,18 +5,18 @@ import { RoomsContext } from 'utils/ctx_rooms'
 import lock from 'assets/img/TeenyiconsPasswordOutline.svg'
 import RoomPasswordModal from 'components/modal_room_password'
 
-function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
+function RoomTile({id, name,icon, hidden, master, users, secured : hasPassword, ...props}){
     const [show, setShow] = useState(false);
     const rooms = useContext(RoomsContext);
 
     function handleClick(){
-        if(secured){
+        if(hasPassword){
             setShow(true);
         }
         else
-            submit();
+            enterRoom();
     }
-    function submit(password){
+    function enterRoom(password){
         return rooms.joinRoom(name, password)
     }
 
@@ -24,21 +24,22 @@ function RoomTile({id, name,icon, hidden, master, users, secured, ...props}){
         return <></>
     }
 
-    window.setShow = setShow;
+    // window.setShow = setShow;
     return <div onClick={handleClick}>
     
         <Card className="bg-dark text-light" {...props}>
             <Card.Img variant="top" src={icon} />
-            <Badge style={{padding:".44em .25em .44em .45em", margin:".25rem"}} bg="white" className="position-absolute end-0 top-0" pill><img width="18" src={lock} style={{filter:"invert(.5)"}}/></Badge>
+            {hasPassword && <Badge style={{padding:".44em .25em .44em .45em", margin:".25rem"}} bg="white" className="position-absolute end-0 top-0" pill><img width="18" src={lock} style={{filter:"invert(.5)"}}/></Badge>}
             <Card.Body>
-            <Card.Title>#{name}</Card.Title>
-            {/*<Card.Text></Card.Text>*/}
+                <Card.Title>#{name}</Card.Title>
             </Card.Body>
         </Card>
         <RoomPasswordModal 
-            show={show}
-            setShow = { setShow } 
-            onSubmit={submit}
+            show = {show}
+            setShow = { (v) => {
+                setShow(v)
+            } } 
+            onSubmit = { enterRoom }
         />
 
         <style global jsx>{`
