@@ -17,15 +17,7 @@ export default () => {
     const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: sucess, 3: failed
 
     useEffect(()=>{
-        function onKeyDown(e) {
-            if (e.keyCode === 13) {
-                setShow(true);
-            }
-        }
-            window.addEventListener('keydown', onKeyDown);
-        return ()=>{
-            window.removeEventListener('keydown', onKeyDown);
-        }
+
     },[])
 
     function submit() {

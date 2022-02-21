@@ -12,28 +12,18 @@ export default ({show, setShow, onSubmit, ...props}) => {
     const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: success, 3: failed
 
     useEffect(()=>{
-        function onKeyDown(e) {
-            if (e.keyCode === 13) {
-                setShow(true);
-            }
-        }
+       
+        if ( !ref?.current || !show ) return;
 
-        if(show) {
-            console.log("Add event listener in room password modal");
-            window.addEventListener('keydown', onKeyDown);
-        }
-        else {
-            console.log("Remove event listener in room password modal");
-            window.removeEventListener('keydown', onKeyDown);
-        }
+        ref.current.addEventListener("submit", (e) => { 
+            e.preventDefault();
+        });
+    },[])
 
-        return ()=>{
-            console.log("Remove event listener in room password modal");
-            window.removeEventListener('keydown', onKeyDown);
-        }
-    },[show])
+    function submit(event) {
 
-    function submit() {
+        event.preventDefault();
+
         if ( !ref?.current || !show ) return;
         let [password] = Array.from(ref.current.elements).map(v => v.value);
 
@@ -55,9 +45,9 @@ export default ({show, setShow, onSubmit, ...props}) => {
 
     return <>       
         
-        <Modal className="py-4" closeButton {...{show, setShow}} buttons={[button]} title="Room password" >
+        <Modal className="py-4" tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title="Room password" >
         <MD>{``}</MD>
-        <Form ref={ref}>
+        <Form ref={ref} onSubmit={submit}>
             <FloatingLabel controlId="floatingInput" label="password" className="mb-3">
                 <Form.Control name="password" type="password" placeholder="password"/>
             </FloatingLabel>
