@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
-import {useHistory} from 'react-router-dom'
-import {Row, Col, Card, Badge, Button, Form, FloatingLabel, Spinner} from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
+import { Row, Col, Card, Badge } from 'react-bootstrap'
 import { RoomsContext } from 'utils/ctx_rooms'
 import lock from 'assets/img/TeenyiconsPasswordOutline.svg'
 import RoomPasswordModal from 'components/modal_room_password'
@@ -9,7 +9,12 @@ function RoomTile({id, name,icon, hidden, master, users, secured : hasPassword, 
     const [show, setShow] = useState(false);
     const rooms = useContext(RoomsContext);
 
-    function handleClick(){
+    function onClick(){
+        
+        // Password modal is open ...
+        if(show)
+        return;
+
         if(hasPassword){
             setShow(true);
         }
@@ -25,7 +30,7 @@ function RoomTile({id, name,icon, hidden, master, users, secured : hasPassword, 
     }
 
     // window.setShow = setShow;
-    return <div onClick={handleClick}>
+    return <div onClick={onClick}>
     
         <Card className="bg-dark text-light" {...props}>
             <Card.Img variant="top" src={icon} />
@@ -35,10 +40,8 @@ function RoomTile({id, name,icon, hidden, master, users, secured : hasPassword, 
             </Card.Body>
         </Card>
         <RoomPasswordModal 
-            show = {show}
-            setShow = { (v) => {
-                setShow(v)
-            } } 
+            show = { show }
+            setShow = { setShow } 
             onSubmit = { enterRoom }
         />
 
@@ -81,13 +84,13 @@ function onKeyPress(){
 }
 
 export default ()=>{
+    
     const history = useHistory();
     const rooms = useContext(RoomsContext);
 
     useEffect( ()=>{
 
     }, [rooms.list])
-
 
     return <>
         <Row onKeyPress={onKeyPress} id="lobby" className="h-100 m-auto">
@@ -110,4 +113,3 @@ export default ()=>{
         `}</style>
     </>
 }
-//{name:'room test'},{name:'low coverage'},{name:'volcano'},{name:'ecogreen'},{name:'weathercast'},...

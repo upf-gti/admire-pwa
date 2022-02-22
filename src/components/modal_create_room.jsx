@@ -7,8 +7,6 @@ import Nav from 'partials/nav'
 import Modal from 'partials/modal'
 import { RoomsContext } from 'utils/ctx_rooms'
 
-
-
 export default () => {
     const rooms                   = useContext(RoomsContext);
     const ref                     = useRef(null);

@@ -2,13 +2,17 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 export default ({title, children, show, setShow, callback, buttons, closeButton, ...props}) => {
+
+    function Hide() {
+        setShow(false);
+    }
+
     return <>
         <Modal
             centered
             show={show}
             keyboard={true}
-            //backdrop={closeButton?"":"static"}
-            onHide={() => setShow(false)}
+            onHide={Hide}
             dialogClassName="modal-partial modal-shadow-lg"
             {...props}
         >
@@ -22,7 +26,7 @@ export default ({title, children, show, setShow, callback, buttons, closeButton,
 
             { (buttons || closeButton) && <Modal.Footer className="flex-nowrap">
                 {buttons && buttons.map( (v,k,a) => v )}
-                {closeButton && <Button variant="outline-secondary" onClick={() => setShow(false)}> Close</Button>}
+                {closeButton && <Button variant="outline-secondary" onClick={Hide}> Close</Button>}
             </Modal.Footer>} 
         </Modal>
 
