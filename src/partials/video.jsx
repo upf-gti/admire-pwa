@@ -34,7 +34,6 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             position: relative;
             margin:1px;
             padding:0;
-            border:1px solid $secondary;
             transition:all .2s ease-in-out;
 
             &:hover, .selected{
@@ -59,10 +58,10 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             }
 
             video{
-                width:100%;
+                width: calc(100% + 2px);
                 height:100%;
                 object-fit: cover;
-                margin-bottom: -4px;
+                margin-bottom: -9px;
             }
         }
 

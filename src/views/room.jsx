@@ -48,7 +48,7 @@ export default function Room({ ...props }){
                     let isMediahubCall = mediaHubCallId === callId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
-                    return <div key={k}>
+                    return <div key={k} className="carouselVideoItem">
                         <div className="stream-forward">
                             { imMaster && <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/> }
                             { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
@@ -94,6 +94,12 @@ export default function Room({ ...props }){
                             padding-bottom: 2px;
                         }
                     }
+                }
+
+                .carouselVideoItem {
+                    margin-top: 8px;
+                    border: none;
+                    border-bottom: 1px solid $color4;
                 }
 
                 .stream-forward{
