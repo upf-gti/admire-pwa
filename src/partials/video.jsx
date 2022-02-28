@@ -35,6 +35,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             margin:1px;
             padding:0;
             transition:all .2s ease-in-out;
+            background-color: #333;
 
             &:hover, .selected{
                 border:1px solid $primary;
