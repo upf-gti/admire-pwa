@@ -42,7 +42,8 @@ export default ({children, ...props}) => {
                 toast.error(`Call error: ${message}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }
         });
-        return BRA.rtcClient.call(username, {response});
+        let callID = auth.user?.username + "_" + username;
+        return BRA.rtcClient.call(username, {response: response, callid: callID});
     }
 
     function callAllUsers(){
