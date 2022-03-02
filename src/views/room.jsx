@@ -128,8 +128,18 @@ export default function Room({ ...props }){
             }
 
             @media only screen and (orientation: portrait){
+
+                .carouselVideoItem {
+                    margin-top: 0px !important;
+                    margin-right: 3px;
+                }
+
                 .stream-controls{
                     margin-bottom: 5.5rem !important;
+                }
+
+                .stream-status {
+                    margin-bottom: 6px;
                 }
 
                 #content-row{ flex-direction: column; }

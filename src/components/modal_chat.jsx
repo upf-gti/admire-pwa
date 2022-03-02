@@ -13,7 +13,7 @@ export default () => {
     const [show, setShow] = useState(false);
     const [state, setState] = useState(0);
 
-    useEffect(() => { }, [rooms.messages]);
+    useEffect(() => { scrollDown() }, [rooms.messages]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -21,8 +21,21 @@ export default () => {
             .then(() => inputRef.current.value = "")
     }
 
+    function scrollDown() {
+        const chat = document.getElementById("chat");
+        if(!chat)
+        return;
+        const div = chat.querySelector(".modal-body");
+        div.scrollTop = div.scrollHeight;
+    }
+
+    function handleOpen() {
+        setShow(s => !s);
+        setTimeout(scrollDown, 50);
+    }
+
     return <>
-        <Nav.Item onClick={() => setShow(s => !s)} disabled={!rooms.current}><i className="bi bi-chat-dots" />Chat</Nav.Item>
+        <Nav.Item onClick={() => handleOpen() } disabled={!rooms.current}><i className="bi bi-chat-dots" />Chat</Nav.Item>
         <Modal id="chat" buttons={[
             <Form className="flex-grow-1" noValidate validated={inputRef.current?.value.length ? true : false} onSubmit={handleSubmit}>
                 <InputGroup >
@@ -60,6 +73,18 @@ export default () => {
             </ul>
         </Modal>
         <style global jsx>{`
+
+            #chat .modal-body {
+                height: 50vh;
+                overflow-y: scroll;
+            }
+
+            #chat .modal-footer {
+                /*position: sticky;
+                bottom: 0px;*/
+                background: #fff;
+            }
+
             .messages {
                 padding-left:0;
                 img{
