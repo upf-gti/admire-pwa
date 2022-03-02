@@ -63,7 +63,6 @@ export default ({show, setShow, ...props}) => {
         <style global jsx>{`
             @import 'src/variables.scss';
 
-
             #wizard{
                 .nav-tabs{
                     width: calc(100% + 24px);
@@ -71,8 +70,12 @@ export default ({show, setShow, ...props}) => {
                     margin-top: -3.6rem;
                     //margin-top: -1rem;
 
+                    & .nav-item{
+                        margin-right: 2px;
+                    }
+
                     & .nav-link{
-                        background-color: rgba(255,255,255,0.15);
+                        background-color: rgba(60, 60, 60, 0.75) !important;
                         color: white;
                         font-weight: 500;
 
@@ -89,9 +92,12 @@ export default ({show, setShow, ...props}) => {
                     margin-top: 1.5rem;
                     max-height: calc( 100 - 4rem );                
                 }
+
+                .modal-body {
+                    padding-top: 63px;
+                    overflow-y: scroll;
+                }
             }    
         `}</style>
     </div>;
 }
-
-//xs={12} md={{span:6, offset:3}} lg={{span:8, offset:2}}

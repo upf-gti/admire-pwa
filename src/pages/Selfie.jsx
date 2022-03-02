@@ -46,8 +46,8 @@ export default function Pose() {
         http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {});
 
         http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {data:{ actor: img.src, studio: img.src }})
-        .then(response =>  {debugger})
-        .catch(error => {debugger})
+        // .then(response =>  {debugger})
+        // .catch(error => {debugger})
     
         //send to server
     }
@@ -65,6 +65,7 @@ export default function Pose() {
     The highlighted number shows the <b>best scored</b> capture.
     `;
     const [min,med,max] = images.map( v => parseFloat(v.props.score ?? 0)).sort()
+
     return <>
     <div id='selfie'>
         <h3 className="pt-2"><b>Step 4: Lighting Quality</b></h3>
@@ -77,7 +78,7 @@ export default function Pose() {
             <MD className="user-select-none">{message}</MD>
             <div id="carousel" className="d-flex flex-horizontal">
             { images.map( (v,k) => <div style={{position:'relative', width: "calc( 100% / 3)"}} key={k} onClick={makeSelfie}>
-                <img src={v.src ?? v.props.src} alt={`Selfie ${k}`} style={v.style} id={k}/>
+                <img className={v.props.score ? "mirrored" : ""} src={v.src ?? v.props.src} alt={`Selfie ${k}`} style={v.style} id={k}/>
                 <Badge bg={parseFloat(v.props.score ?? 0) === max?"success":"secondary"}>{v.score ?? v.props.score}</Badge>
             </div> )}
             </div>
@@ -94,6 +95,13 @@ export default function Pose() {
                 {
                     margin-left: 0px;
                 }
+
+                img.mirrored {
+                    transform: rotateY(180deg);
+                    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+                    -moz-transform:rotateY(180deg); /* Firefox */
+                }
+
                 img {
                     width: 100%;
                     height: 100%;

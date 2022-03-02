@@ -31,6 +31,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
         @import 'src/variables.scss';
 
         .Video{
+
             position: relative;
             margin:1px;
             padding:0;
@@ -63,6 +64,10 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
                 height:100%;
                 object-fit: cover;
                 margin-bottom: -9px;
+
+                transform: rotateY(180deg);
+                -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+                -moz-transform:rotateY(180deg); /* Firefox */
             }
         }
 

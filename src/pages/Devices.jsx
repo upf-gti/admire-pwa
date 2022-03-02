@@ -67,6 +67,10 @@ export default ()=>{
                 max-height: 25vh;
             }
 
+            #devices-row{
+                overflow-y: scroll;
+            }
+
             @media only screen and (orientation: landscape) and (max-height: 671px) {           
                 #devices .row{
                     flex-direction: row !important;
@@ -75,21 +79,6 @@ export default ()=>{
                     }
                 }
             }  
-
-            /*@media (orientation: landscape){
-                #devices{
-                    #devices-row{
-                        flex-direction: row !important;
-                    }
-                }
-            }
-            @media (orientation: portrait){
-                #devices{
-                    #devices-row{
-                        flex-direction: column !important;
-                    }
-                }
-            }*/
         `}</style>
     </div>
 }
