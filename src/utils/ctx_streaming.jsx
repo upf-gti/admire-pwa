@@ -35,14 +35,23 @@ export default ({children, ...props}) => {
         setLocalStream(localStream);
     }, [media.localStream]);
 
-    function callUser(username, callback){
+    function callUser(username, callback, fwdCallId){
         const response = callback ?? (({event, data}) => {
             const {callid, error, message} = data;
             if(error){
                 toast.error(`Call error: ${message}`,{icon:<i className="bi bi-telephone-x"/>, duration: 5000});
             }
         });
+
         let callID = auth.user?.username + "_" + username;
+
+        if(fwdCallId) {
+            const fwd_call = BRA.rtcClient.getCall(fwdCallId);
+            if(fwd_call) {
+                callID = fwd_call.caller + "_" + callID;
+            }
+        }
+
         return BRA.rtcClient.call(username, {response: response, callid: callID});
     }
 

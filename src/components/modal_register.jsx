@@ -134,7 +134,7 @@ export default () => {
 
     //onClick={submit}
 
-    let button = <Button onClick={handleSubmit} type="submit" disabled={!validated} variant={validated?"outline-primary":"outline-secondary"}  >CREATE ACCOUNT!</Button>;
+    let button = <Button onClick={handleSubmit} type="submit" disabled={!validated} variant={validated?"outline-primary":"outline-secondary"}  >Register</Button>;
     switch(fetching){
         case 1: button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
         case 2: button = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
