@@ -109,6 +109,9 @@ export default ()=>{
         <style global jsx>{`
             #lobby{
                 min-height: 19rem;
+                height: calc(100vh - 3rem) !important;
+                overflow-y: scroll !important;
+                padding-bottom: 4rem !important;
             }    
         `}</style>
     </>
