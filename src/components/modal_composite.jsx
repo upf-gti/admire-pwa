@@ -68,7 +68,7 @@ export default () => {
             <Row id='devices-row'>
                 <Col md={6}>
 
-                    <video autoPlay muted ref={videoARef} style={{width:"100%"}}/>
+                    <video autoPlay muted className="mirrored" ref={videoARef} style={{width:"100%"}}/>
                     {/*<Video muted fref={videoARef} stream={wrtc.streams[A]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={A} onChange={({ target }) => {
@@ -79,7 +79,7 @@ export default () => {
                     </FloatingLabel>
                 </Col>
                 <Col md={6}>
-                    <video autoPlay muted ref={videoBRef} style={{width:"100%"}}/>
+                    <video autoPlay muted className="mirrored" ref={videoBRef} style={{width:"100%"}}/>
                     {/*<Video muted fref={videoBRef} stream={wrtc.streams[B]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={B} onChange={({ target }) => {
@@ -91,5 +91,14 @@ export default () => {
                 </Col>
             </Row>
         </Modal>
+        <style global jsx>{`
+
+            .mirrored {
+                transform: rotateY(180deg);
+                -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+                -moz-transform:rotateY(180deg); /* Firefox */
+            }
+            
+        `}</style>
     </>;
 }
