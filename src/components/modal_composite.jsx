@@ -54,12 +54,12 @@ export default () => {
         if(!A || !B) return;
         const snapA = snapshot( videoARef.current );
         const snapB = snapshot( videoBRef.current );
-        http.post("https://admire-dev-web.brainstorm3d.com/image/lut", {data:{ actor: snapA, studio: snapB }})
+        http.post("https://admire-dev-iq.brainstorm3d.com/image/lut", {data:{ actor: snapA, studio: snapB }})
         .then(response =>  {debugger})
         .catch(error => {debugger})
     
-        //send to server
-        console.log('submit');
+        // send to server
+        // console.log('submit');
     }
 
     return <>
