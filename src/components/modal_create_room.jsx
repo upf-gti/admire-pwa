@@ -14,10 +14,6 @@ export default () => {
     const [isValid, setValid]     = useState(true);//eslint-disable-line
     const [fetching, setFetching] = useState(0);               //0: not fetching, 1: fetching, 2: sucess, 3: failed
 
-    useEffect(()=>{
-
-    },[])
-
     function submit() {
         if ( !ref?.current || !show ) return;
             

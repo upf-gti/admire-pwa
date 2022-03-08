@@ -1,18 +1,13 @@
 //https://github.com/google/mediapipe/issues/2346#issuecomment-888062233
 
-import { useState, useRef, useEffect, useContext, useCallback  } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import { Row, Col, ProgressBar, Form } from 'react-bootstrap'
-import Shader from "assets/shader.fs"
-import { CanvasRenderer } from 'lib_canvas_renderer'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { FaceDetection } from '@mediapipe/face_detection'
-import { Camera } from '@mediapipe/camera_utils'
-import { drawRectangle, drawLandmarks } from '@mediapipe/drawing_utils'
 import MD from 'utils/md'
-//import { SelfieSegmentation } from "@mediapipe/selfie_segmentation";
 
 console.warn = ()=>{}
-let video, camera, faceDetection;
+let faceDetection;
 
 export default function Pose() {
     let [center, setCenter] = useState({x:0, y:0, w:0, h:0});
@@ -49,7 +44,7 @@ export default function Pose() {
         
         faceDetection = new FaceDetection({
             locateFile: (file) => {
-              return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4/${file}`;
+              return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4.1628005423/${file}`;
             },
         });
         window.faceDetection = faceDetection; 
@@ -91,7 +86,7 @@ export default function Pose() {
         warningRange = Math.max(0,Math.min(100, center.w*100)),
         dangerRange = Math.max(0,Math.min(100, 100 - validRange - warningRange));
 
-    //intro message for the pose detection assesment step
+    // Intro message for the pose detection assesment step
     let message = `
     The pose detection step is used to detect the pose of the person in the image. Position yourself centered on the image within the green valid range.
     If the conditions are not met, reposition yourself or the camera.
@@ -134,9 +129,7 @@ export default function Pose() {
 
         <style global jsx>{`
         @import "src/variables.scss";
-        /*#pose .row{
-            flex-direction: column !important;
-        }*/
+        
         @media only screen and (orientation: landscape) and (max-height: 671px) {           
             #pose .row{
                 flex-direction: row !important;

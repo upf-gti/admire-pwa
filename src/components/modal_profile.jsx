@@ -5,7 +5,6 @@ import MD from 'utils/md';
 import { AuthContext } from 'utils/ctx_authentication';
 
 import profile_img from 'assets/img/profile_light.png'
-import HForm from 'utils/forms'
 import toast from 'react-hot-toast';
 
 export default () => {

@@ -27,7 +27,13 @@ export default function Pose() {
             ia[i] = byteString.charCodeAt(i)
 
         return new Blob([ia], { type: mimeString })
-      }
+    }
+
+    function byteSize(str) {
+        if(str.constructor !== String)
+            str = JSON.stringify( str );
+        return new Blob([str]).size;
+    }
 
     function makeSelfie(event) {
         if(!videoRef.current) return;
@@ -43,13 +49,16 @@ export default function Pose() {
         images[event.target.id] = <img src={img.src} score={Math.random().toFixed(2)} style={{transform:'scaleX(-1)'}}/>
         setState(s => s+1);
 
-        http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {});
+        let body = { 
+            actor: img.src, 
+            studio: img.src 
+        };
 
-        http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {data:{ actor: img.src, studio: img.src }})
+        console.log( "Byte size: " + byteSize(body) );
+
+        // http.post("https://admire-dev-iq.brainstorm3d.com/image/analyze", {data: body})
         // .then(response =>  {debugger})
         // .catch(error => {debugger})
-    
-        //send to server
     }
 
     useEffect(() => {

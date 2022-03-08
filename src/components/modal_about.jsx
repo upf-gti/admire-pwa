@@ -45,9 +45,8 @@ export default () => {
         - Privacy-focused - We don't collect any personal data.
         - Lightweight - The app is only ~5MB.
 
-        Hope you liked using this app 😉
-
-        <div align="center" className="fw-bolder">Made with ❤️ by <a href="https://www.upf.edu/web/gti"> UPF-GTI</a> </div>
+        Hope you liked using this app!
+        
         `}</MD>
         </Modal>
     </>;

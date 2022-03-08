@@ -3,7 +3,6 @@ import { Row, Col, Button,FloatingLabel, Form } from 'react-bootstrap'
 
 import http from 'utils/http'
 import Modal from 'partials/modal'
-import Video from 'partials/video'
 import { RoomsContext } from 'utils/ctx_rooms'
 import { StreamContext } from 'utils/ctx_streaming'
 import { MediaContext } from 'utils/ctx_mediadevices'
@@ -39,7 +38,13 @@ export default () => {
         return ()=>{//Destructor
     }},[B, wrtc.streams]);
     
-    
+
+    function byteSize(str) {
+        if(str.constructor !== String)
+            str = JSON.stringify( str );
+        return new Blob([str]).size;
+    }
+
     function snapshot(video)
     {   
         const canvas  = document.createElement('canvas');
@@ -52,18 +57,23 @@ export default () => {
 
     function submit(){
         if(!A || !B) return;
-        const snapA = snapshot( videoARef.current );
-        const snapB = snapshot( videoBRef.current );
-        http.post("https://admire-dev-iq.brainstorm3d.com/image/lut", {data:{ actor: snapA, studio: snapB }})
+        const base64Actor = snapshot( videoARef.current );
+        const base64Studio = snapshot( videoBRef.current );
+
+        let body = {
+            actor: base64Actor, 
+            studio: base64Studio
+        }
+
+        console.log("Request body size (bytes) " + byteSize( body ));
+
+        http.post("https://admire-dev-iq.brainstorm3d.com/image/lut", {data: body})
         .then(response =>  {debugger})
         .catch(error => {debugger})
-    
-        // send to server
-        // console.log('submit');
     }
 
     return <>
-        <Button onClick={()=>setShow(s => !s)} ><i className="bi bi-magic"/>Color Calibration</Button>
+        <Button className="lutButton" onClick={()=>setShow(s => !s)} ><i className="bi bi-magic"/>Color Calibration</Button>
         <Modal buttons={[<Button onClick={submit}>Submit</Button>]} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Row id='devices-row'>
                 <Col md={6}>
@@ -99,6 +109,13 @@ export default () => {
                 -moz-transform:rotateY(180deg); /* Firefox */
             }
             
+            @media only screen and (orientation: portrait){
+
+                .lutButton {
+                    margin-bottom: 6px;
+                }
+            }
+
         `}</style>
     </>;
 }
