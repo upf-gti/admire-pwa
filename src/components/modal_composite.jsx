@@ -23,8 +23,8 @@ export default () => {
     const media       = useContext(MediaContext);
     const wrtc        = useContext(StreamContext);
     const [show, setShow] = useState(false);
-    const [A, setA] = useState(Object.keys(wrtc.streams)[1] ?? null);
-    const [B, setB] = useState(Object.keys(wrtc.streams)[0] ?? null);
+    const [A, setA] = useState('local');
+    const [B, setB] = useState('local');
     const [fetching, setFetching] = useState(0);//0: not fetching, 1: fetching, 2: sucess, 3: failed
 
     useEffect(()=>{//Constructor
@@ -74,12 +74,12 @@ export default () => {
 
     function submit(){
         if(!A || !B) return;
-        const base64Actor = snapshot( videoARef.current );
-        const base64Studio = snapshot( videoBRef.current );
+        const base64Studio = snapshot( videoARef.current );
+        const base64Actor = snapshot( videoBRef.current );
 
         let body = {
-            actor: base64Actor, 
-            studio: base64Studio
+            studio: base64Studio,
+            actor: base64Actor
         }
 
         console.log("Request body size (bytes) " + byteSize( body ));
@@ -102,7 +102,7 @@ export default () => {
 		if(!lutResponse)
             throw("No LUT");
 
-        let filename = Object.keys(wrtc.streams)[0] + "_" + Object.keys(wrtc.streams)[1] + "_lut.txt";
+        let filename = A + "_" + B + ".lut";
 		let file = new Blob( [lutResponse.lut], {type : 'text/plain'});
 		var url = URL.createObjectURL( file );
 		var element = document.createElement("a");
@@ -138,6 +138,7 @@ export default () => {
         <Modal buttons={buttons} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Row id='devices-row'>
                 <Col md={6}>
+                    <h4>Studio</h4>
                     <video autoPlay muted className="mirrored" ref={videoARef} style={{width:"100%"}}/>
                     {/*<Video muted fref={videoARef} stream={wrtc.streams[A]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
@@ -149,6 +150,7 @@ export default () => {
                     </FloatingLabel>
                 </Col>
                 <Col md={6}>
+                    <h4>Actor</h4>
                     <video autoPlay muted className="mirrored" ref={videoBRef} style={{width:"100%"}}/>
                     {/*<Video muted fref={videoBRef} stream={wrtc.streams[B]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
