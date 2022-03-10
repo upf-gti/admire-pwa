@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useRef } from 'react'
-import { Row, Col, Button,FloatingLabel, Form } from 'react-bootstrap'
+import { Row, Col, Button, FloatingLabel, Form, Spinner } from 'react-bootstrap'
 
 import http from 'utils/http'
 import Modal from 'partials/modal'
@@ -8,7 +8,12 @@ import { StreamContext } from 'utils/ctx_streaming'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { AuthContext } from 'utils/ctx_authentication'
 
+let lutResponse = null;
 
+const F_NONE = 0;
+const F_PROCESS = 1;
+const F_SUCCESS = 2;
+const F_ERROR = 3;
 
 export default () => {
     const videoARef = useRef(null);
@@ -18,8 +23,9 @@ export default () => {
     const media       = useContext(MediaContext);
     const wrtc        = useContext(StreamContext);
     const [show, setShow] = useState(false);
-    const [A, setA] = useState(Object.keys(wrtc.streams)[0] ?? null);
+    const [A, setA] = useState(Object.keys(wrtc.streams)[1] ?? null);
     const [B, setB] = useState(Object.keys(wrtc.streams)[0] ?? null);
+    const [fetching, setFetching] = useState(0);//0: not fetching, 1: fetching, 2: sucess, 3: failed
 
     useEffect(()=>{//Constructor
         if(!rooms.ready || !media.ready) return;
@@ -38,11 +44,22 @@ export default () => {
         return ()=>{//Destructor
     }},[B, wrtc.streams]);
     
+    function refreshStreams() {
+        if(A && videoARef.current)
+            videoARef.current.srcObject = wrtc.streams[A];
+        if(B && videoBRef.current)
+            videoBRef.current.srcObject = wrtc.streams[B];
+    }
 
     function byteSize(str) {
         if(str.constructor !== String)
             str = JSON.stringify( str );
         return new Blob([str]).size;
+    }
+
+    function onOpen() {
+        setShow(s => !s);
+        setTimeout( refreshStreams, 100 );
     }
 
     function snapshot(video)
@@ -66,18 +83,61 @@ export default () => {
         }
 
         console.log("Request body size (bytes) " + byteSize( body ));
+        setFetching(F_PROCESS);
 
         http.post("https://admire-dev-iq.brainstorm3d.com/image/lut", {data: body})
-        .then(response =>  {debugger})
-        .catch(error => {debugger})
+        .then(response =>  { 
+          
+            setFetching(F_SUCCESS);
+            setTimeout( () => { setFetching(F_NONE); } , 1500);
+            lutResponse = response;
+        }).catch(err => {
+            setFetching(F_ERROR);
+            console.error(err);
+        })
     }
 
+    function downloadLUT()
+	{
+		if(!lutResponse)
+            throw("No LUT");
+
+        let filename = Object.keys(wrtc.streams)[0] + "_" + Object.keys(wrtc.streams)[1] + "_lut.txt";
+		let file = new Blob( [lutResponse.lut], {type : 'text/plain'});
+		var url = URL.createObjectURL( file );
+		var element = document.createElement("a");
+		element.setAttribute('href', url);
+		element.setAttribute('download', filename );
+		element.style.display = 'none';
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
+		setTimeout( () => URL.revokeObjectURL( url ) , 1000 * 60 ); //wait one minute to revoke url
+	}
+
+    let buttons = [];
+    let submitButton;
+
+    switch(fetching){
+        case F_PROCESS: submitButton = <Button variant="outline-primary"> <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/></Button>; break;
+        case F_SUCCESS: submitButton = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
+        case F_ERROR: submitButton = <Button variant="outline-danger"  > ❌ Error </Button>; break;
+        default: submitButton = <Button onClick={submit} >Submit</Button>;
+    }
+
+    if(lutResponse) {
+        buttons.push( <Button variant="link" onClick={downloadLUT} >Download LUT</Button> );
+    }
+
+
+    // buttons.push( <Button variant="outline-info" className="my-float-left" onClick={refreshStreams} >Refresh</Button> );
+    buttons.push( submitButton );
+
     return <>
-        <Button className="lutButton" onClick={()=>setShow(s => !s)} ><i className="bi bi-magic"/>Color Calibration</Button>
-        <Modal buttons={[<Button onClick={submit}>Submit</Button>]} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
+        <Button className="lutButton" onClick={onOpen} ><i className="bi bi-magic"/>Color Calibration</Button>
+        <Modal buttons={buttons} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Row id='devices-row'>
                 <Col md={6}>
-
                     <video autoPlay muted className="mirrored" ref={videoARef} style={{width:"100%"}}/>
                     {/*<Video muted fref={videoARef} stream={wrtc.streams[A]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
@@ -102,6 +162,11 @@ export default () => {
             </Row>
         </Modal>
         <style global jsx>{`
+
+            .my-float-left {
+                margin: 0 auto !important;
+                margin-left: 0px !important;
+            }
 
             .mirrored {
                 transform: rotateY(180deg);
