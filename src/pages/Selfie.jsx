@@ -1,13 +1,10 @@
 //https://github.com/google/mediapipe/issues/2346#issuecomment-888062233
 
-import { useState, useRef, useEffect, useContext, useCallback  } from 'react'
-import { Row, Col, ProgressBar, Form, Image as ReactImage, Button, Badge } from 'react-bootstrap'
+import { useState, useRef, useEffect, useContext  } from 'react'
+import { Row, Col, Image as ReactImage, Badge } from 'react-bootstrap'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import MD from 'utils/md'
 import selfie from 'assets/img/selfie.png'
-import img1 from 'assets/img/snipping.png'
-import img2 from 'assets/img/score.png'
-import http from 'utils/http'
 
 console.warn = ()=>{}
 let images = new Array(3).fill(<img style={{width:"100%"}}src={selfie} alt="0"/>);

@@ -39,7 +39,9 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             background-color: #333;
 
             &:hover, .selected{
-                border:1px solid $primary;
+                /*border:1px solid $primary;*/
+                opacity: 0.55;
+                cursor: pointer;
             }
 
             .stream-status{ 

@@ -119,14 +119,14 @@ export default () => {
     let submitButton;
 
     switch(fetching){
-        case F_PROCESS: submitButton = <Button variant="outline-primary"> <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/></Button>; break;
-        case F_SUCCESS: submitButton = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
-        case F_ERROR: submitButton = <Button variant="outline-danger"  > ❌ Error </Button>; break;
+        case F_PROCESS: submitButton = <Button variant="outline-primary"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/></Button>; break;
+        case F_SUCCESS: submitButton = <Button variant="outline-success">Done</Button>; break;
+        case F_ERROR: submitButton = <Button variant="outline-danger">Error</Button>; break;
         default: submitButton = <Button onClick={submit} >Submit</Button>;
     }
 
     if(lutResponse) {
-        buttons.push( <Button variant="link" onClick={downloadLUT} >Download LUT</Button> );
+        buttons.push( <Button variant="link" onClick={downloadLUT}>Download LUT <i className="bi bi-download"/></Button> );
     }
 
 
@@ -134,12 +134,12 @@ export default () => {
     buttons.push( submitButton );
 
     return <>
-        <Button className="lutButton" onClick={onOpen} ><i className="bi bi-magic"/>Color Calibration</Button>
+        <Button className="lutButton" onClick={onOpen} ><i className="bi bi-magic"/> Color Calibration</Button>
         <Modal buttons={buttons} id='configure' tabIndex="0" closeButton size="lg" {...{show, setShow}} _title={<span>Settings: Wizard</span>}>
             <Row id='devices-row'>
                 <Col md={6}>
                     <h4>Studio</h4>
-                    <video autoPlay muted className="mirrored" ref={videoARef} style={{width:"100%"}}/>
+                    <video autoPlay muted className="lutVideo mirrored mx-auto d-block" ref={videoARef} style={{width:"100%", marginBottom: "6px"}}/>
                     {/*<Video muted fref={videoARef} stream={wrtc.streams[A]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={A} onChange={({ target }) => {
@@ -151,7 +151,7 @@ export default () => {
                 </Col>
                 <Col md={6}>
                     <h4>Actor</h4>
-                    <video autoPlay muted className="mirrored" ref={videoBRef} style={{width:"100%"}}/>
+                    <video autoPlay muted className="lutVideo mirrored mx-auto d-block" ref={videoBRef} style={{width:"100%", marginBottom: "6px"}}/>
                     {/*<Video muted fref={videoBRef} stream={wrtc.streams[B]}/>*/}
                     <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                     <Form.Select value={B} onChange={({ target }) => {
@@ -180,6 +180,10 @@ export default () => {
 
                 .lutButton {
                     margin-bottom: 6px;
+                }
+
+                .lutVideo{
+                    width: 70% !important;
                 }
             }
 

@@ -1,6 +1,6 @@
 //import { useEffect } from 'react';
 import { useParams } from "react-router-dom"
-import { Row, Col, Badge } from 'react-bootstrap'
+import { Row, Col, Badge, Button } from 'react-bootstrap'
 import { useContext, useLayoutEffect, useEffect, useState, useRef } from 'react'
 
 import Video from 'partials/video'
@@ -34,10 +34,24 @@ export default function Room({ ...props }){
         wrtc.replaceStream(media.localStream);
     },[media.localStream]);
 
+    function scrollLeft() {
+        let carousel = document.getElementById('carousel');
+        const videoItem = document.querySelectorAll('.carouselVideoItem')[0];
+        carousel.scrollLeft = Math.max( carousel.scrollLeft - videoItem.clientWidth - 4, 0 );
+    }
+
+    function scrollRight() {
+        let carousel = document.getElementById('carousel');
+        const videoItem = document.querySelectorAll('.carouselVideoItem')[0];
+        carousel.scrollLeft = Math.min( carousel.scrollLeft + videoItem.clientWidth + 4, carousel.scrollWidth );
+    }
+
     return <div id="room" className="overflow-hidden m-auto" style={{zIndex:1000}}>
         <Row  id="content-row" className="g-2" style={{ height:"100%" }}>
             <Col xs="auto" id="carousel-col" ref={carouselRef}>
+                <Button onClick={ scrollLeft } className="float-start scrollButton" variant="outline-light"><i className="bi bi-caret-left-fill" /></Button>
                 {auth.user.username === rooms.current?.master.username && <ButtonComposite/>}
+                <Button onClick={ scrollRight } className="float-end scrollButton" variant="outline-light"><i className="bi bi-caret-right-fill" /></Button>
                 <div id="carousel" className="d-flex flex-column" >
                 {  Object.entries({local:media.localStream, ...wrtc.streams}).map(([callId, stream], k)=>{
 
@@ -66,6 +80,10 @@ export default function Room({ ...props }){
         <style global jsx>{`
             @import "src/variables.scss";
 
+            .scrollButton {
+                display: none;
+            }
+
             #room{
                 height:calc(100vh - 3rem - 4.5rem);
 
@@ -84,11 +102,13 @@ export default function Room({ ...props }){
                 #carousel-col {
                     height: 100%;
                     width:166px;
-                    overflow-x: hidden;
-                    overflow-y: scroll;
-
+                    
                     #carousel{
+                        overflow-x: hidden;
+                        overflow-y: scroll;
                         height:100%;
+                        padding-bottom: 63px;
+
                         .Video{
                             padding-right: 1px;
                             padding-bottom: 2px;
@@ -129,6 +149,10 @@ export default function Room({ ...props }){
 
             @media only screen and (orientation: portrait){
 
+                .scrollButton {
+                    display: block;
+                }
+
                 .carouselVideoItem {
                     margin-top: 0px !important;
                     margin-right: 3px;
@@ -146,11 +170,14 @@ export default function Room({ ...props }){
                 #carousel-col{
                     overflow-x: scroll;
                     overflow-y: hidden;
-                    height: 126px !important;
+                    height: 170px !important;
                     width: 100% !important;
+
                     #carousel{
                         flex-direction: row !important;
                         border:none;
+                        padding-bottom: 44px !important;
+
                         .Video, .Video video{ 
                             width: 166px; 
                             height:124px; 

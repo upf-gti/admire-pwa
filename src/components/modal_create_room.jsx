@@ -36,21 +36,21 @@ export default () => {
         //setValid(ref?.current?.value.length > 3);
     }
 
-    let button = <Button disabled={!isValid} variant={isValid?"outline-primary":"outline-secondary"} onClick={submit} >Proceed!</Button>;
+    let button = <Button disabled={!isValid} variant={isValid?"outline-primary":"outline-secondary"} onClick={submit} >Create</Button>;
     switch(fetching){
         case 1: button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
-        case 2: button = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
-        case 3: button = <Button variant="outline-danger"  > ❌ Error </Button>; break;
+        case 2: button = <Button variant="outline-success" >Done</Button>; break;
+        case 3: button = <Button variant="outline-danger"  >Error</Button>; break;
         default: break;
     }
 
 
     return <>
-        <Nav.Button onClick={()=>setShow(1)} label="Create room" appendclass="shadow rounded-circle bg-danger" >
+        <Nav.Button onClick={()=>setShow(1)} title="Create room" label="Create room" appendclass="shadow rounded-circle bg-danger" >
             <i className="bi bi-plus-lg"></i> 
         </Nav.Button>
         
-        <Modal size="sm" onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title={<span>Let's create a room</span>}>
+        <Modal size="sm" onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title={<span>Room settings</span>}>
         <MD>{``}</MD>
         <Form ref={ref}>
             <FloatingLabel controlId="floatingInput" label="roomId" className="mb-3">

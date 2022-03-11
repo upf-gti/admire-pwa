@@ -56,8 +56,8 @@ function submit() {
     let button;
     switch(fetching){
         case 1:  button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
-        case 2:  button = <Button variant="outline-success" > ✔️ Succeed! </Button>; break;
-        case 3:  button = <Button variant="outline-danger"  > ❌ Error </Button>; break;
+        case 2:  button = <Button variant="outline-success" >Done</Button>; break;
+        case 3:  button = <Button variant="outline-danger"  >Error</Button>; break;
         default: button = <Button variant="outline-primary" onClick={submit} >Proceed!</Button>;
     }
 
