@@ -58,16 +58,16 @@ function submit() {
         case 1:  button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
         case 2:  button = <Button variant="outline-success" >Done</Button>; break;
         case 3:  button = <Button variant="outline-danger"  >Error</Button>; break;
-        default: button = <Button variant="outline-primary" onClick={submit} >Proceed!</Button>;
+        default: button = <Button variant="outline-primary" onClick={submit} >Proceed</Button>;
     }
 
     return <>
         {isForwardCall ? <Badge style={{padding:".44em .45em"}} pill bg="danger" onClick={() => wrtc.callHangup( mediaHubCallId )}><i className="bi bi-x"></i></Badge>
         :                <Badge style={{padding:".44em .45em"}} pill bg="danger" onClick={() => setShow( callId )} className="cursor-pointer"><i className="bi bi-cast"></i></Badge>}
-        <Modal {...{show,setShow}}  buttons={[button]}  closeButton title="Ready to forward?" onKeyDown={onKeyDown}>
+        <Modal {...{show,setShow}}  buttons={[button]}  closeButton title="Forward stream" onKeyDown={onKeyDown}>
             Enter the destination ID you want to forward to
             <FloatingLabel controlId="floatingInput" label="targetId" className="mb-3">
-                <Form.Control ref={ref} name="targetId" type="text" placeholder="mediahub target id"/>
+                <Form.Control ref={ref} name="targetId" type="text" value="mediarouter" placeholder="mediahub target id"/>
             </FloatingLabel>
         </Modal>
     </>;
