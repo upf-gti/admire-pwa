@@ -63,10 +63,16 @@ function RoomTile({id, name,icon, hidden, master, users, secured : hasPassword, 
 
                 .card-body{
                     transition: all 0.075s ease-in-out;
+                    overflow-x: hidden;
                     .card-title{
                         margin:0;
-                        font-size: 1rem;
+                        font-size: 0.9rem;
                         white-space: nowrap;
+                       transition: 2s;
+                    }
+
+                    .card-title:hover {
+                       margin-left: -25px;
                     }
                 }
 
@@ -96,8 +102,8 @@ export default ()=>{
         <Row onKeyPress={onKeyPress} id="lobby" className="h-100 m-auto">
             <Col xs={12} sm={{span:10, offset:1}} >
         
-            <h1 className="text-light">Lobby</h1>    
-            <Row xs={2} sm={4} lg={4} xl={5} className="g-4">
+            <h1 className="text-light lobby-title">Lobby</h1>    
+            <Row xs={2} sm={3} lg={3} xl={5} className="g-3">
             { [...Object.values(rooms.list)].map((v,k) => <Col key={k}>
                     <RoomTile /*name={` ${v?.name || 'Room '+k}`}*/ {...v} />
                 </Col>
@@ -112,6 +118,10 @@ export default ()=>{
                 height: calc(100vh - 3rem) !important;
                 overflow-y: scroll !important;
                 padding-bottom: 4rem !important;
+
+                .lobby-title{
+                    margin-bottom: 20px;
+                }
             }    
         `}</style>
     </>
