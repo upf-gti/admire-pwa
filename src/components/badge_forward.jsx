@@ -67,7 +67,7 @@ function submit() {
         <Modal {...{show,setShow}}  buttons={[button]}  closeButton title="Forward stream" onKeyDown={onKeyDown}>
             Enter the destination ID you want to forward to
             <FloatingLabel controlId="floatingInput" label="targetId" className="mb-3">
-                <Form.Control ref={ref} name="targetId" type="text" value="mediarouter" placeholder="mediahub target id"/>
+                <Form.Control ref={ref} name="targetId" type="text" defaultValue="mediarouter" placeholder="mediahub target id"/>
             </FloatingLabel>
         </Modal>
     </>;
