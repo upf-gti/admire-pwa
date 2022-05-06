@@ -122,6 +122,11 @@ export default function Room({ ...props }){
                     border-bottom: 1px solid $color4;
                 }
 
+                .carouselVideoItem:hover{
+                    margin-top: 8px;
+                    border-bottom: none;
+                }
+
                 .stream-forward{
                     height:1.9rem;
                     position:relative;

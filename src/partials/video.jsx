@@ -30,6 +30,17 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
     <style global jsx>{`
         @import 'src/variables.scss';
 
+        #carousel-col .Video{
+
+            background-clip: text;
+
+            &:hover, .selected{
+                opacity: 0.55;
+                -webkit-opacity: 0.55;
+                cursor: pointer;
+            }
+        }
+
         .Video{
 
             position: relative;
@@ -37,12 +48,6 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             padding:0;
             transition:all .2s ease-in-out;
             background-color: #333;
-
-            &:hover, .selected{
-                /*border:1px solid $primary;*/
-                opacity: 0.55;
-                cursor: pointer;
-            }
 
             .stream-status{ 
                 color:white !important;
