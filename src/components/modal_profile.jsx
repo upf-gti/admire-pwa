@@ -20,11 +20,12 @@ export default () => {
         auth.updateUserInfo({username, email, avatar, name, surname, birthdate});
     }
 
-    async function clear(){
-        Array.from(ref.current.elements).foreach(v => {
-            debugger;
-        });
-        toast.success('User info restored');
+    async function clear() {
+        console.log("TODO: clear user info");
+        // Array.from(ref.current.elements).forEach(v => {
+        //     debugger;
+        // });
+        // toast.success('User info restored');
     }
 
 
@@ -82,6 +83,10 @@ export default () => {
         </Row>
         </Modal>
         <style global jsx>{`
+
+            #avatar-img{
+                background: #444;
+            }
 
         `}</style>
     </>;

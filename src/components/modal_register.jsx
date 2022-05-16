@@ -112,7 +112,7 @@ export default () => {
     async function handleSubmit(e){
         e.preventDefault();
         let {username, email, password, avatar, gravatar, name, surname, birthdate, role} = formvalues;
-        avatar = avatar?.length? avatar : gravatar??profile_img;
+        // avatar = avatar?.length? avatar : gravatar??profile_img;
         const toastId = toast.loading('Registering...');
         
         await http.post(`${process.env.REACT_APP_API_URL}/register`, {data:{ username, email, password, avatar, name, surname, birthdate, role }})
