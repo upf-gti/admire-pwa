@@ -35,9 +35,9 @@ export default () => {
        
 
         <Modal closeButton size="lg" {...{show, setShow}} 
-        //title={ <h2 className="user-select-none">Profile</h2>}
+        title={ <h2 className="user-select-none">Profile</h2>}
         buttons={[
-        <Button onClick={auth.logout}><i className="bi bi-power"></i> Log me out</Button>
+        <Button onClick={auth.logout}><i className="bi bi-power"></i> Sign out</Button>
         ,      
         
         <div align="center" className="fw-bolder">

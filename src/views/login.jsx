@@ -102,7 +102,7 @@ export default () => {
         <Col>
             <Card.Body as={Col} className="text-start px-4 pb-4">
 
-            <Card.Text className="user-select-none">Enter your e-mail adress and your password.</Card.Text>
+            <Card.Text className="user-select-none">Enter your e-mail address and your password.</Card.Text>
             
             <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
                 <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
@@ -112,8 +112,7 @@ export default () => {
                     <Form.Control required name="password" type="password" placeholder=" " onChange={handleUserInput} defaultValue={formvalues.password??""}/>
                 </FloatingLabel>
 
-                <Form.Switch id="remember-switch" label="Remember me" className="user-select-none" name="remember" onChange={handleUserInput} defaultChecked={formvalues.remember??false}/>
-
+                <Form.Switch id="remember-switch" label="Remember me" className="user-select-none remember-switch-form" name="remember" onChange={handleUserInput} defaultChecked={formvalues.remember??false}/>
 
                 <OverlayTrigger placement="bottom"
                     overlay={
@@ -125,7 +124,7 @@ export default () => {
                         <span style={{padding:"10px 0"}}>
                             <Button size="sm" className="mt-4" type="submit" disabled={!(validated && !fetching)} > 
                                 {!fetching?
-                                <><i className="bi bi-box-arrow-in-left"/> Log me in </>
+                                <><i className="bi bi-box-arrow-in-left"/> Sign in </>
                                 : <><Spinner as="span"animation="grow" size="sm" role="status" aria-hidden="true"/> Logging in... </>
                             }</Button>
                         </span>
@@ -142,6 +141,17 @@ export default () => {
 
     <style global jsx>{`
         @import "src/variables.scss";
+
+        .remember-switch-form {
+
+            label {
+                font-size: 0.9em;
+                color: #777;
+            }
+
+            margin-top: 7px;
+        }
+
         .divider {
                 border-bottom: 1px solid #FFF;
                 background-color: #DADADA;

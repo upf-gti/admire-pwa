@@ -36,7 +36,7 @@ export default () => {
         <Button variant="link" onClick={ ()=>setShow(1) }>About</Button>
         <Modal closeButton size="md" {...{show, setShow}} title={<span>{process.env.REACT_APP_NAME} - Offline capable <Button variant={`${proposal.proposalEvent?"outline-primary":"outline-secondary"}`}size="sm" onClick={promptInstall} disabled={!proposal.proposalEvent}> {`${proposal.proposalEvent? "Install PWA" : "Not available"}`}</Button></span>}>
         <MD>{`
-        An offline-capable AdMiRe version is available, wich is a [Progressive Web App](https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/).
+        An offline-capable AdMiRe version is available, which is a [Progressive Web App](https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/).
 
         The app serves the following features:
         - Offline-capable (with [Service Workers](https://developers.google.com/web/fundamentals/primers/service-workers/))
@@ -44,9 +44,6 @@ export default () => {
         - Dark Mode.
         - Privacy-focused - We don't collect any personal data.
         - Lightweight - The app is only ~5MB.
-
-        Hope you liked using this app!
-        
         `}</MD>
         </Modal>
     </>;

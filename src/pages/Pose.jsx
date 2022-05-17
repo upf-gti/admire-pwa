@@ -100,7 +100,7 @@ export default function Pose() {
     ${(Math.abs(center.x - .5) > validRange*.01 ) 
         ?`* ❌ You are not centered at all.` 
     :(Math.abs(center.x - .5) > warningRange*.01 )
-        ?'* ⚠️ You haven\'t enough margin of movement.'
+        ?'* ⚠️ Not enough margin of movement.'
         :'* ✔️ You got enough space on the sides'
     }
     `;

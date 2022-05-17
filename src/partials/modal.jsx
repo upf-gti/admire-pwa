@@ -42,7 +42,7 @@ export default ({title, children, show, setShow, callback, buttons, closeButton,
             }
 
             .modal-content{
-                max-height: 90vh;
+                // max-height: 90vh;
                 //overflow: hidden;
             }
 

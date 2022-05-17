@@ -90,9 +90,6 @@ export default () => {
         setFormValues( { ...values, [name]:value, [`${name}_check`]:check, formErrors } );
     }
 
-
-
-
     useEffect(()=>{
         function validateForm(){
             let isValid = true;
@@ -134,19 +131,19 @@ export default () => {
 
     //onClick={submit}
 
-    let button = <Button onClick={handleSubmit} type="submit" disabled={!validated} variant={validated?"outline-primary":"outline-secondary"}  >Register</Button>;
+    let button = <Button onClick={handleSubmit} type="submit" disabled={!validated} variant={validated?"outline-primary":"outline-secondary"}>Sign up</Button>;
     switch(fetching){
         case 1: button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;
         case 2: button = <Button variant="outline-success" >Done</Button>; break;
-        case 3: button = <Button variant="outline-danger"  >Error</Button>; break;
+        case 3: button = <Button variant="outline-danger" >Error</Button>; break;
         default: break;
     }
 
     return <>
-        <Card.Footer className="text-center user-select-none" onClick={ ()=>setShow(1) }> Create an account </Card.Footer>
+        <Card.Footer className="text-center user-select-none" onClick={ ()=>setShow(1) }> Sign up </Card.Footer>
         <Form validated={validated} onSubmit={handleSubmit} ref={formRef}>
         <Modal className="py-4" closeButton {...{show, setShow}} 
-        title={<h2 className="user-select-none">Let's create your account</h2>}
+        title={<h2 className="user-select-none">Create account</h2>}
         backdrop="static"
         buttons={[
             <OverlayTrigger placement="top"
@@ -161,21 +158,18 @@ export default () => {
             </OverlayTrigger>
         ]}
         >
-            <ReactImage
-                id="avatar-img"
-                src={formvalues.avatar ?? formvalues.gravatar ?? profile_img}
-                roundedCircle
-                className='position-absolute top-0 start-50 bg-danger shadow'
-                width="128" height="128"
-            />
-
-            <MD className="user-select-none">{`Create your account. It's free and only takes a minute.`}</MD>
-
-            <Form.Group className = "mb-1" children = {<FloatingLabel label="username">     <Form.Control name='username'   className={ hasError(formvalues.formErrors?.username)}  placeholder='username'   onChange={handleUserInput} type="text"      defaultValue={formvalues['username'  ]}     />      </FloatingLabel>} />
-            <Form.Group className = "mb-1" children = {<FloatingLabel label="email">        <Form.Control name='email'      className={ hasError(formvalues.formErrors?.email)}     placeholder='email'      onChange={handleUserInput} type="email"     defaultValue={formvalues['email'     ]}     />      </FloatingLabel>} />{/*value={userEmail} onChange={event => setEmail(event.target.value)} isInvalid={!isEmailValid} /> */}
-            <Form.Group className = "mb-1" children = {<FloatingLabel label="password">     <Form.Control name='password'   className={ hasError(formvalues.formErrors?.password)}  placeholder='password'   onChange={handleUserInput} type="password"  defaultValue={formvalues['password'  ]}     />      </FloatingLabel>} />
+            <Form.Group className = "mb-1" children = {<FloatingLabel label="username">     <Form.Control name='username'       className={ hasError(formvalues.formErrors?.username)}  placeholder='username'   onChange={handleUserInput} type="text"      defaultValue={formvalues['username'  ]}     />      </FloatingLabel>} />
+            <Form.Group className = "mb-1" children = {<FloatingLabel label="email">        <Form.Control name='email'          className={ hasError(formvalues.formErrors?.email)}     placeholder='email'      onChange={handleUserInput} type="email"     defaultValue={formvalues['email'     ]}     />      </FloatingLabel>} />{}
+            <Form.Group className = "mb-1" children = {<FloatingLabel label="password">     <Form.Control name='password'       className={ hasError(formvalues.formErrors?.password)}  placeholder='password'   onChange={handleUserInput} type="password"  defaultValue={formvalues['password'  ]}     />      </FloatingLabel>} />
             <Form.Group className = "mb-1" children = {<FloatingLabel label="confirm password"> <Form.Control name='password2'  className={ hasError(formvalues.formErrors?.password2)} placeholder='password2'  onChange={handleUserInput} type="password"  defaultValue={formvalues['password2'  ]}     />      </FloatingLabel>} />
-            <Form.Group className = "mb-1" children = {<FloatingLabel label="avatar URL">   <Form.Control name='avatar'     className={ hasError(formvalues.formErrors?.avatar)}    placeholder='avatar URL' onChange={handleUserInput} type="avatar"    defaultValue={formvalues['avatar URL']}     />      </FloatingLabel>} />{/*value={image_url !== '' ? image_url : userEmail !== '' ? gravatar_url : ''} onChange={event => setImageURL(event.target.value)} */}
+            <Form.Group className = "mb-1" children = {<FloatingLabel label="avatar URL">   <Form.Control name='avatar'         className={ hasError(formvalues.formErrors?.avatar)}    placeholder='avatar URL' onChange={handleUserInput} type="avatar"    defaultValue={formvalues['avatar URL']}     />  
+                <ReactImage
+                    id="avatar-img"
+                    src={formvalues.avatar ?? formvalues.gravatar ?? profile_img}
+                    roundedCircle
+                    className='bg-danger shadow'
+                    width="48" height="48"
+                /></FloatingLabel>} />{}
             <Form.Group className = "mb-1" children = {<FloatingLabel label="name">         <Form.Control name='name'       className={ hasError(formvalues.formErrors?.name)}      placeholder='name'       onChange={handleUserInput} type="text"      defaultValue={formvalues['name'      ]}     />      </FloatingLabel>} />
             <Form.Group className = "mb-1" children = {<FloatingLabel label="surname">      <Form.Control name='surname'    className={ hasError(formvalues.formErrors?.surname)}   placeholder='surname'    onChange={handleUserInput} type="text"      defaultValue={formvalues['surname'   ]}     />      </FloatingLabel>} />
             <Form.Group className = "mb-1" children = {<FloatingLabel label="birthddate">   <Form.Control name='birthdate'  className={ hasError(formvalues.formErrors?.birthdate)} placeholder='birthdate'  onChange={handleUserInput} type="date"      defaultValue={formvalues['birthdate' ]}     />      </FloatingLabel>} />
@@ -191,7 +185,9 @@ export default () => {
         </Form>
         <style global jsx>{`
             #avatar-img{
-                transform: translate(-50%,-125%) !important;
+                margin-top: -53px;
+                float: right;
+                margin-right: 15px;
             }
         `}</style>
     </>;

@@ -95,7 +95,7 @@ export default () => {
     </OverlayTrigger>
 
     return <>
-        <Button size="sm" className="mt-4" variant="link" onClick={ ()=>setShow(1) }><i className="bi bi-lock"></i>Forgot password?</Button>
+        <Button size="sm" className="mt-4 forgot-button" variant="link" onClick={ ()=>setShow(1) }><i className="bi bi-lock"></i> Forgot password?</Button>
         <Modal size="md" closeButton {...{show, setShow}} 
         buttons={[button]} 
         title={<h2 className="user-select-none">Forgot Password</h2>} 
@@ -107,5 +107,13 @@ export default () => {
                 </FloatingLabel>
             </Form>
         </Modal>
+
+        <style global jsx>{`
+        @import "src/variables.scss";
+            
+            .forgot-button {
+                float: right;
+            }
+        `}</style>
     </>;
 }
