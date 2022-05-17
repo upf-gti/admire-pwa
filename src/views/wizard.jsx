@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Row, Col } from 'react-bootstrap'
-import MD from 'utils/md'
 import Gesture from 'rc-gesture'
-import { findByDisplayValue } from '.pnpm/@testing-library+dom@8.10.1/node_modules/@testing-library/dom'
-import Modal from 'partials/modal'
 
 export default ({show, setShow, ...props}) => {
-    const pages = ["Devices","Battery", "Pose", "Selfie"];
+    const pages = ["Devices","Battery", "Pose"]; // , "Selfie"
     const [selected, setSelected] = useState(0);
     const [page, setPage] = useState(null);
     const [views, setViews] = useState([]);

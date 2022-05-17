@@ -40,12 +40,12 @@ export default () => {
         <Button onClick={auth.logout}><i className="bi bi-power"></i> Sign out</Button>
         ,      
         
-        <div align="center" className="fw-bolder">
-        <ButtonGroup>
-            <Button onClick={submit} variant = "outline-primary">Save</Button>
-            <Button onClick={clear} variant = "outline-secondary">Discard</Button>
-        </ButtonGroup>
-        </div>
+        // <div align="center" className="fw-bolder">
+        // <ButtonGroup>
+        //     <Button onClick={submit} variant = "outline-primary">Save</Button>
+        //     <Button onClick={clear} variant = "outline-secondary">Discard</Button>
+        // </ButtonGroup>
+        // </div>
         ]}
         >
         <Row>
