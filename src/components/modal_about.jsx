@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useReducer} from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 import Modal from 'partials/modal'
 import MD from 'utils/md';
+import logo from 'assets/img/logo.png';
 
 export default () => {
     const [show, setShow] = useState(false);
@@ -34,16 +35,16 @@ export default () => {
 
     return <>
         <Button variant="link" onClick={ ()=>setShow(1) }>About</Button>
-        <Modal closeButton size="md" {...{show, setShow}} title={<span>{process.env.REACT_APP_NAME} - Offline capable <Button variant={`${proposal.proposalEvent?"outline-primary":"outline-secondary"}`}size="sm" onClick={promptInstall} disabled={!proposal.proposalEvent}> {`${proposal.proposalEvent? "Install PWA" : "Not available"}`}</Button></span>}>
+        {/* <Button variant={`${proposal.proposalEvent?"outline-primary":"outline-secondary"}`}size="sm" onClick={promptInstall} disabled={!proposal.proposalEvent}> {`${proposal.proposalEvent? "Install PWA" : "Not available"}`}</Button> */}
+        <Modal closeButton size="md" {...{show, setShow}} title={<span>{process.env.REACT_APP_NAME} </span>}>
+        <Image className="me-2 float-end" width={48} height={48} src={logo} />
         <MD>{`
-        An offline-capable AdMiRe version is available, which is a [Progressive Web App](https://docs.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/).
+        **AdMiRe** is an european project which goal is to develop, validate and demonstrate innovative solutions based on Mixed Reality (MR) technologies.
 
-        The app serves the following features:
-        - Offline-capable (with [Service Workers](https://developers.google.com/web/fundamentals/primers/service-workers/))
-        - "Add to Home Screen" feature on Android and iOS supported devices to launch the app from the home screen.
-        - Dark Mode.
-        - Privacy-focused - We don't collect any personal data.
-        - Lightweight - The app is only ~5MB.
+        The application has the following features:
+        - Lobby management to create virtual productions
+        - Videoconferences to communicate users and operators
+        - Video streaming and routing capabilities
         `}</MD>
         </Modal>
     </>;

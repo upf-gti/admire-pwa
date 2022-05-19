@@ -24,8 +24,8 @@ export default ({children, ...props}) => {
         }
         window.addEventListener('unload', onUnload);
 
-        function onAppConnect    (){ toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000}); setConnected( v => ({...v, app:true })); }
-        function onRtcConnect    (){ toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000}); setConnected( v => ({...v, rtc:true })); }
+        function onAppConnect    (){ /*toast("App Connected",    {id:toast_app, icon:'⚡', duration:2000});*/ setConnected( v => ({...v, app:true })); }
+        function onRtcConnect    (){ /*toast("RTC Connected",    {id:toast_rtc, icon:'⚡', duration:2000});*/ setConnected( v => ({...v, rtc:true })); }
         function onAppDisconnect (){ toast("App Disconnected", {id:toast_app, icon:'⚠️', duration:2000}); setConnected( v => ({...v, app:false})); }
         function onRtcDisconnect (){ toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); }
 
@@ -58,7 +58,7 @@ export default ({children, ...props}) => {
             (async ()=>{
                 const u = await getUserInfo()
                 .then( (response) => {
-                    toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
+                    // toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
                     setUser(response);
                     return response;
                 })
@@ -73,7 +73,7 @@ export default ({children, ...props}) => {
             toast_usr = toast.loading(`Fetching user info...`, {duration:Infinity});
             getUserInfo()
             .then( (response) => {
-                toast.success(`Success`, {id:toast_usr, icon:'⚡', duration:2000});
+                toast.success(`Welcome ${response.name}`, {id:toast_usr, icon:'⚡', duration:4000});
                 setUser(response);
                 setLogged(true);
             })
