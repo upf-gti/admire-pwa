@@ -90,7 +90,7 @@ export default ({children, ...props}) => {
         const forwardingCallId = liveCalls[callid];   //Live call
 
         if (forwardingCallId) {
-            const forward_stream = streams[forwardingCallId];
+            const forward_stream = (forwardingCallId === "local") ? window.localStream : streams[forwardingCallId];
             if (!forward_stream) {
                 callHangup(callid);
                 return toast.error(`Live Call Error: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);;
