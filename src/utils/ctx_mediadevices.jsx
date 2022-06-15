@@ -121,8 +121,13 @@ export default ({children, ...props}) => {
     function setVideo(device, resolution){
         BRA.mediaAdapter.setVideo(device, resolution);
     }
+    
     function setAudio(device){
         BRA.mediaAdapter.setAudio(device);
+    }
+
+    function setMask(mask){
+        this.settings.mask = mask;
     }
 
     const store = window.media = {
@@ -135,6 +140,7 @@ export default ({children, ...props}) => {
         getDevices,
         setVideo,
         setAudio,
+        setMask,
         ready,
     }
 

@@ -4,12 +4,12 @@ import { useHistory, Redirect } from "react-router-dom"
 import { AuthContext } from 'utils/ctx_authentication';
 import { RoomsContext } from 'utils/ctx_rooms'
 
-
 import Nav from "partials/nav"
 import Room  from 'views/room'
 import Login  from 'views/login'
 import Lobby  from 'views/lobby'
 import Wizard from 'views/wizard'
+import ProfileNavModal from 'components/modal_nav_profile'
 import CreateRoomModal from 'components/modal_create_room'
 import LeaveRoomModal from 'components/modal_leave_room'
 import WizardModal from 'components/modal_wizard'
@@ -46,7 +46,7 @@ function App({...props}) {
       </Container>
 
       <Nav>
-          {rooms.current? <LeaveRoomModal/> : <Nav.Item><i className="bi bi-house"/>Lobby</Nav.Item>}
+          {rooms.current? <LeaveRoomModal/> : <ProfileNavModal/>} 
           <WizardModal/>
           {rooms.current?<StreamButtons/>:<CreateRoomModal/>}
           <UsersModal/>

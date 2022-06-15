@@ -5,6 +5,12 @@ import Video from 'partials/video'
 import AudioGain from 'components/audioGain'
 import { MediaContext } from 'utils/ctx_mediadevices'
 
+const UserMasks = [
+    'None',
+    'Face',
+    'Torso',
+    'Body'
+];
 
 export default ()=>{
 
@@ -28,6 +34,15 @@ export default ()=>{
             </Col>
 
             <Col md={6}>
+
+                {<FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-mask" /> Mask</span>}>
+                <Form.Select onChange={({target}) => {
+                    media.setMask(target.value);
+                }}>
+                {UserMasks.map((v, k) => <option selected={ v === media.settings.mask } value={v}>{v}</option>)}
+                </Form.Select>
+                </FloatingLabel>}
+
                 <FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video devices</span>}>
                 <Form.Select value={media.settings?.video ?? "None"} onChange={({ target }) => {
                     media.setVideo(target.value);
@@ -37,7 +52,7 @@ export default ()=>{
                 </Form.Select>
                 </FloatingLabel>
 
-                {<FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-camera-video" /> Video resolutions</span>}>
+                {<FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-collection" /> Video resolutions</span>}>
                 <Form.Select value={media.settings?.resolution ?? "Undefined"} onChange={({target}) => {
                     media.setVideo(media.settings?.video ?? "None", target.value);
                 }}>
@@ -54,7 +69,7 @@ export default ()=>{
                 </FloatingLabel>
                 
                 <div className='d-flex'>
-                <Form.Switch id="hear-switch" label="test" className="me-2 user-select-none" name="test-input" onChange={(e)=>setTest(t => !t)} defaultChecked={test}/>
+                <Form.Switch id="hear-switch" label="Test" className="me-2 user-select-none" name="test-input" onChange={(e)=>setTest(t => !t)} defaultChecked={test}/>
                 <AudioGain stream={media.localStream} show={test} />
                 </div>
             </Col>

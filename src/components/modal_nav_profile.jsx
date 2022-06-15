@@ -1,17 +1,16 @@
 import React, {useState, useContext, useRef } from 'react';
 import { Row, Col, Form, FloatingLabel, ButtonGroup, Button, Image } from 'react-bootstrap';
+import { AuthContext } from 'utils/ctx_authentication';
+
 import Modal from 'partials/modal'
 import MD from 'utils/md';
-
-import { AuthContext } from 'utils/ctx_authentication';
-import { RoomsContext } from 'utils/ctx_rooms'
+import Nav from 'partials/nav'
 
 import profile_img from 'assets/img/profile_light.png'
 
 export default () => {
     const ref = useRef(null);
     const auth = useContext(AuthContext);
-    const rooms = useContext(RoomsContext);
     const [show, setShow] = useState(false);
     
     //introduction message to user settings panel
@@ -24,11 +23,17 @@ export default () => {
 
     async function clear() {
         console.log("TODO: clear user info");
+        // Array.from(ref.current.elements).forEach(v => {
+        //     debugger;
+        // });
+        // toast.success('User info restored');
     }
 
-    if(!auth.isLogged || !rooms.current) return <></>;
+
+    if(!auth.isLogged) return <></>;
     return <>
-        <Button variant="link" onClick={ ()=>setShow(1) }>Profile</Button>
+        <Nav.Item onClick={()=>setShow(1)} ><i className="bi bi-person-circle"/>Profile</Nav.Item>
+        {/* <Button variant="link" onClick={ ()=>setShow(1) }>Profile</Button> */}
        
 
         <Modal closeButton size="lg" {...{show, setShow}} 
@@ -75,6 +80,7 @@ export default () => {
             <Form.Group className="mb-1" children={<FloatingLabel label="birthddate">   <Form.Control disabled name='birthdate'  placeholder='birthdate'  defaultValue={auth.user.birthdate}/*onChange={handleUserInput}*/ type="date"      /*defaultValue={formvalues['birthdate' ]}*/     />      </FloatingLabel>} />
             </Form>
         </Col>
+
   
         </Row>
         </Modal>

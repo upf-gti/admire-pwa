@@ -35,7 +35,7 @@ export default () => {
     }
 
     return <>
-        <Nav.Item onClick={() => handleOpen() } disabled={!rooms.current}><i className="bi bi-chat-dots" />Chat</Nav.Item>
+        <Nav.Item onClick={() => handleOpen() } disabled={!rooms.current}><i className="bi bi-chat-square-text" />Chat</Nav.Item>
         <Modal id="chat" buttons={[
             <Form className="flex-grow-1" noValidate validated={inputRef.current?.value.length ? true : false} onSubmit={handleSubmit}>
                 <InputGroup >
@@ -51,7 +51,7 @@ export default () => {
                     </Button>
                 </InputGroup>
             </Form>
-        ]} tabIndex="0" closeButton size="lg" {...{ show, setShow }} title={<span><i className="bi bi-chat-dots" /> Chat</span>}>
+        ]} tabIndex="0" closeButton size="lg" {...{ show, setShow }} title={<span><i className="bi bi-chat-square-text" /> Chat</span>}>
             <ul className="messages">
                 {rooms.messages.map((message, i) => <>{message.username? <li key={i} className={message.username === auth.user.username ? "sent" : "replies"}>
                     <Image className="border border-light border-2 shadow" roundedCircle src={message.avatar} alt={message.username} />

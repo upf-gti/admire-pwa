@@ -1,9 +1,17 @@
-import {Button} from 'react-bootstrap'
-import { useEffect, useState, useRef } from 'react'
+import { Button, Image } from 'react-bootstrap'
+import { useContext, useEffect, useState, useRef } from 'react'
+
+import { MediaContext } from 'utils/ctx_mediadevices'
+
+import face_mask from 'assets/img/face-mask.png'
+import torso_mask from 'assets/img/torso-mask.png'
+import body_mask from 'assets/img/body-mask.png'
 
 export default ({id, stream, onClick, isLocal = false, ...props})=>{
     let ref = useRef(null);
+
     const [status, setStatus] = useState({audio:true});
+    const media = useContext(MediaContext);
 
     useEffect(()=>{
         if(stream && ref.current){
@@ -12,8 +20,21 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
         }
     },[stream]);
 
-    function handleClick(){
+    function handleClick() {
         setStatus({...status, audio:!status.audio});
+    }
+
+    function handleMask(value) {
+        switch(value){
+            case 'Face':
+                return face_mask;
+            case 'Torso':
+                return torso_mask;
+            case 'Body':
+                return body_mask;
+            default:
+                return null;
+        }
     }
     
     return <>
@@ -25,6 +46,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
                 :<i className={`fs-4 bi bi-volume${!(isLocal||!status?.audio) ? "-down" : "-mute"}`} />}
             </Button>
         </div>
+        {media.settings.mask ? <Image className="mask-image" src={handleMask(media.settings.mask)} width={media.settings.width} height={media.settings.height} /> : <></>}
         <video autoPlay playsInline muted={isLocal || !status?.audio} ref={ref} {...{onClick}}/>
     </div>
     <style global jsx>{`
@@ -67,7 +89,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             }
 
             video{
-                width: calc(100% + 2px);
+                width: calc(100%);
                 height:100%;
                 object-fit: cover;
                 margin-bottom: -9px;
@@ -76,6 +98,21 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
                 -webkit-transform:rotateY(180deg); /* Safari and Chrome */
                 -moz-transform:rotateY(180deg); /* Firefox */
             }
+
+            .mask-image {
+                position: absolute;
+                z-index: 1;
+                width: auto;
+                height: 100%;
+                left: 0;
+                right: 0;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .Video.stream {
+            border: 3px inset #F33;
         }
 
     `}</style>

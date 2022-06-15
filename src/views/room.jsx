@@ -93,7 +93,7 @@ export default function Room({ ...props }){
 
                     .Video
                     {
-                        width:100%;
+                        width: calc( 100% - 1px);
                         height:100%;
                         object-fit: cover;
                     }
