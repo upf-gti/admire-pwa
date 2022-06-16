@@ -49,4 +49,3 @@ export default () => {
         </Modal>
     </>;
 }
-//<Button onClick={handleClick}>Install {import.meta.env.NAME}</Button>

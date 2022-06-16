@@ -4,6 +4,7 @@ import {Row, Col, FloatingLabel, Form} from 'react-bootstrap'
 import Video from 'partials/video'
 import AudioGain from 'components/audioGain'
 import { MediaContext } from 'utils/ctx_mediadevices'
+import { setCacheNameDetails } from "workbox-core"
 
 const UserMasks = [
     'None',
@@ -16,6 +17,7 @@ export default ()=>{
 
     const media = useContext(MediaContext);
     const [test, setTest] = useState(false);
+    const [mask, setMask] = useState('None');
 
     useEffect(()=>{
         media.init();
@@ -38,8 +40,9 @@ export default ()=>{
                 {<FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-mask" /> Mask</span>}>
                 <Form.Select onChange={({target}) => {
                     media.setMask(target.value);
-                }}>
-                {UserMasks.map((v, k) => <option selected={ v === media.settings.mask } value={v}>{v}</option>)}
+                    setMask(target.value);
+                }} defaultValue={ media.settings.mask }>
+                {UserMasks.map((v, k) => <option key={k} value={v}>{v}</option>)}
                 </Form.Select>
                 </FloatingLabel>}
 

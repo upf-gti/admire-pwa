@@ -130,7 +130,6 @@ export default () => {
     }
 
 
-    // buttons.push( <Button variant="outline-info" className="my-float-left" onClick={refreshStreams} >Refresh</Button> );
     buttons.push( submitButton );
 
     return <>

@@ -129,8 +129,6 @@ export default () => {
         return(error?.length ? '' : 'has-error');
     }
 
-    //onClick={submit}
-
     let button = <Button onClick={handleSubmit} type="submit" disabled={!validated} variant={validated?"outline-primary":"outline-secondary"}>Sign up</Button>;
     switch(fetching){
         case 1: button = <Button variant="outline-primary"> <Spinner as="span"      animation="border"      size="sm"      role="status"      aria-hidden="true"/></Button>; break;

@@ -16,16 +16,24 @@ export default () => {
         <Modal tabIndex="0" closeButton size="md" {...{show, setShow}} title={<span><i className="bi bi-people"/> Users</span>}>
             <ul id="user-list">
                 {rooms.current?.users?.map( (v,k,a) => v && 
-                <li key={k}>
+                <li className="user-item" key={k}>
                     <span onClick={()=>rooms.kickUser(v?.username)}>❌</span>
                     <Image className="border border-light border-2 shadow" roundedCircle src={v.avatar} alt={v.username} style={{width: "1.5rem", height: "1.5rem"}}/>
-                    {v?.username}
+                    <p className="user-item-name">{v?.username}</p>
                 </li> )}
             </ul>            
         </Modal>
         <style jsx>{`
 
-            #user-list{
+            .user-item {
+                display: flex;
+
+                .user-item-name {
+                    margin-left: 0.2em;
+                }
+            }
+
+            #user-list {
                 list-style: none;
                 padding:0;
 
