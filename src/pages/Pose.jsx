@@ -1,25 +1,35 @@
 //https://github.com/google/mediapipe/issues/2346#issuecomment-888062233
 
 import { useState, useRef, useEffect, useContext } from 'react'
-import { Row, Col, ProgressBar, Form } from 'react-bootstrap'
+import { Row, Col, ProgressBar, FloatingLabel, Form, Image } from 'react-bootstrap'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { FaceDetection } from '@mediapipe/face_detection'
+
 import MD from 'utils/md'
+import Video from 'partials/video'
 
 console.warn = ()=>{}
 let faceDetection;
+let faceDetectionStarted = false;
+
+const UserMasks = [
+    'None',
+    'Face',
+    'Torso',
+    'Body'
+];
 
 export default function Pose() {
     let [center, setCenter] = useState({x:0, y:0, w:0, h:0});
-    const canvasRef = useRef(null);
     const videoRef = useRef(null);
-    let [ctx, setCtx] = useState(null);
+
+    const [mask, setMask] = useState('None');
     const media = useContext(MediaContext);
 
     function onResults({image, detections}) {
-        //ctx.save();
-        //ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        //ctx.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        
+        console.log(detections);
+
         for(let detection of detections) {
             const { L, boundingBox, landmarks } = detection;
             setCenter({
@@ -28,20 +38,11 @@ export default function Pose() {
                 ,w:boundingBox.width
                 ,h:boundingBox.height
             });
-            try{
-                //drawRectangle(ctx, boundingBox, {color: 'blue', lineWidth: 1, fillColor: '#00000000'});
-                //drawLandmarks(ctx, landmarks, {color: 'red',radius: 1,});
-            }catch(e){}
         }
-        //ctx.restore();
     }
 
     async function start(){
 
-        //Create the context
-        //ctx = ctx = canvasRef.current.getContext('2d');
-        //setCtx(ctx);
-        
         faceDetection = new FaceDetection({
             locateFile: (file) => {
               return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4.1628005423/${file}`;
@@ -68,6 +69,8 @@ export default function Pose() {
             }catch(e){}
         }, 120);
 
+        faceDetectionStarted = true;
+
         return () => {
             cancelAnimationFrame(id);
             faceDetection.destroy();
@@ -75,11 +78,27 @@ export default function Pose() {
     }
 
     useEffect(() => {
-        if(!media.ready) return;
-        faceDetection?.reset();
+        
+        if(!media.ready) 
+        return;
+        
+        if(!faceDetectionStarted)
+        start();
+
+        videoRef.current = document.querySelector("#pose video");
         videoRef.current.srcObject = media.localStream;
         videoRef.current.play();
-        return start();
+
+        return () => {
+
+            try {
+                faceDetection?.close();
+                faceDetectionStarted = false;
+            }catch(e) {
+                // already deleted
+            }
+        };
+
     }, [media.ready, media.localStream]);
 
     let validRange = Math.max(0,Math.min(100, 100 - center.w*400)),
@@ -88,21 +107,21 @@ export default function Pose() {
 
     // Intro message for the pose detection assesment step
     let message = `
-    The pose detection step is used to detect the pose of the person in the image. Position yourself centered on the image within the green valid range.
-    If the conditions are not met, reposition yourself or the camera.
-    ${(center.w > .3) ? '* ❌ You are in the too close to the camera.': '* ✔️ Your distance to camera looks good.'}
-    ${(center.y - center.h < 0.0)
-        ? '* ❌ You are too far from the camera.'
-    :(center.y - center.h < 0.13)
-        ? '* ⚠️ Your face is to near to the top margin.' 
-        : '* ✔️ Got enough space on top.'
-    }
-    ${(Math.abs(center.x - .5) > validRange*.01 ) 
-        ?`* ❌ You are not centered at all.` 
-    :(Math.abs(center.x - .5) > warningRange*.01 )
-        ?'* ⚠️ Not enough margin of movement.'
-        :'* ✔️ You got enough space on the sides'
-    }
+        The pose detection step is used to detect the pose of the person in the image. Position yourself centered on the image within the green valid range.
+        If the conditions are not met, reposition yourself or the camera.
+        ${(center.w > .3) ? '* ❌ You are in the too close to the camera.': '* ✔️ Your distance to camera looks good.'}
+        ${(center.y - center.h < 0.0)
+            ? '* ❌ You are too far from the camera.'
+        :(center.y - center.h < 0.13)
+            ? '* ⚠️ Your face is to near to the top margin.' 
+            : '* ✔️ Got enough space on top.'
+        }
+        ${(Math.abs(center.x - .5) > validRange*.01 ) 
+            ?`* ❌ You are not centered at all.` 
+        :(Math.abs(center.x - .5) > warningRange*.01 )
+            ?'* ⚠️ Not enough margin of movement.'
+            :'* ✔️ You got enough space on the sides'
+        }
     `;
 
     return <>
@@ -110,7 +129,7 @@ export default function Pose() {
         <h3 className="pt-2"><b>Step 3: Positioning in frame</b></h3>
             <Row>
             <Col md={6}>
-                <video muted style={{ transform: "rotateY(180deg)", width:"100%" }} ref={videoRef}></video>
+                <Video id="local-pose" stream={media.localStream}  style={{ transform: "rotateY(180deg)", width:"100%" }} isLocal={true} />
                 <ProgressBar>
                     <ProgressBar variant = "danger"  key = {1} now = {dangerRange*.5} />
                     <ProgressBar variant = "warning" key = {2} now = {warningRange*.5} />
@@ -121,15 +140,25 @@ export default function Pose() {
                 <Form.Range id="range" value={center.x * 100}/>
             </Col>
             <Col md={6}>
+
+                {<FloatingLabel className="pb-1" controlId="floatingSelect" label={<span> <i className="bi bi-mask" /> Mask</span>}>
+                <Form.Select onChange={({target}) => {
+                    media.setMask(target.value);
+                    setMask(target.value);
+                }} defaultValue={ media.settings.mask }>
+                {UserMasks.map((v, k) => <option key={k} value={v}>{v}</option>)}
+                </Form.Select>
+                </FloatingLabel>}
+
                 <MD className="user-select-none">{message}</MD>
             </Col>
 
             </Row>
         </div>
 
-        <style global jsx>{`
+    <style global jsx>{`
         @import "src/variables.scss";
-        
+
         @media only screen and (orientation: landscape) and (max-height: 671px) {           
             #pose .row{
                 flex-direction: row !important;

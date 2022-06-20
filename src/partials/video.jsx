@@ -1,6 +1,5 @@
 import { Button, Image } from 'react-bootstrap'
 import { useContext, useEffect, useState, useRef } from 'react'
-
 import { MediaContext } from 'utils/ctx_mediadevices'
 
 import face_mask from 'assets/img/face-mask.png'
@@ -44,7 +43,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
     }
 
     function isValidMask() {
-        console.log("Mask is: " + media.settings.mask );
+        // console.log("Mask is: " + media.settings.mask );
         return media.settings.mask && media.settings.mask !== 'None';
     }
     
@@ -99,7 +98,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
                 }
             }
 
-            video{
+            video {
                 width: calc(100%);
                 height:100%;
                 object-fit: cover;
