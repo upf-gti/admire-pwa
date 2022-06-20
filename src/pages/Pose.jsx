@@ -1,7 +1,7 @@
 //https://github.com/google/mediapipe/issues/2346#issuecomment-888062233
 
 import { useState, useRef, useEffect, useContext } from 'react'
-import { Row, Col, ProgressBar, FloatingLabel, Form, Image } from 'react-bootstrap'
+import { Row, Col, ProgressBar, FloatingLabel, Form } from 'react-bootstrap'
 import { MediaContext } from 'utils/ctx_mediadevices'
 import { FaceDetection } from '@mediapipe/face_detection'
 
@@ -9,8 +9,8 @@ import MD from 'utils/md'
 import Video from 'partials/video'
 
 console.warn = ()=>{}
-let faceDetection;
-let faceDetectionStarted = false;
+let faceDetection = null;
+let faceDetectionIntervalId;
 
 const UserMasks = [
     'None',
@@ -26,6 +26,23 @@ export default function Pose() {
     const [mask, setMask] = useState('None');
     const media = useContext(MediaContext);
 
+    useEffect(() => {
+        
+        if(!media.ready) 
+        return;
+        
+        start();
+
+        videoRef.current = document.querySelector("#pose video");
+        videoRef.current.srcObject = media.localStream;
+        videoRef.current.play();
+
+        return () => {
+            clearInterval(faceDetectionIntervalId);
+        };
+
+    }, [media.ready, media.localStream]);
+
     function onResults({image, detections}) {
         
         console.log(detections);
@@ -33,10 +50,7 @@ export default function Pose() {
         for(let detection of detections) {
             const { L, boundingBox, landmarks } = detection;
             setCenter({
-                 x:boundingBox.xCenter
-                ,y:boundingBox.yCenter
-                ,w:boundingBox.width
-                ,h:boundingBox.height
+                x:boundingBox.xCenter, y:boundingBox.yCenter, w:boundingBox.width, h:boundingBox.height
             });
         }
     }
@@ -58,7 +72,7 @@ export default function Pose() {
         faceDetection.onResults(onResults);
         await faceDetection.initialize();
 
-        const id = setInterval(async () => {
+        faceDetectionIntervalId = setInterval(async () => {
             if(!videoRef.current){
                 return;
             }
@@ -68,38 +82,7 @@ export default function Pose() {
                 });
             }catch(e){}
         }, 120);
-
-        faceDetectionStarted = true;
-
-        return () => {
-            cancelAnimationFrame(id);
-            faceDetection.destroy();
-        };
     }
-
-    useEffect(() => {
-        
-        if(!media.ready) 
-        return;
-        
-        if(!faceDetectionStarted)
-        start();
-
-        videoRef.current = document.querySelector("#pose video");
-        videoRef.current.srcObject = media.localStream;
-        videoRef.current.play();
-
-        return () => {
-
-            try {
-                faceDetection?.close();
-                faceDetectionStarted = false;
-            }catch(e) {
-                // already deleted
-            }
-        };
-
-    }, [media.ready, media.localStream]);
 
     let validRange = Math.max(0,Math.min(100, 100 - center.w*400)),
         warningRange = Math.max(0,Math.min(100, center.w*100)),
