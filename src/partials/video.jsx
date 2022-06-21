@@ -80,6 +80,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             padding:0;
             transition:all .2s ease-in-out;
             background-color: #333;
+            overflow: hidden;
 
             .stream-status{ 
                 color:white !important;
@@ -110,15 +111,28 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
             }
 
             .mask-image {
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.25));
+                -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.25)));
                 position: absolute;
                 z-index: 1;
                 width: auto;
                 height: 100%;
                 left: 0;
                 right: 0;
+                bottom: 0;
+                top: 0;
                 margin-left: auto;
                 margin-right: auto;
+                margin-top: auto;
+                margin-bottom: auto;
             }
+
+            @media only screen and (orientation: portrait){
+                .mask-image {
+                    width: 90%;
+                    height: auto;
+                }
+            } 
         }
 
         .Video.stream {

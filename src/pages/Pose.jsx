@@ -45,8 +45,6 @@ export default function Pose() {
 
     function onResults({image, detections}) {
         
-        console.log(detections);
-
         for(let detection of detections) {
             const { L, boundingBox, landmarks } = detection;
             setCenter({
