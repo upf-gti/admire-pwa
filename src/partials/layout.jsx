@@ -56,7 +56,7 @@ export default ({ children, ...props }) => {
     <Title/>
 
     <div className="z-top d-flex m-2 position-absolute top-0 end-0">
-      <ProfileModal />
+      {/* <ProfileModal /> */}
       <AboutModal />
       <FullScreenBTN />
     </div>

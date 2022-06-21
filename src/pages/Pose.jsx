@@ -92,11 +92,11 @@ export default function Pose() {
     let message = `
         The pose detection step is used to detect the pose of the person in the image. Position yourself centered on the image within the green valid range.
         If the conditions are not met, reposition yourself or the camera.
-        ${(center.w > .3) ? '* ❌ You are in the too close to the camera.': '* ✔️ Your distance to camera looks good.'}
+        ${(center.w > .3) ? '* ❌ You are too close to the camera.': '* ✔️ Distance to camera looks good.'}
         ${(center.y - center.h < 0.0)
             ? '* ❌ You are too far from the camera.'
         :(center.y - center.h < 0.13)
-            ? '* ⚠️ Your face is to near to the top margin.' 
+            ? '* ⚠️ Your face is too near to the top margin.' 
             : '* ✔️ Got enough space on top.'
         }
         ${(Math.abs(center.x - .5) > validRange*.01 ) 
