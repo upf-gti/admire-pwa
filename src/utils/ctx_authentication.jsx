@@ -16,8 +16,8 @@ export default ({children, ...props}) => {
     let   { current: toast_usr }        = useRef(null);
     const [ retries, setRetries ]       = useState(0);        
 
-
-    useEffect( ()=>{ //Constructor
+    useEffect( ()=>{ // Constructor
+        
         function onUnload(){
             logout();   
             window.removeEventListener('unload', onUnload);
@@ -30,17 +30,20 @@ export default ({children, ...props}) => {
         function onRtcDisconnect (){ toast("RTC Disconnected", {id:toast_rtc, icon:'⚠️', duration:2000}); setConnected( v => ({...v, rtc:false})); }
 
         BRA.appClient.on(BRA.APPEvent.ClientConnected,      onAppConnect    );
-        BRA.rtcClient.on(BRA.RTCEvent.ClientConnected,      onRtcConnect    );
         BRA.appClient.on(BRA.APPEvent.ClientDisconnected,   onAppDisconnect );
-        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect );
         BRA.appClient.on(BRA.APPEvent.Error,                onError );
 
-    return ()=>{ //Destructor
+        BRA.rtcClient.on(BRA.RTCEvent.ClientAuthorized,     onRtcConnect    );
+        BRA.rtcClient.on(BRA.RTCEvent.ClientDisconnected,   onRtcDisconnect );
+
+    return ()=>{ // Destructor
+
         BRA.appClient.off(BRA.APPEvent.ClientConnected,     onAppConnect    );
-        BRA.appClient.off(BRA.RTCEvent.ClientConnected,     onAppDisconnect );
-        BRA.rtcClient.off(BRA.APPEvent.ClientDisconnected,  onRtcConnect    );
-        BRA.rtcClient.off(BRA.RTCEvent.ClientDisconnected,  onRtcDisconnect );
+        BRA.appClient.off(BRA.APPEvent.ClientDisconnected,  onAppDisconnect );
         BRA.appClient.off(BRA.APPEvent.Error,               onError );
+
+        BRA.rtcClient.off(BRA.RTCEvent.ClientAuthorized,    onRtcConnect    );
+        BRA.rtcClient.off(BRA.RTCEvent.ClientDisconnected,  onRtcDisconnect );
 
         onUnload();
     }

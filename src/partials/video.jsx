@@ -137,6 +137,7 @@ export default ({id, stream, onClick, isLocal = false, ...props})=>{
 
         .Video.stream {
             border: 3px inset #F33;
+            border-radius: 5px;
         }
 
     `}</style>

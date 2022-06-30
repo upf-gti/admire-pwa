@@ -82,37 +82,55 @@ export default ({children, ...props}) => {
     }
 
     function onCallOpened( request ) {
+
         const { call, stream } = request;
         const callid = call.callid;
         
         streams = {...streams, [callid]: stream}
         setStreams(streams);
-        const forwardingCallId = liveCalls[callid];   //Live call
+        const forwardingCallId = liveCalls[callid];   
+
+        // Live call
 
         if (forwardingCallId) {
-            const forward_stream = (forwardingCallId === "local") ? window.localStream : streams[forwardingCallId];
-            if (!forward_stream) {
+
+            const forwardStream = (forwardingCallId === "local") ? window.localStream : streams[forwardingCallId];
+            if (!forwardStream) {
                 callHangup(callid);
-                return toast.error(`Live Call Error: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);;
+                return toast.error(`Live Call Error: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
             }
             toast.success(`Live Call: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
-            const videotrack = forward_stream.getVideoTracks()[0];
-            const audiotrack = forward_stream.getAudioTracks()[0];
+            const videotrack = forwardStream.getVideoTracks()[0];
+            const audiotrack = forwardStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
             toast(`Forwarding stream`, {icon:<i className="bi bi-cast"/>});
+
+            const forwardingCall = BRA.rtcClient.getCall( forwardingCallId );
+            forwardingCall?.sendMessage(JSON.stringify( { 'live': true } ));
         }
 
-        //Regular call
+        // Regular call
+
         else {
+
             toast.success(`Incoming Call: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
-            //TODO:esto no deberia estar en window!!!!
+            // TODO: Move this out of window?
             if(!window.localStream) return;
             const videotrack = window.localStream.getVideoTracks()[0];
             const audiotrack = window.localStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
             toast(`Call from ${getUserId(callid)}`, {icon:<i className="bi bi-telephone-inbound"/>});
+
+            call?.onMessage(function( event )
+            {
+                const data = JSON.parse( event );
+                
+                if( data.live != undefined ) {
+                    setLiveStreamBorder( data.live );
+                }
+            });
         }
     }
 
@@ -152,10 +170,20 @@ export default ({children, ...props}) => {
             break;
         }
 
+        // Live call
+
         if (result) {
             const [mediaHubCallId, forwardedCallId] = result;
+            const forwardingCall = BRA.rtcClient.getCall( forwardedCallId );
+            forwardingCall?.sendMessage(JSON.stringify( { 'live': false } ));
             delete liveCalls[mediaHubCallId];
         }
+    }
+
+    function setLiveStreamBorder( status ) {
+
+        const operation = status ? 'add' : 'remove';
+        document.querySelector(".main-video").classList[ operation ]( "stream" );
     }
 
     function getUserId(callId){
@@ -168,7 +196,7 @@ export default ({children, ...props}) => {
         return id;
     }
 
-    //TODO:check this
+    // TODO:check this
     function forwardCall(source, target) {
         if (!target || !source)
             return console.error(`source or target callId's are undefined`);
