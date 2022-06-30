@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/admire-pwa/static/css/main.93c9379b.chunk.css",
-    "main.js": "/admire-pwa/static/js/main.08589ca3.chunk.js",
-    "main.js.map": "/admire-pwa/static/js/main.08589ca3.chunk.js.map",
+    "main.js": "/admire-pwa/static/js/main.d874386a.chunk.js",
+    "main.js.map": "/admire-pwa/static/js/main.d874386a.chunk.js.map",
     "runtime-main.js": "/admire-pwa/static/js/runtime-main.687bc914.js",
     "runtime-main.js.map": "/admire-pwa/static/js/runtime-main.687bc914.js.map",
     "static/js/2.37c63ba4.chunk.js": "/admire-pwa/static/js/2.37c63ba4.chunk.js",
@@ -41,6 +41,6 @@
     "static/js/runtime-main.687bc914.js",
     "static/js/2.37c63ba4.chunk.js",
     "static/css/main.93c9379b.chunk.css",
-    "static/js/main.08589ca3.chunk.js"
+    "static/js/main.d874386a.chunk.js"
   ]
 }
