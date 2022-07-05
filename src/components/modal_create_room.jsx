@@ -47,7 +47,7 @@ export default () => {
 
     return <>
         <Nav.Button onClick={()=>setShow(1)} title="Create room" label="Create room" appendclass="shadow rounded-circle bg-danger" >
-            <i className="bi bi-plus-lg"></i> 
+            <i className="bi bi-plus"></i> 
         </Nav.Button>
         
         <Modal size="sm" onKeyDown={ (e)=> (e.keyCode === 13) && submit() } tabIndex="0" buttons={[button]} closeButton {...{show, setShow}} title={<span>Room settings</span>}>

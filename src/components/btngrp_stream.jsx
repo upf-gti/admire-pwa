@@ -53,11 +53,17 @@ export default () => {
     <div id='pulse-wrapper'className="p-4 rounded-circle" style={{marginTop: '-4rem', marginBottom: '-4rem'}}>
         <canvas width='512' height='512' ref={canvasRef} className='position-absolute top-0 rounded-circle'/>
         <Nav.Button onClick={handleClick} label="Create room" appendclass="shadow rounded-circle bg-danger" >
-            <i className={isAudioEnabled?"bi bi-mic":"bi bi-mic-mute"}></i>
+            <i className={isAudioEnabled?"bi customMic bi-mic":"bi customMic bi-mic-mute"}></i>
         </Nav.Button>
     </div>
     
     <style global jsx>{`
+
+        .bi.customMic {
+            font-size: 2rem;
+            vertical-align: 0.2rem;
+        }
+
         #pulse-wrapper {
             //border: 1px dashed #ccc;
             margin: -3rem -1.5rem 0rem -1.5rem !important;
