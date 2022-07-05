@@ -19,7 +19,7 @@ export default ()=>{
 
     return <div id='devices'>
 
-        <h3 className="pt-2"><b>Step 1: Devices</b></h3>
+        <h3 className="pt-2"><b>Media Devices</b></h3>
         <Row id='devices-row'>
 
             <Col md={6}>

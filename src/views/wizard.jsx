@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Gesture from 'rc-gesture'
 
 export default ({show, setShow, ...props}) => {
-    const pages = ["Devices","Battery", "Pose"]; // , "Selfie"
+    const pages = ["Devices","Battery", "Pose", "Environment"]; // , "Selfie"
     const [selected, setSelected] = useState(0);
     const [page, setPage] = useState(null);
     const [views, setViews] = useState([]);

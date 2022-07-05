@@ -3,11 +3,9 @@ import toast from 'react-hot-toast'
 import React, {useState, useEffect, useRef  } from 'react'
 import { Spinner, Button, Form, FloatingLabel, OverlayTrigger, Tooltip, Card, Image as ReactImage } from 'react-bootstrap'
 
-import MD from 'utils/md';
 import http from 'utils/http'
 import Modal from 'partials/modal'
 import profile_img from 'assets/img/profile_light.png'
-
 
 export default () => {
     const formRef = useRef(null);

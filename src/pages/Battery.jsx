@@ -27,7 +27,7 @@ export default function Battery() {
     `;
 
     return <div id="battery">
-        <h3 className="pt-2"><b>Step 2: Battery Level</b></h3>
+        <h3 className="pt-2"><b>Battery Level</b></h3>
         <Row>
             <Col md={4}>
                 <BatteryIcon />

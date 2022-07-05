@@ -107,7 +107,7 @@ export default function Pose() {
 
     return <>
         <div id='pose'>
-        <h3 className="pt-2"><b>Step 3: Positioning in frame</b></h3>
+        <h3 className="pt-2"><b>Positioning in frame</b></h3>
             <Row>
             <Col md={6}>
                 <Video id="local-pose" stream={media.localStream}  style={{ transform: "rotateY(180deg)", width:"100%" }} isLocal={true} />
