@@ -62,6 +62,9 @@ export default function Room({ ...props }){
                     let isMediahubCall = mediaHubCallId === callId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
+                    if( isMediahubCall )
+                        return <></>;
+
                     return <div key={k} className="carouselVideoItem">
                         <div className="stream-forward">
                             { imMaster && <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/> }
