@@ -58,19 +58,24 @@ export default function Room({ ...props }){
                     let id = wrtc.getUserId(callId);
                     let imMaster = auth.user.username === rooms.current?.master.username;
                     let [mediaHubCallId, forwardedCallId] = wrtc.getLiveCall(callId); //eslint-disable-line
+                    let isLiveCall = wrtc.isLiveCall(callId);
                     let isForwardCall = !!forwardedCallId;
-                    let isMediahubCall = mediaHubCallId === callId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
-                    if( isMediahubCall )
+                    console.log( [callId, mediaHubCallId, forwardedCallId, isLiveCall] )
+
+                    // if( id === 'mediarouter' )
+                    //     debugger;
+
+                    if( isLiveCall )
                         return <></>;
 
-                    return <div key={k} className="carouselVideoItem">
+                    return <div key={id} className="carouselVideoItem">
                         <div className="stream-forward">
                             { imMaster && <BadgeForwardCall callId={callId} isForwardCall={isForwardCall}/> }
                             { isSelected && <Badge pill bg="primary"><i className="bi bi-eye active"/></Badge> }
                         </div>
-                        {!isMediahubCall && <Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>}
+                        {<Video isLocal={id === auth.user.username} key={callId} id={id} stream={stream} className={!isSelected?"cursor-pointer":""} onClick={()=>{setSelected(callId)}}/>}
                     </div>
                 })}
                 </div>

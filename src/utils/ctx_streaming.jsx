@@ -114,14 +114,13 @@ export default ({children, ...props}) => {
 
         else {
 
-            toast.success(`Incoming Call: ${callid}, callerId: ${call.caller}, calleeId: ${call.callee} `);
-            // TODO: Move this out of window?
             if(!window.localStream) return;
             const videotrack = window.localStream.getVideoTracks()[0];
             const audiotrack = window.localStream.getAudioTracks()[0];
             call.replaceLocalVideoTrack(videotrack);
             call.replaceLocalAudioTrack(audiotrack);
-            toast(`Call from ${getUserId(callid)}`, {icon:<i className="bi bi-telephone-inbound"/>});
+
+            toast(`Call from ${call.caller} to ${call.callee}`, {icon:<i className="bi bi-telephone-inbound"/>});
 
             call?.onMessage(function( event )
             {
@@ -144,7 +143,7 @@ export default ({children, ...props}) => {
 
         delete streams[callid];
         setStreams({...streams});
-        toast(`Call from ${getUserId(callid)} closed`, {icon:<i className="bi bi-telephone-x"/>});
+        toast(`Call from ${call.caller} to ${call.callee} closed`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
     function onCallHangup( {event, data} ){
@@ -156,8 +155,6 @@ export default ({children, ...props}) => {
         manageLiveCallClosed(callid);
         delete streams[callid];
         setStreams({...streams});
-
-        toast(`User ${getUserId(callid)} hangup`, {icon:<i className="bi bi-telephone-x"/>});
     }
 
     function manageLiveCallClosed(callid) {
@@ -208,6 +205,11 @@ export default ({children, ...props}) => {
         return Object.entries(liveCalls).find( v => v[1] === callid ) ?? [null,null];
     }
 
+    function isLiveCall(callid)
+    {
+        return !!liveCalls[ callid ];
+    }
+
     function replaceStream(stream){
         for( const callid in BRA.rtcClient.getCalls() )
         {
@@ -234,6 +236,7 @@ export default ({children, ...props}) => {
         forwardCall,
         getUserId,
         getLiveCall,
+        isLiveCall,
         replaceStream,
         streams: {...streams, local:localStream},
     }
