@@ -62,11 +62,6 @@ export default function Room({ ...props }){
                     let isForwardCall = !!forwardedCallId;
                     let isSelected = selected === callId || (!selected && k === 0);
 
-                    console.log( [callId, mediaHubCallId, forwardedCallId, isLiveCall] )
-
-                    // if( id === 'mediarouter' )
-                    //     debugger;
-
                     if( isLiveCall )
                         return <></>;
 
